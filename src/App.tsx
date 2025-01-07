@@ -1,8 +1,15 @@
+import { Route, Routes } from "react-router-dom";
+
+import Layout from "./components/layout";
+import Dashboard from "./pages/dashboard";
+
 const App = () => {
   return (
-    <div className="flex w-full items-center justify-center p-5 text-3xl font-bold">
-      App
-    </div>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Dashboard />} />
+      </Route>
+    </Routes>
   );
 };
 
