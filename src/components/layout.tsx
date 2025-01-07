@@ -7,7 +7,7 @@ const Layout = () => {
   return (
     <MaxWidthWrapper>
       <Navbar />
-      <div className="flex h-[calc(100vh-116px)] w-full items-start justify-start">
+      <div className="flex w-full items-start justify-start">
         <Outlet />
       </div>
     </MaxWidthWrapper>
