@@ -1,7 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
 
-import { type Project } from "@/lib/schema";
-
 import {
   Sheet,
   SheetContent,
@@ -13,7 +11,7 @@ import ProjectForm from "./project-form";
 
 interface ProjectSheetProps {
   open: boolean;
-  project?: Project;
+  project?: ProjectProps;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 

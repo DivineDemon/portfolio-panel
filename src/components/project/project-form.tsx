@@ -1,8 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Trash } from "lucide-react";
+import { Loader2, Plus, Trash } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { type Project, projectSchema } from "@/lib/schema";
+import {
+  usePostProjectMutation,
+  useUpdateProjectMutation,
+} from "@/store/services/project";
 
 import { Button } from "../ui/button";
 import {
@@ -17,28 +22,56 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
 interface ProjectFormProps {
-  project?: Project;
+  project?: ProjectProps;
 }
 
 const ProjectForm = ({ project }: ProjectFormProps) => {
   const form = useForm<Project>({
     resolver: zodResolver(projectSchema),
-    defaultValues: project,
+    defaultValues: {
+      company: project?.company,
+      features: project?.features.split(","),
+      link: project?.link,
+      project_name: project?.project_name,
+      start_year: project?.start_year,
+    },
   });
+  const [addProject, { isLoading: adding }] = usePostProjectMutation();
+  const [editProject, { isLoading: editing }] = useUpdateProjectMutation();
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     // @ts-ignore
-    name: "projectFeatures",
+    name: "features",
     rules: {
       minLength: 1,
       required: true,
     },
   });
 
-  function onSubmit(values: Project) {
-    console.log(values);
-  }
+  const onSubmit = async (values: Project) => {
+    let response = null;
+    if (project) {
+      response = await editProject({
+        id: `${project.id}`,
+        body: {
+          company: values.company,
+          features: values.features,
+          link: values.link,
+          project_name: values.project_name,
+          start_year: values.start_year,
+        },
+      });
+    } else {
+      response = await addProject(values);
+    }
+
+    if (response.error) {
+      toast.error(`Failed to ${project ? "Edit" : "Add"} Project!`);
+    } else {
+      toast.success(`${project ? "Edited" : "Added"} Project Successfully!`);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -49,7 +82,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
         <div className="flex h-[calc(100vh-190px)] w-full flex-col items-start justify-start gap-2.5 overflow-y-auto">
           <FormField
             control={form.control}
-            name="projectName"
+            name="project_name"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Project Name</FormLabel>
@@ -65,7 +98,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
           />
           <FormField
             control={form.control}
-            name="companyName"
+            name="company"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Company Name</FormLabel>
@@ -78,12 +111,17 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
           />
           <FormField
             control={form.control}
-            name="year"
+            name="start_year"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Year</FormLabel>
                 <FormControl>
-                  <Input placeholder="2077" {...field} />
+                  <Input
+                    type="number"
+                    placeholder="2077"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -91,7 +129,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
           />
           <FormField
             control={form.control}
-            name="projectLink"
+            name="link"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Project Link</FormLabel>
@@ -117,7 +155,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
             <FormField
               key={field.id}
               control={form.control}
-              name={`projectFeatures.${idx}`}
+              name={`features.${idx}`}
               render={({ field }) => (
                 <FormItem className="flex w-full flex-col items-center justify-center gap-2 space-y-0">
                   <div className="flex w-full items-center justify-center gap-2">
@@ -140,15 +178,22 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
           ))}
           <div className="w-full">
             <p className="text-[0.8rem] font-medium text-destructive">
-              {form.formState.errors?.projectFeatures?.message
-                ? form.formState.errors.projectFeatures.message
-                : form.formState.errors?.projectFeatures?.root?.message}
+              {form.formState.errors?.features?.message
+                ? form.formState.errors.features.message
+                : form.formState.errors?.features?.root?.message}
             </p>
           </div>
         </div>
         <div className="absolute bottom-0 left-0 z-[1] flex w-full items-center justify-end bg-background pt-2.5">
-          <Button type="submit" variant="default">
-            Save Changes
+          <Button type="submit" variant="default" disabled={editing || adding}>
+            {editing || adding ? (
+              <>
+                <Loader2 className="animate-spin" />
+                Please Wait...
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </div>
       </form>

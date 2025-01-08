@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 export const projectSchema = z.object({
-  projectLink: z.string().url("Invalid URL format."),
-  projectName: z.string().min(1, "Project name is required."),
-  companyName: z.string().min(1, "Company name is required."),
-  year: z.string().regex(/^\d{4}$/, "Year must be a 4-digit number."),
-  projectFeatures: z
+  link: z.string().url("Invalid URL format."),
+  project_name: z.string().min(1, "Project name is required."),
+  company: z.string().min(1, "Company name is required."),
+  start_year: z.number(),
+  features: z
     .array(z.string())
     .nonempty()
     .min(3, "At least 3 features are required."),

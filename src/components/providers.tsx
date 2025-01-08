@@ -1,18 +1,23 @@
 import { type ReactNode } from "react";
 
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
+
+import store from "@/store";
 
 import { ThemeProvider } from "./theme-provider";
 
 const Providers = ({ children }: { children: ReactNode }) => {
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <Toaster richColors={true} />
-        {children}
-      </ThemeProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeProvider>
+          <Toaster richColors={true} />
+          {children}
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
   );
 };
 
