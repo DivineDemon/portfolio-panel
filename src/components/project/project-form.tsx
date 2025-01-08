@@ -18,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import ImageUploader from "../ui/image-uploader";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
@@ -34,6 +35,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
       link: project?.link,
       project_name: project?.project_name,
       start_year: project?.start_year,
+      image: project?.image,
     },
   });
   const [addProject, { isLoading: adding }] = usePostProjectMutation();
@@ -60,6 +62,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
           link: values.link,
           project_name: values.project_name,
           start_year: values.start_year,
+          image: values.image ?? "",
         },
       });
     } else {
@@ -140,6 +143,13 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
               </FormItem>
             )}
           />
+          <div className="flex w-full flex-col items-center justify-center gap-2">
+            <Label className="w-full text-left text-sm">Project Image</Label>
+            <ImageUploader
+              image={form.getValues("image")}
+              setValue={form.setValue as (name: string, value: string) => void}
+            />
+          </div>
           <div className="flex w-full items-center justify-center">
             <Label className="flex-1 text-left">Project Features</Label>
             <Button

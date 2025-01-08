@@ -1,47 +1,46 @@
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { useState } from "react";
 
 import { Loader2, Upload, X } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 
 import { cn, imageToUrl } from "@/lib/utils";
 
-import { Button } from "../ui/button";
+import { Button } from "./button";
 
 interface ImageUploaderProps {
-  image: string;
-  setImage: Dispatch<SetStateAction<string>>;
+  image?: string;
+  setValue: (name: string, value: string) => void;
 }
 
-const ImageUploader = ({ image, setImage }: ImageUploaderProps) => {
+const ImageUploader = ({ image, setValue }: ImageUploaderProps) => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: { "image/jpeg": [], "image/png": [], "image/jpg": [] },
-    maxFiles: 1,
-    maxSize: 2097152,
-    onDrop: async (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
-        const reader = new FileReader();
+  const onDrop = async (acceptedFiles: File[]) => {
+    setLoading(true);
 
-        reader.onload = async () => {
-          if (reader.result) {
-            setLoading(true);
-            const imageUrl = await imageToUrl(
-              reader.result.toString().split(",")[1]
-            );
-            if (imageUrl) {
-              setImage(imageUrl);
-              setLoading(false);
-            }
-          }
-        };
+    if (acceptedFiles.length === 0) {
+      return;
+    }
 
-        reader.readAsDataURL(file);
-      } else {
+    const file = acceptedFiles[0];
+    const reader = new FileReader();
+
+    reader.onload = async (event) => {
+      if (event.target?.result) {
+        const url = await imageToUrl(
+          event.target.result.toString().split(",")[1]
+        );
+        setValue("image", url);
         setLoading(false);
       }
-    },
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: { "image/*": [".png", ".jpg", ".jpeg"] },
   });
 
   return (
@@ -59,22 +58,24 @@ const ImageUploader = ({ image, setImage }: ImageUploaderProps) => {
       {image ? (
         <div className="relative">
           <img
-            src={image}
-            alt="uploaded-image"
             className="aspect-square size-24 object-cover"
+            alt="project-image"
+            src={image}
           />
           <Button
-            type="button"
-            size="icon"
+            onClick={() => setValue("image", "")}
             variant="destructive"
-            onClick={() => setImage("")}
-            className="absolute right-1 top-1 size-5"
+            size="icon"
+            className="absolute right-1 top-1 size-7"
           >
             <X />
           </Button>
         </div>
       ) : loading ? (
-        <Loader2 className="size-10 animate-spin" />
+        <>
+          <Loader2 className="size-10 animate-spin" />
+          <span>Uploading...</span>
+        </>
       ) : (
         <>
           <Upload className="size-10" />

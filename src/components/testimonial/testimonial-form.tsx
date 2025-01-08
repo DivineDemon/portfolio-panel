@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -14,18 +12,16 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import ImageUploader from "../ui/image-uploader";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import ImageUploader from "./image-uploader";
 
 interface TestimonialFormProps {
   testimonial?: Testimonial;
 }
 
 const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
-  const [image, setImage] = useState<string>("");
-
   const form = useForm<Testimonial>({
     resolver: zodResolver(testimonialSchema),
     defaultValues: testimonial,
@@ -83,8 +79,11 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
             )}
           />
           <div className="flex w-full flex-col items-center justify-center gap-2">
-            <Label className="w-full text-left text-sm">Client Image</Label>
-            <ImageUploader image={image} setImage={setImage} />
+            <Label className="w-full text-left text-sm">Project Image</Label>
+            <ImageUploader
+              image={form.getValues("image")}
+              setValue={form.setValue as (name: string, value: string) => void}
+            />
           </div>
         </div>
         <div className="flex w-full items-center justify-end">

@@ -5,4 +5,5 @@ declare type ProjectProps = {
   company: string;
   start_year: number;
   project_name: string;
+  image: string;
 };

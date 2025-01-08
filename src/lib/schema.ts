@@ -9,6 +9,7 @@ export const projectSchema = z.object({
     .array(z.string())
     .nonempty()
     .min(3, "At least 3 features are required."),
+  image: z.string().url(),
 });
 
 export type Project = z.infer<typeof projectSchema>;
