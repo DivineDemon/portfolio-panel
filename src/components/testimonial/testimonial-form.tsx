@@ -1,5 +1,6 @@
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Upload } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import { Testimonial, testimonialSchema } from "@/lib/schema";
@@ -16,12 +17,15 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import ImageUploader from "./image-uploader";
 
 interface TestimonialFormProps {
   testimonial?: Testimonial;
 }
 
 const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
+  const [image, setImage] = useState<string>("");
+
   const form = useForm<Testimonial>({
     resolver: zodResolver(testimonialSchema),
     defaultValues: testimonial,
@@ -80,18 +84,7 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
           />
           <div className="flex w-full flex-col items-center justify-center gap-2">
             <Label className="w-full text-left text-sm">Client Image</Label>
-            <div className="flex w-full flex-col items-center justify-center gap-2.5 rounded-lg border-2 border-dashed border-black bg-muted p-5 dark:border-white">
-              <Upload className="size-10" />
-              <p className="w-full text-center text-sm text-gray-400">
-                Drag & Drop
-                <br />
-                or
-                <br />
-                <span className="font-medium text-black underline dark:text-white">
-                  Browse
-                </span>
-              </p>
-            </div>
+            <ImageUploader image={image} setImage={setImage} />
           </div>
         </div>
         <div className="flex w-full items-center justify-end">
