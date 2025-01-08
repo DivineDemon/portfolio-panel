@@ -11,12 +11,18 @@ const Navbar = () => {
           <Origami className="opacity-85 transition-all duration-200 hover:opacity-100" />
         </Link>
         <div className="flex items-center justify-center gap-10 text-sm md:text-base">
-          <span className="opacity-85 transition-all duration-200 hover:opacity-100">
+          <Link
+            to="/projects"
+            className="opacity-85 transition-all duration-200 hover:opacity-100"
+          >
             Projects
-          </span>
-          <span className="opacity-85 transition-all duration-200 hover:opacity-100">
+          </Link>
+          <Link
+            to="/testimonials"
+            className="opacity-85 transition-all duration-200 hover:opacity-100"
+          >
             Testimonials
-          </span>
+          </Link>
         </div>
         <ModeToggle />
       </div>
