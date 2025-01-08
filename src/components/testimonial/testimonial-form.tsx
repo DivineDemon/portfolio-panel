@@ -1,7 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { Testimonial, testimonialSchema } from "@/lib/schema";
+import {
+  usePostTestimonialMutation,
+  useUpdateTestimonialMutation,
+} from "@/store/services/testimonial";
 
 import { Button } from "../ui/button";
 import {
@@ -18,26 +24,60 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 
 interface TestimonialFormProps {
-  testimonial?: Testimonial;
+  testimonial?: TestimonialProps;
 }
 
 const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
   const form = useForm<Testimonial>({
     resolver: zodResolver(testimonialSchema),
-    defaultValues: testimonial,
+    defaultValues: {
+      client_name: testimonial?.client_name,
+      company: testimonial?.company,
+      content: testimonial?.content,
+      designation: testimonial?.designation,
+      image: testimonial?.image,
+    },
   });
+  const [addTestimonial, { isLoading: adding }] = usePostTestimonialMutation();
+  const [editTestimonial, { isLoading: editing }] =
+    useUpdateTestimonialMutation();
 
-  function onSubmit(values: Testimonial) {
-    console.log(values);
-  }
+  const onSubmit = async (values: Testimonial) => {
+    let response = null;
+    if (testimonial) {
+      response = await editTestimonial({
+        id: `${testimonial.id}`,
+        body: {
+          client_name: values.client_name,
+          company: values.company,
+          content: values.content,
+          designation: values.designation,
+          image: values.image,
+        },
+      });
+    } else {
+      response = await addTestimonial(values);
+    }
+
+    if (response.error) {
+      toast.error(`Failed to ${testimonial ? "Edit" : "Add"} Testimonial!`);
+    } else {
+      toast.success(
+        `${testimonial ? "Edited" : "Added"} Testimonial Successfully!`
+      );
+    }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="h-full w-full">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="relative h-full w-full"
+      >
         <div className="flex h-[calc(100vh-175px)] w-full flex-col items-start justify-start gap-2.5">
           <FormField
             control={form.control}
-            name="clientName"
+            name="client_name"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Client Name</FormLabel>
@@ -50,7 +90,20 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
           />
           <FormField
             control={form.control}
-            name="jobTitle"
+            name="company"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Company</FormLabel>
+                <FormControl>
+                  <Input placeholder="Monsters Inc." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="designation"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Job Title</FormLabel>
@@ -63,7 +116,7 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
           />
           <FormField
             control={form.control}
-            name="message"
+            name="content"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Message</FormLabel>
@@ -79,16 +132,23 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
             )}
           />
           <div className="flex w-full flex-col items-center justify-center gap-2">
-            <Label className="w-full text-left text-sm">Project Image</Label>
+            <Label className="w-full text-left text-sm">Client Image</Label>
             <ImageUploader
               image={form.getValues("image")}
               setValue={form.setValue as (name: string, value: string) => void}
             />
           </div>
         </div>
-        <div className="flex w-full items-center justify-end">
-          <Button type="submit" variant="default">
-            Save Changes
+        <div className="absolute bottom-0 left-0 z-[1] flex w-full items-center justify-end bg-background pt-2.5">
+          <Button type="submit" variant="default" disabled={editing || adding}>
+            {editing || adding ? (
+              <>
+                <Loader2 className="animate-spin" />
+                Please Wait...
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </div>
       </form>

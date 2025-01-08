@@ -6,9 +6,13 @@ import TestimonialCard from "@/components/testimonial/testimonial-card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useFetchProjectsQuery } from "@/store/services/project";
+import { useFetchTestimonialsQuery } from "@/store/services/testimonial";
 
 const Dashboard = () => {
-  const { data: projects, isLoading } = useFetchProjectsQuery({});
+  const { data: projects, isLoading: pLoading } = useFetchProjectsQuery({});
+  const { data: testimonials, isLoading: tLoading } = useFetchTestimonialsQuery(
+    {}
+  );
 
   return (
     <div className="flex w-full flex-col items-start justify-start gap-5 px-5 pb-5 xl:px-0">
@@ -27,18 +31,20 @@ const Dashboard = () => {
         </Link>
       </div>
       <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {isLoading ? (
+        {pLoading ? (
           <div className="col-span-1 flex w-full items-center justify-center md:col-span-2 xl:col-span-3">
             <Loader2 className="size-10 animate-spin" />
           </div>
         ) : (
-          projects?.map((project) => (
-            <ProjectCard
-              key={project.id}
-              className="col-span-1"
-              project={project}
-            />
-          ))
+          projects
+            ?.slice(0, 3)
+            .map((project) => (
+              <ProjectCard
+                key={project.id}
+                className="col-span-1"
+                project={project}
+              />
+            ))
         )}
       </div>
       <div className="flex w-full items-center justify-center border-t pt-5">
@@ -56,9 +62,21 @@ const Dashboard = () => {
         </Link>
       </div>
       <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {[...Array(3)].map((_, idx) => (
-          <TestimonialCard key={idx} />
-        ))}
+        {tLoading ? (
+          <div className="col-span-1 flex w-full items-center justify-center md:col-span-2 xl:col-span-3">
+            <Loader2 className="size-10 animate-spin" />
+          </div>
+        ) : (
+          testimonials
+            ?.slice(0, 3)
+            .map((testimonial) => (
+              <TestimonialCard
+                key={testimonial.id}
+                className="col-span-1"
+                testimonial={testimonial}
+              />
+            ))
+        )}
       </div>
     </div>
   );

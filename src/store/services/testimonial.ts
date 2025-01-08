@@ -1,3 +1,5 @@
+import { Testimonial } from "@/lib/schema";
+
 import { api } from "./core";
 
 export const testimonialApi = api.injectEndpoints({
@@ -8,6 +10,11 @@ export const testimonialApi = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["Testimonials"],
+      transformResponse: (response: {
+        success: boolean;
+        message: string;
+        data: TestimonialProps[];
+      }) => response.data,
     }),
     fetchTestimonial: build.query({
       query: (id: string) => ({
@@ -15,10 +22,14 @@ export const testimonialApi = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["Testimonial"],
+      transformResponse: (response: {
+        success: boolean;
+        message: string;
+        data: TestimonialProps;
+      }) => response.data,
     }),
     postTestimonial: build.mutation({
-      // Require Type
-      query: (body) => ({
+      query: (body: Testimonial) => ({
         url: "/testimonials",
         method: "POST",
         body,
@@ -27,15 +38,18 @@ export const testimonialApi = api.injectEndpoints({
     }),
     deleteTestimonial: build.mutation({
       query: (id: string) => ({
-        url: `/items/${id}`,
+        url: `/testimonials/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Testimonials"],
     }),
     updateTestimonial: build.mutation({
-      query: ({ id, body }: { id: string; body: any }) => ({
-        url: `/items/${id}`,
-        method: "PATCH",
+      query: ({ id, body }: { id: string; body: Testimonial }) => ({
+        url: `/testimonials/${id}`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body,
       }),
       invalidatesTags: ["Testimonials", "Testimonial"],

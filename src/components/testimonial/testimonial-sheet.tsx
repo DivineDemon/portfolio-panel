@@ -1,7 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
 
-import { Testimonial } from "@/lib/schema";
-
 import {
   Sheet,
   SheetContent,
@@ -13,7 +11,7 @@ import TestimonialForm from "./testimonial-form";
 
 interface TestimonialSheetProps {
   open: boolean;
-  testimonial?: Testimonial;
+  testimonial?: TestimonialProps;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 

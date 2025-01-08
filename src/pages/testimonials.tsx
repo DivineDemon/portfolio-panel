@@ -1,15 +1,18 @@
 import { useState } from "react";
 
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 
 import TestimonialCard from "@/components/testimonial/testimonial-card";
 import TestimonialSheet from "@/components/testimonial/testimonial-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { useFetchTestimonialsQuery } from "@/store/services/testimonial";
 
 const Testimonials = () => {
   const [query, setQuery] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
+  const { data, isLoading } = useFetchTestimonialsQuery({});
 
   return (
     <>
@@ -31,15 +34,46 @@ const Testimonials = () => {
               type="text"
               value={query}
               className="h-[36.5px] w-full md:w-64"
-              placeholder="Search Testimonials..."
+              placeholder="Search by Client Name"
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
         </div>
-        <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {[...Array(20)].map((_, idx) => (
-            <TestimonialCard key={idx} className="col-span-1" />
-          ))}
+        <div
+          className={cn(
+            "grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3",
+            {
+              "h-[calc(100vh-175px)]": isLoading,
+            }
+          )}
+        >
+          {isLoading ? (
+            <div className="col-span-1 flex h-full w-full items-center justify-center md:col-span-2 xl:col-span-3">
+              <Loader2 className="size-10 animate-spin" />
+            </div>
+          ) : query ? (
+            data
+              ?.filter((testimonial) =>
+                testimonial.client_name
+                  .toLowerCase()
+                  .includes(query.toLowerCase())
+              )
+              .map((testimonial) => (
+                <TestimonialCard
+                  key={testimonial.id}
+                  className="col-span-1"
+                  testimonial={testimonial}
+                />
+              ))
+          ) : (
+            data?.map((testimonial) => (
+              <TestimonialCard
+                key={testimonial.id}
+                className="col-span-1"
+                testimonial={testimonial}
+              />
+            ))
+          )}
         </div>
       </div>
     </>

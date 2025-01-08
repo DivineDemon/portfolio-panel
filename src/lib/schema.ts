@@ -15,10 +15,11 @@ export const projectSchema = z.object({
 export type Project = z.infer<typeof projectSchema>;
 
 export const testimonialSchema = z.object({
-  clientName: z.string(),
-  jobTitle: z.string(),
-  message: z.string(),
+  client_name: z.string(),
+  designation: z.string(),
+  content: z.string(),
   image: z.string().url(),
+  company: z.string(),
 });
 
 export type Testimonial = z.infer<typeof testimonialSchema>;

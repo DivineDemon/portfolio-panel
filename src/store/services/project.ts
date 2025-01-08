@@ -22,6 +22,11 @@ export const projectApi = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["Project"],
+      transformResponse: (response: {
+        success: boolean;
+        message: string;
+        data: ProjectProps;
+      }) => response.data,
     }),
     postProject: build.mutation({
       query: (body: Project) => ({
