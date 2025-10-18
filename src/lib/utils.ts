@@ -11,19 +11,16 @@ export async function imageToUrl(image: string) {
   formData.append("image", image);
 
   try {
-    const response = await fetch(
-      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_PUBLIC_IMGBB_KEY}`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const response = await fetch(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_PUBLIC_IMGBB_KEY}`, {
+      method: "POST",
+      body: formData,
+    });
     const final = await response.json();
 
     toast.success("Image Uploaded Successfully!");
 
     return final.data.image.url;
-  } catch (error: Error | unknown) {
+  } catch (error) {
     toast.error((error as Error).message);
     return "";
   }

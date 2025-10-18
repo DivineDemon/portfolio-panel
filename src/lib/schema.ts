@@ -5,10 +5,7 @@ export const projectSchema = z.object({
   project_name: z.string().min(1, "Project name is required."),
   company: z.string().min(1, "Company name is required."),
   start_year: z.number(),
-  features: z
-    .array(z.string())
-    .nonempty()
-    .min(3, "At least 3 features are required."),
+  features: z.array(z.string()).nonempty().min(3, "At least 3 features are required."),
   image: z.string().url(),
 });
 

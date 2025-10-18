@@ -1,6 +1,5 @@
-import { useState } from "react";
-
 import { Loader2, Upload, X } from "lucide-react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { cn, imageToUrl } from "@/lib/utils";
@@ -27,9 +26,7 @@ const ImageUploader = ({ image, setValue }: ImageUploaderProps) => {
 
     reader.onload = async (event) => {
       if (event.target?.result) {
-        const url = await imageToUrl(
-          event.target.result.toString().split(",")[1]
-        );
+        const url = await imageToUrl(event.target.result.toString().split(",")[1]);
         setValue("image", url);
         setLoading(false);
       }
@@ -51,22 +48,18 @@ const ImageUploader = ({ image, setValue }: ImageUploaderProps) => {
         {
           "border-blue-500": isDragActive,
           "border-black dark:border-white": !isDragActive,
-        }
+        },
       )}
     >
       <input {...getInputProps()} />
       {image ? (
         <div className="relative">
-          <img
-            className="aspect-square size-24 object-cover"
-            alt="project-image"
-            src={image}
-          />
+          <img className="aspect-square size-24 object-cover" alt="project-image" src={image} />
           <Button
             onClick={() => setValue("image", "")}
             variant="destructive"
             size="icon"
-            className="absolute right-1 top-1 size-7"
+            className="absolute top-1 right-1 size-7"
           >
             <X />
           </Button>
@@ -79,14 +72,12 @@ const ImageUploader = ({ image, setValue }: ImageUploaderProps) => {
       ) : (
         <>
           <Upload className="size-10" />
-          <p className="w-full text-center text-sm text-gray-400">
+          <p className="w-full text-center text-gray-400 text-sm">
             Drag & Drop
             <br />
             or
             <br />
-            <span className="font-medium text-black underline dark:text-white">
-              Browse
-            </span>
+            <span className="font-medium text-black underline dark:text-white">Browse</span>
           </p>
         </>
       )}

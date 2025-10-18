@@ -10,11 +10,7 @@ export const testimonialApi = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["Testimonials"],
-      transformResponse: (response: {
-        success: boolean;
-        message: string;
-        data: TestimonialProps[];
-      }) => response.data,
+      transformResponse: (response: { success: boolean; message: string; data: TestimonialProps[] }) => response.data,
     }),
     fetchTestimonial: build.query({
       query: (id: string) => ({
@@ -22,11 +18,7 @@ export const testimonialApi = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["Testimonial"],
-      transformResponse: (response: {
-        success: boolean;
-        message: string;
-        data: TestimonialProps;
-      }) => response.data,
+      transformResponse: (response: { success: boolean; message: string; data: TestimonialProps }) => response.data,
     }),
     postTestimonial: build.mutation({
       query: (body: Testimonial) => ({

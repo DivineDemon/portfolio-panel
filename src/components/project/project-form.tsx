@@ -4,20 +4,10 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { type Project, projectSchema } from "@/lib/schema";
-import {
-  usePostProjectMutation,
-  useUpdateProjectMutation,
-} from "@/store/services/project";
+import { usePostProjectMutation, useUpdateProjectMutation } from "@/store/services/project";
 
 import { Button } from "../ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import ImageUploader from "../ui/image-uploader";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -78,10 +68,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative h-full w-full"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="relative h-full w-full">
         <div className="flex h-[calc(100vh-190px)] w-full flex-col items-start justify-start gap-2.5 overflow-y-auto">
           <FormField
             control={form.control}
@@ -90,10 +77,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
               <FormItem className="w-full">
                 <FormLabel>Project Name</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Post Apocalyptic Armor Store"
-                    {...field}
-                  />
+                  <Input placeholder="Post Apocalyptic Armor Store" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -152,12 +136,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
           </div>
           <div className="flex w-full items-center justify-center">
             <Label className="flex-1 text-left">Project Features</Label>
-            <Button
-              type="button"
-              onClick={() => append("")}
-              variant="outline"
-              size="icon"
-            >
+            <Button type="button" onClick={() => append("")} variant="outline" size="icon">
               <Plus />
             </Button>
           </div>
@@ -187,7 +166,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
             />
           ))}
           <div className="w-full">
-            <p className="text-[0.8rem] font-medium text-destructive">
+            <p className="font-medium text-[0.8rem] text-destructive">
               {form.formState.errors?.features?.message
                 ? form.formState.errors.features.message
                 : form.formState.errors?.features?.root?.message}

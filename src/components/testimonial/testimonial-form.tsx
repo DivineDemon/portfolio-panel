@@ -4,20 +4,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Testimonial, testimonialSchema } from "@/lib/schema";
-import {
-  usePostTestimonialMutation,
-  useUpdateTestimonialMutation,
-} from "@/store/services/testimonial";
+import { usePostTestimonialMutation, useUpdateTestimonialMutation } from "@/store/services/testimonial";
 
 import { Button } from "../ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import ImageUploader from "../ui/image-uploader";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -39,8 +29,7 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
     },
   });
   const [addTestimonial, { isLoading: adding }] = usePostTestimonialMutation();
-  const [editTestimonial, { isLoading: editing }] =
-    useUpdateTestimonialMutation();
+  const [editTestimonial, { isLoading: editing }] = useUpdateTestimonialMutation();
 
   const onSubmit = async (values: Testimonial) => {
     let response = null;
@@ -62,18 +51,13 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
     if (response.error) {
       toast.error(`Failed to ${testimonial ? "Edit" : "Add"} Testimonial!`);
     } else {
-      toast.success(
-        `${testimonial ? "Edited" : "Added"} Testimonial Successfully!`
-      );
+      toast.success(`${testimonial ? "Edited" : "Added"} Testimonial Successfully!`);
     }
   };
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative h-full w-full"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="relative h-full w-full">
         <div className="flex h-[calc(100vh-175px)] w-full flex-col items-start justify-start gap-2.5">
           <FormField
             control={form.control}

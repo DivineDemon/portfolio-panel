@@ -10,11 +10,7 @@ export const projectApi = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["Projects"],
-      transformResponse: (response: {
-        success: boolean;
-        message: string;
-        data: ProjectProps[];
-      }) => response.data,
+      transformResponse: (response: { success: boolean; message: string; data: ProjectProps[] }) => response.data,
     }),
     fetchProject: build.query({
       query: (id: string) => ({
@@ -22,11 +18,7 @@ export const projectApi = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["Project"],
-      transformResponse: (response: {
-        success: boolean;
-        message: string;
-        data: ProjectProps;
-      }) => response.data,
+      transformResponse: (response: { success: boolean; message: string; data: ProjectProps }) => response.data,
     }),
     postProject: build.mutation({
       query: (body: Project) => ({

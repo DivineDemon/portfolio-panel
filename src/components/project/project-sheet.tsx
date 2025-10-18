@@ -1,12 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "../ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../ui/sheet";
 import ProjectForm from "./project-form";
 
 interface ProjectSheetProps {
@@ -22,10 +16,7 @@ const ProjectSheet = ({ open, project, setOpen }: ProjectSheetProps) => {
         <SheetHeader>
           <SheetTitle>{project ? "Edit" : "Add"} Project</SheetTitle>
           <SheetDescription>
-            {project
-              ? "Make changes to your project here"
-              : "Add a new project here"}
-            . Click save when you're done.
+            {project ? "Make changes to your project here" : "Add a new project here"}. Click save when you're done.
           </SheetDescription>
         </SheetHeader>
         <ProjectForm project={project} />

@@ -1,6 +1,5 @@
-import { useState } from "react";
-
 import { Loader2, Plus } from "lucide-react";
+import { useState } from "react";
 
 import TestimonialCard from "@/components/testimonial/testimonial-card";
 import TestimonialSheet from "@/components/testimonial/testimonial-sheet";
@@ -19,15 +18,9 @@ const Testimonials = () => {
       <TestimonialSheet open={open} setOpen={setOpen} />
       <div className="flex w-full flex-col items-start justify-start gap-5 px-5 pb-5 xl:px-0">
         <div className="flex w-full flex-col items-center justify-center gap-2.5 md:flex-row md:gap-0">
-          <span className="w-full text-left text-xl font-bold md:w-auto md:flex-1">
-            Testimonials List
-          </span>
+          <span className="w-full text-left font-bold text-xl md:w-auto md:flex-1">Testimonials List</span>
           <div className="flex w-full items-center justify-center gap-2.5 md:w-auto">
-            <Button
-              onClick={() => setOpen(true)}
-              type="button"
-              variant="outline"
-            >
+            <Button onClick={() => setOpen(true)} type="button" variant="outline">
               <Plus /> <span className="hidden md:flex">Add Testimonial</span>
             </Button>
             <Input
@@ -40,12 +33,9 @@ const Testimonials = () => {
           </div>
         </div>
         <div
-          className={cn(
-            "grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3",
-            {
-              "h-[calc(100vh-175px)]": isLoading,
-            }
-          )}
+          className={cn("grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3", {
+            "h-[calc(100vh-175px)]": isLoading,
+          })}
         >
           {isLoading ? (
             <div className="col-span-1 flex h-full w-full items-center justify-center md:col-span-2 xl:col-span-3">
@@ -53,25 +43,13 @@ const Testimonials = () => {
             </div>
           ) : query ? (
             data
-              ?.filter((testimonial) =>
-                testimonial.client_name
-                  .toLowerCase()
-                  .includes(query.toLowerCase())
-              )
+              ?.filter((testimonial) => testimonial.client_name.toLowerCase().includes(query.toLowerCase()))
               .map((testimonial) => (
-                <TestimonialCard
-                  key={testimonial.id}
-                  className="col-span-1"
-                  testimonial={testimonial}
-                />
+                <TestimonialCard key={testimonial.id} className="col-span-1" testimonial={testimonial} />
               ))
           ) : (
             data?.map((testimonial) => (
-              <TestimonialCard
-                key={testimonial.id}
-                className="col-span-1"
-                testimonial={testimonial}
-              />
+              <TestimonialCard key={testimonial.id} className="col-span-1" testimonial={testimonial} />
             ))
           )}
         </div>
