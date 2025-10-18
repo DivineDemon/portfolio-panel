@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_BASE_API_URL,
+  baseUrl: `${import.meta.env.VITE_BASE_API_URL}/api`,
 });
 
 const baseQueryWith401Handling: typeof baseQuery = async (args, api, extraOptions) => {
@@ -17,6 +17,5 @@ const baseQueryWith401Handling: typeof baseQuery = async (args, api, extraOption
 export const api = createApi({
   baseQuery: baseQueryWith401Handling,
   keepUnusedDataFor: 5,
-  tagTypes: ["Projects", "Project", "Testimonials", "Testimonial"],
   endpoints: () => ({}),
 });
