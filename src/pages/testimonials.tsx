@@ -6,12 +6,12 @@ import TestimonialSheet from "@/components/testimonial/testimonial-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useFetchTestimonialsQuery } from "@/store/services/testimonial";
+import { useGetApiTestimonialsQuery } from "@/store/services/apis";
 
 const Testimonials = () => {
   const [query, setQuery] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
-  const { data, isLoading } = useFetchTestimonialsQuery({});
+  const { data, isLoading } = useGetApiTestimonialsQuery();
 
   return (
     <>
@@ -42,13 +42,13 @@ const Testimonials = () => {
               <Loader2 className="size-10 animate-spin" />
             </div>
           ) : query ? (
-            data
+            data?.data
               ?.filter((testimonial) => testimonial.client_name.toLowerCase().includes(query.toLowerCase()))
               .map((testimonial) => (
                 <TestimonialCard key={testimonial.id} className="col-span-1" testimonial={testimonial} />
               ))
           ) : (
-            data?.map((testimonial) => (
+            data?.data?.map((testimonial) => (
               <TestimonialCard key={testimonial.id} className="col-span-1" testimonial={testimonial} />
             ))
           )}

@@ -5,12 +5,11 @@ import ProjectCard from "@/components/project/project-card";
 import TestimonialCard from "@/components/testimonial/testimonial-card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useFetchProjectsQuery } from "@/store/services/project";
-import { useFetchTestimonialsQuery } from "@/store/services/testimonial";
+import { useGetApiProjectsQuery, useGetApiTestimonialsQuery } from "@/store/services/apis";
 
 const Dashboard = () => {
-  const { data: projects, isLoading: pLoading } = useFetchProjectsQuery({});
-  const { data: testimonials, isLoading: tLoading } = useFetchTestimonialsQuery({});
+  const { data: projects, isLoading: pLoading } = useGetApiProjectsQuery();
+  const { data: testimonials, isLoading: tLoading } = useGetApiTestimonialsQuery();
 
   return (
     <div className="flex w-full flex-col items-start justify-start gap-5 px-5 pb-5 xl:px-0">
@@ -34,7 +33,7 @@ const Dashboard = () => {
             <Loader2 className="size-10 animate-spin" />
           </div>
         ) : (
-          projects
+          projects?.data
             ?.slice(0, 3)
             .map((project) => <ProjectCard key={project.id} className="col-span-1" project={project} />)
         )}
@@ -59,7 +58,7 @@ const Dashboard = () => {
             <Loader2 className="size-10 animate-spin" />
           </div>
         ) : (
-          testimonials
+          testimonials?.data
             ?.slice(0, 3)
             .map((testimonial) => (
               <TestimonialCard key={testimonial.id} className="col-span-1" testimonial={testimonial} />

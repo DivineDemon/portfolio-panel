@@ -6,12 +6,12 @@ import ProjectSheet from "@/components/project/project-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useFetchProjectsQuery } from "@/store/services/project";
+import { useGetApiProjectsQuery } from "@/store/services/apis";
 
 const Projects = () => {
   const [query, setQuery] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
-  const { data, isLoading } = useFetchProjectsQuery({});
+  const { data, isLoading } = useGetApiProjectsQuery();
 
   return (
     <>
@@ -42,11 +42,11 @@ const Projects = () => {
               <Loader2 className="size-10 animate-spin" />
             </div>
           ) : query ? (
-            data
+            data?.data
               ?.filter((project) => project.project_name.toLowerCase().includes(query.toLowerCase()))
               .map((project) => <ProjectCard key={project.id} className="col-span-1" project={project} />)
           ) : (
-            data?.map((project) => <ProjectCard key={project.id} className="col-span-1" project={project} />)
+            data?.data?.map((project) => <ProjectCard key={project.id} className="col-span-1" project={project} />)
           )}
         </div>
       </div>

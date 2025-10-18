@@ -3,24 +3,30 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
-import { useDeleteTestimonialMutation } from "@/store/services/testimonial";
-
+import { useDeleteApiTestimonialsByIdMutation } from "@/store/services/apis";
 import { Button } from "../ui/button";
 import WarningModal from "../warning-modal";
 import TestimonialSheet from "./testimonial-sheet";
 
 interface TestimonialCardProps {
   className?: string;
-  testimonial: TestimonialProps;
+  testimonial: {
+    id: number;
+    image: string | null;
+    company: string;
+    content: string;
+    designation: string;
+    client_name: string;
+  };
 }
 
 const TestimonialCard = ({ className, testimonial }: TestimonialCardProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [warn, setWarn] = useState<boolean>(false);
-  const [deleteTestimonial, { isLoading }] = useDeleteTestimonialMutation();
+  const [deleteTestimonial, { isLoading }] = useDeleteApiTestimonialsByIdMutation();
 
   const handleDelete = async () => {
-    const response = await deleteTestimonial(`${testimonial.id}`);
+    const response = await deleteTestimonial({ id: `${testimonial.id}` });
 
     if (response.error) {
       toast.error("Failed to Delete Testimonial!");
@@ -41,7 +47,7 @@ const TestimonialCard = ({ className, testimonial }: TestimonialCardProps) => {
         )}
       >
         <div className="flex w-full items-center justify-center gap-3.5">
-          <img src={testimonial.image} alt="avatar" className="aspect-square size-10 rounded-full" />
+          <img src={testimonial.image ?? ""} alt="avatar" className="aspect-square size-10 rounded-full" />
           <div className="flex flex-1 flex-col items-center justify-center">
             <span className="w-full text-left font-semibold text-lg">{testimonial.client_name}</span>
             <span className="w-full text-left text-gray-500 text-sm">

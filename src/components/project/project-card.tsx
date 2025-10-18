@@ -3,24 +3,32 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
-import { useDeleteProjectMutation } from "@/store/services/project";
-
+import { useDeleteApiProjectsByIdMutation } from "@/store/services/apis";
 import { Button } from "../ui/button";
 import WarningModal from "../warning-modal";
 import ProjectSheet from "./project-sheet";
 
 interface ProjectCardProps {
   className?: string;
-  project: ProjectProps;
+  project: {
+    id: number;
+    image: string | null;
+    features: string;
+    link: string;
+    start_year: number;
+    project_name: string;
+    company_id: number;
+    company_name: string | null;
+  };
 }
 
 const ProjectCard = ({ className, project }: ProjectCardProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [warn, setWarn] = useState<boolean>(false);
-  const [deleteProject, { isLoading }] = useDeleteProjectMutation();
+  const [deleteProject, { isLoading }] = useDeleteApiProjectsByIdMutation();
 
   const handleDelete = async () => {
-    const response = await deleteProject(`${project.id}`);
+    const response = await deleteProject({ id: `${project.id}` });
 
     if (response.error) {
       toast.error("Failed to Delete Project!");
@@ -54,7 +62,7 @@ const ProjectCard = ({ className, project }: ProjectCardProps) => {
           ))}
         </ul>
         <div className="flex w-full items-center justify-center border-b pb-2.5">
-          <span className="w-full overflow-hidden truncate text-left text-sm">{project.company}</span>
+          <span className="w-full overflow-hidden truncate text-left text-sm">{project.company_name}</span>
           <span className="w-full overflow-hidden truncate text-left text-gray-500 text-sm">{project.link}</span>
         </div>
         <div className="flex w-full items-center justify-between">

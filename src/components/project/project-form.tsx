@@ -4,8 +4,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { type Project, projectSchema } from "@/lib/schema";
-import { usePostProjectMutation, useUpdateProjectMutation } from "@/store/services/project";
-
+import { usePostApiProjectsMutation, usePutApiProjectsByIdMutation } from "@/store/services/apis";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import ImageUploader from "../ui/image-uploader";
@@ -28,8 +27,8 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
       image: project?.image,
     },
   });
-  const [addProject, { isLoading: adding }] = usePostProjectMutation();
-  const [editProject, { isLoading: editing }] = useUpdateProjectMutation();
+  const [addProject, { isLoading: adding }] = usePostApiProjectsMutation();
+  const [editProject, { isLoading: editing }] = usePutApiProjectsByIdMutation();
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -41,13 +40,13 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
     },
   });
 
-  const onSubmit = async (values: Project) => {
+  const _onSubmit = async (values: Project) => {
     let response = null;
     if (project) {
       response = await editProject({
         id: `${project.id}`,
         body: {
-          company: values.company,
+          company_id: 1,
           features: values.features,
           link: values.link,
           project_name: values.project_name,
@@ -56,7 +55,16 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
         },
       });
     } else {
-      response = await addProject(values);
+      response = await addProject({
+        body: {
+          company_id: 1,
+          features: values.features,
+          link: values.link,
+          project_name: values.project_name,
+          start_year: values.start_year,
+          image: values.image ?? "",
+        },
+      });
     }
 
     if (response.error) {
@@ -68,7 +76,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="relative h-full w-full">
+      <form onSubmit={form.handleSubmit(_onSubmit)} className="relative h-full w-full">
         <div className="flex h-[calc(100vh-190px)] w-full flex-col items-start justify-start gap-2.5 overflow-y-auto">
           <FormField
             control={form.control}

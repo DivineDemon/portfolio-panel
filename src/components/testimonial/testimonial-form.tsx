@@ -4,8 +4,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Testimonial, testimonialSchema } from "@/lib/schema";
-import { usePostTestimonialMutation, useUpdateTestimonialMutation } from "@/store/services/testimonial";
-
+import { usePostApiTestimonialsMutation, usePutApiTestimonialsByIdMutation } from "@/store/services/apis";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import ImageUploader from "../ui/image-uploader";
@@ -28,8 +27,8 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
       image: testimonial?.image,
     },
   });
-  const [addTestimonial, { isLoading: adding }] = usePostTestimonialMutation();
-  const [editTestimonial, { isLoading: editing }] = useUpdateTestimonialMutation();
+  const [addTestimonial, { isLoading: adding }] = usePostApiTestimonialsMutation();
+  const [editTestimonial, { isLoading: editing }] = usePutApiTestimonialsByIdMutation();
 
   const onSubmit = async (values: Testimonial) => {
     let response = null;
@@ -45,7 +44,15 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
         },
       });
     } else {
-      response = await addTestimonial(values);
+      response = await addTestimonial({
+        body: {
+          client_name: values.client_name,
+          company: values.company,
+          content: values.content,
+          designation: values.designation,
+          image: values.image,
+        },
+      });
     }
 
     if (response.error) {
