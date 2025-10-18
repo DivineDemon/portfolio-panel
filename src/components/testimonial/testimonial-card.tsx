@@ -56,7 +56,7 @@ const TestimonialCard = ({ className, testimonial }: TestimonialCardProps) => {
           </div>
         </div>
         <p className="line-clamp-4 w-full text-pretty border-t pt-2.5 text-justify text-sm">{testimonial.content}</p>
-        <div className="flex w-full items-center justify-between">
+        <div className="mt-auto flex w-full items-center justify-between">
           <Button onClick={() => setWarn(true)} variant="destructive" size="icon">
             {isLoading ? <Loader2 className="animate-spin" /> : <Trash className="size-[1.2rem]" />}
           </Button>
