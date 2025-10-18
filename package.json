@@ -7,7 +7,6 @@
     "dev": "vite",
     "preview": "vite preview",
     "build": "tsc -b && vite build",
-    "build:vercel": "npm run build",
     "format": "prettier src/ --write",
     "lint": "biome check --write --unsafe .",
     "generate:api": "bun --env-file=.env rtk-query-codegen-openapi src/openapi-config.ts"
@@ -37,9 +36,6 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.14",
     "zod": "^4.1.12"
-  },
-  "engines": {
-    "node": ">=18.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.6",
