@@ -5,7 +5,14 @@ import TestimonialForm from "./testimonial-form";
 
 interface TestimonialSheetProps {
   open: boolean;
-  testimonial?: TestimonialProps;
+  testimonial?: {
+    id: number;
+    image: string | null;
+    company: string;
+    content: string;
+    designation: string;
+    client_name: string;
+  };
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 

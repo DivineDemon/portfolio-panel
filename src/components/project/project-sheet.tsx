@@ -5,7 +5,16 @@ import ProjectForm from "./project-form";
 
 interface ProjectSheetProps {
   open: boolean;
-  project?: ProjectProps;
+  project?: {
+    id: number;
+    image: string | null;
+    features: string;
+    link: string;
+    start_year: number;
+    project_name: string;
+    company_id: number;
+    company_name: string | null;
+  };
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 

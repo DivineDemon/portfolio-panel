@@ -13,7 +13,14 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 
 interface TestimonialFormProps {
-  testimonial?: TestimonialProps;
+  testimonial?: {
+    id: number;
+    image: string | null;
+    company: string;
+    content: string;
+    designation: string;
+    client_name: string;
+  };
 }
 
 const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
@@ -24,7 +31,7 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
       company: testimonial?.company,
       content: testimonial?.content,
       designation: testimonial?.designation,
-      image: testimonial?.image,
+      image: testimonial?.image ?? "",
     },
   });
   const [addTestimonial, { isLoading: adding }] = usePostApiTestimonialsMutation();

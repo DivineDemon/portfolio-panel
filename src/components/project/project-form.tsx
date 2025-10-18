@@ -12,19 +12,28 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
 interface ProjectFormProps {
-  project?: ProjectProps;
+  project?: {
+    id: number;
+    image: string | null;
+    features: string;
+    link: string;
+    start_year: number;
+    project_name: string;
+    company_id: number;
+    company_name: string | null;
+  };
 }
 
 const ProjectForm = ({ project }: ProjectFormProps) => {
   const form = useForm<Project>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      company: project?.company,
+      company: project?.company_name ?? "",
       features: project?.features.split(","),
-      link: project?.link,
-      project_name: project?.project_name,
-      start_year: project?.start_year,
-      image: project?.image,
+      link: project?.link ?? "",
+      project_name: project?.project_name ?? "",
+      start_year: project?.start_year ?? 0,
+      image: project?.image ?? "",
     },
   });
   const [addProject, { isLoading: adding }] = usePostApiProjectsMutation();
