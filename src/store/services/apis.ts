@@ -390,6 +390,7 @@ export type GetApiCaseStudiesApiResponse = /** status 200 List of case studies *
     testing: string;
     design: string;
     tech_stack_urls: string;
+    images?: string;
     ceo_statement: string;
     conclusion: string;
   }[];
@@ -414,6 +415,7 @@ export type PostApiCaseStudiesApiResponse = /** status 201 Case study created su
     testing: string;
     design: string;
     tech_stack_urls: string;
+    images?: string;
     ceo_statement: string;
     conclusion: string;
   };
@@ -434,6 +436,7 @@ export type PostApiCaseStudiesApiArg = {
     testing: string;
     design: string;
     tech_stack_urls: string;
+    images?: string;
     ceo_statement: string;
     conclusion: string;
   };
@@ -457,6 +460,7 @@ export type GetApiCaseStudiesByIdApiResponse = /** status 200 Case study details
     testing: string;
     design: string;
     tech_stack_urls: string;
+    images?: string;
     ceo_statement: string;
     conclusion: string;
   };
@@ -483,6 +487,7 @@ export type PutApiCaseStudiesByIdApiResponse = /** status 200 Case study updated
     testing: string;
     design: string;
     tech_stack_urls: string;
+    images?: string;
     ceo_statement: string;
     conclusion: string;
   };
@@ -504,6 +509,7 @@ export type PutApiCaseStudiesByIdApiArg = {
     testing?: string;
     design?: string;
     tech_stack_urls?: string;
+    images?: string;
     ceo_statement?: string;
     conclusion?: string;
   };
@@ -527,6 +533,7 @@ export type DeleteApiCaseStudiesByIdApiResponse = /** status 200 Case study dele
     testing: string;
     design: string;
     tech_stack_urls: string;
+    images?: string;
     ceo_statement: string;
     conclusion: string;
   };
@@ -553,6 +560,7 @@ export type GetApiCaseStudiesProjectByProjectIdApiResponse = /** status 200 Case
     testing: string;
     design: string;
     tech_stack_urls: string;
+    images?: string;
     ceo_statement: string;
     conclusion: string;
   };

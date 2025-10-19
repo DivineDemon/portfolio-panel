@@ -31,7 +31,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
     resolver: zodResolver(projectSchema),
     defaultValues: {
       company: project?.company_name ?? "",
-      features: project?.features.split(","),
+      features: project?.features ? JSON.parse(project.features) : [],
       link: project?.link ?? "",
       project_name: project?.project_name ?? "",
       start_year: project?.start_year ?? 0,
@@ -152,6 +152,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
             <ImageUploader
               image={form.getValues("image")}
               setValue={form.setValue as (name: string, value: string) => void}
+              multiple={false}
             />
           </div>
           <div className="flex w-full items-center justify-center">

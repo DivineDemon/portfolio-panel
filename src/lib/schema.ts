@@ -36,3 +36,24 @@ export const companySchema = z.object({
 });
 
 export type Company = z.infer<typeof companySchema>;
+
+export const caseStudySchema = z.object({
+  title: z.string().min(1, "Title is required."),
+  description: z.string().min(1, "Description is required."),
+  challenge: z.string().min(1, "Challenge is required."),
+  results: z.string().min(1, "Results are required."),
+  onboarding_improved: z.string().min(1, "Onboarding improvement is required."),
+  retention_increase: z.string().min(1, "Retention increase is required."),
+  time_spent_increase: z.string().min(1, "Time spent increase is required."),
+  research: z.string().min(1, "Research is required."),
+  architecture: z.string().min(1, "Architecture is required."),
+  wireframing: z.string().min(1, "Wireframing is required."),
+  testing: z.string().min(1, "Testing is required."),
+  design: z.string().min(1, "Design is required."),
+  tech_stack_urls: z.array(z.string()).optional(),
+  images: z.array(z.string()).min(6, "At least 6 images are required."),
+  ceo_statement: z.string().min(1, "CEO statement is required."),
+  conclusion: z.string().min(1, "Conclusion is required."),
+});
+
+export type CaseStudy = z.infer<typeof caseStudySchema>;

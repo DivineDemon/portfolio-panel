@@ -1,12 +1,11 @@
-import { Edit, Loader2, Trash } from "lucide-react";
+import { Loader2, Trash } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
-
 import { cn } from "@/lib/utils";
 import { useDeleteApiProjectsByIdMutation } from "@/store/services/apis";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import WarningModal from "../warning-modal";
-import ProjectSheet from "./project-sheet";
 
 interface ProjectCardProps {
   className?: string;
@@ -23,7 +22,6 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ className, project }: ProjectCardProps) => {
-  const [open, setOpen] = useState<boolean>(false);
   const [warn, setWarn] = useState<boolean>(false);
   const [deleteProject, { isLoading }] = useDeleteApiProjectsByIdMutation();
 
@@ -48,7 +46,6 @@ const ProjectCard = ({ className, project }: ProjectCardProps) => {
         cta={handleDelete}
         isLoading={isLoading}
       />
-      <ProjectSheet open={open} setOpen={setOpen} project={project} />
       <div
         className={cn(
           "flex w-full flex-col items-center justify-center gap-2.5 rounded-lg border p-2.5 backdrop-blur-sm transition-all duration-200 hover:bg-white/5 hover:shadow-md",
@@ -76,9 +73,9 @@ const ProjectCard = ({ className, project }: ProjectCardProps) => {
           <Button onClick={() => setWarn(true)} variant="destructive" size="icon">
             {isLoading ? <Loader2 className="animate-spin" /> : <Trash className="size-[1.2rem]" />}
           </Button>
-          <Button type="button" onClick={() => setOpen(true)} variant="default" size="icon">
-            <Edit className="size-[1.2rem]" />
-          </Button>
+          <Link to={`/projects/${project.id}`} className={cn(buttonVariants({ variant: "default" }))}>
+            View
+          </Link>
         </div>
       </div>
     </>
