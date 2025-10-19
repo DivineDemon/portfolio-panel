@@ -38,7 +38,14 @@ const TestimonialCard = ({ className, testimonial }: TestimonialCardProps) => {
 
   return (
     <>
-      <WarningModal open={warn} setOpen={setWarn} message="delete this Testimonial" cta={handleDelete} />
+      <WarningModal
+        open={warn}
+        setOpen={setWarn}
+        title="Delete Testimonial"
+        text="Are you sure you want to delete this testimonial?"
+        cta={handleDelete}
+        isLoading={isLoading}
+      />
       <TestimonialSheet open={open} setOpen={setOpen} testimonial={testimonial} />
       <div
         className={cn(
