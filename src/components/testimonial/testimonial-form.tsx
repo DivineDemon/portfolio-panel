@@ -72,7 +72,7 @@ const TestimonialForm = ({ testimonial }: TestimonialFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="relative h-full w-full">
-        <div className="flex h-[calc(100vh-175px)] w-full flex-col items-start justify-start gap-2.5">
+        <div className="flex h-[calc(100vh-175px)] w-full flex-col items-start justify-start gap-4">
           <FormField
             control={form.control}
             name="client_name"

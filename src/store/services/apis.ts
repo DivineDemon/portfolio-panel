@@ -37,6 +37,15 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ["Projects"],
       }),
+      getApiProjectsCompanyByCompanyId: build.query<
+        GetApiProjectsCompanyByCompanyIdApiResponse,
+        GetApiProjectsCompanyByCompanyIdApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/projects/company/${queryArg.companyId}`,
+        }),
+        providesTags: ["Projects"],
+      }),
       getApiCompanies: build.query<GetApiCompaniesApiResponse, GetApiCompaniesApiArg>({
         query: () => ({ url: `/api/companies` }),
         providesTags: ["Companies"],
@@ -237,6 +246,23 @@ export type DeleteApiProjectsByIdApiResponse = /** status 200 Project deleted su
 };
 export type DeleteApiProjectsByIdApiArg = {
   id: string;
+};
+export type GetApiProjectsCompanyByCompanyIdApiResponse = /** status 200 List of projects for the specified company */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    image: string | null;
+    features: string;
+    link: string;
+    start_year: number;
+    project_name: string;
+    company_id: number;
+    company_name: string | null;
+  }[];
+};
+export type GetApiProjectsCompanyByCompanyIdApiArg = {
+  companyId: string;
 };
 export type GetApiCompaniesApiResponse = /** status 200 List of companies */ {
   success: boolean;
@@ -626,6 +652,7 @@ export const {
   useGetApiProjectsByIdQuery,
   usePutApiProjectsByIdMutation,
   useDeleteApiProjectsByIdMutation,
+  useGetApiProjectsCompanyByCompanyIdQuery,
   useGetApiCompaniesQuery,
   usePostApiCompaniesMutation,
   useGetApiCompaniesByIdQuery,

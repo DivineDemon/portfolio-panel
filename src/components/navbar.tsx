@@ -17,7 +17,7 @@ const Navbar = () => {
             <Origami className="opacity-85 transition-all duration-200 hover:opacity-100" />
           </Link>
           <div className="flex items-center justify-center gap-10 text-sm md:text-base">
-            {["projects", "testimonials", "companies", "case-studies"].map((item, idx) => (
+            {["testimonials", "companies"].map((item, idx) => (
               <Link
                 to={`/${item}`}
                 key={idx}

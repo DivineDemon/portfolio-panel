@@ -16,7 +16,7 @@ const NavSheet = ({ open, setOpen }: NavSheetProps) => {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent className="gap-0 p-0">
         <div className="flex w-full flex-col items-start justify-start gap-5 px-5 pt-13 pb-5 text-[14px] leading-[14px]">
-          {["projects", "testimonials", "companies", "case-studies"].map((item, idx) => (
+          {["testimonials", "companies"].map((item, idx) => (
             <Link
               to={`/${item}`}
               key={idx}

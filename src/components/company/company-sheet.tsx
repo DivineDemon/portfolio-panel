@@ -1,39 +1,40 @@
 import type { Dispatch, SetStateAction } from "react";
 
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../ui/sheet";
-import ProjectForm from "./project-form";
+import CompanyForm from "./company-form";
 
-interface ProjectSheetProps {
+interface CompanySheetProps {
   open: boolean;
-  project?: {
+  company?: {
     id: number;
-    image: string | null;
-    features: string;
-    link: string;
-    start_year: number;
-    project_name: string;
-    company_id: number;
-    company_name: string | null;
+    hq: string;
+    name: string;
+    size: string;
+    founded: number;
+    revenue: string;
+    industry: string;
+    ceo_name: string;
+    ceo_title: string;
   };
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const ProjectSheet = ({ open, project, setOpen }: ProjectSheetProps) => {
+const CompanySheet = ({ open, company, setOpen }: CompanySheetProps) => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent className="flex flex-col items-start justify-start gap-0">
         <SheetHeader className="border-b">
-          <SheetTitle>{project ? "Edit" : "Add"} Project</SheetTitle>
+          <SheetTitle>{company ? "Edit" : "Add"} Company</SheetTitle>
           <SheetDescription>
-            {project ? "Make changes to your project here" : "Add a new project here"}. Click save when you're done.
+            {company ? "Make changes to your company here" : "Add a new company here"}. Click save when you're done.
           </SheetDescription>
         </SheetHeader>
         <div className="h-full w-full p-4">
-          <ProjectForm project={project} />
+          <CompanyForm company={company} />
         </div>
       </SheetContent>
     </Sheet>
   );
 };
 
-export default ProjectSheet;
+export default CompanySheet;

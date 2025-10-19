@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, Trash } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-
 import { type Project, projectSchema } from "@/lib/schema";
 import { usePostApiProjectsMutation, usePutApiProjectsByIdMutation } from "@/store/services/apis";
 import { Button } from "../ui/button";
@@ -25,6 +25,8 @@ interface ProjectFormProps {
 }
 
 const ProjectForm = ({ project }: ProjectFormProps) => {
+  const { id } = useParams();
+
   const form = useForm<Project>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
@@ -49,13 +51,14 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
     },
   });
 
-  const _onSubmit = async (values: Project) => {
+  const onSubmit = async (values: Project) => {
     let response = null;
+
     if (project) {
       response = await editProject({
         id: `${project.id}`,
         body: {
-          company_id: 1,
+          company_id: Number(id),
           features: values.features,
           link: values.link,
           project_name: values.project_name,
@@ -66,7 +69,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
     } else {
       response = await addProject({
         body: {
-          company_id: 1,
+          company_id: Number(id),
           features: values.features,
           link: values.link,
           project_name: values.project_name,
@@ -85,8 +88,8 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(_onSubmit)} className="relative h-full w-full">
-        <div className="flex h-[calc(100vh-190px)] w-full flex-col items-start justify-start gap-2.5 overflow-y-auto">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="relative h-full w-full">
+        <div className="flex h-[calc(100vh-190px)] w-full flex-col items-start justify-start gap-4 overflow-y-auto">
           <FormField
             control={form.control}
             name="project_name"

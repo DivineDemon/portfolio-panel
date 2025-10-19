@@ -40,7 +40,14 @@ const ProjectCard = ({ className, project }: ProjectCardProps) => {
 
   return (
     <>
-      <WarningModal open={warn} setOpen={setWarn} message="delete this Project" cta={handleDelete} />
+      <WarningModal
+        open={warn}
+        setOpen={setWarn}
+        title="Delete Project"
+        text="Are you sure you want to delete this project?"
+        cta={handleDelete}
+        isLoading={isLoading}
+      />
       <ProjectSheet open={open} setOpen={setOpen} project={project} />
       <div
         className={cn(
@@ -55,7 +62,7 @@ const ProjectCard = ({ className, project }: ProjectCardProps) => {
           </span>
         </div>
         <ul className="flex w-full list-inside list-disc flex-col items-center justify-center gap-1.5 border-b pb-2.5">
-          {project.features.split(",").map((item, idx) => (
+          {JSON.parse(project.features).map((item: string, idx: number) => (
             <li key={idx} className="w-full overflow-hidden truncate text-left text-gray-500 text-sm">
               {item}
             </li>
@@ -63,7 +70,7 @@ const ProjectCard = ({ className, project }: ProjectCardProps) => {
         </ul>
         <div className="flex w-full items-center justify-center border-b pb-2.5">
           <span className="w-full overflow-hidden truncate text-left text-sm">{project.company_name}</span>
-          <span className="w-full overflow-hidden truncate text-left text-gray-500 text-sm">{project.link}</span>
+          <span className="w-full overflow-hidden truncate text-right text-gray-500 text-sm">{project.link}</span>
         </div>
         <div className="flex w-full items-center justify-between">
           <Button onClick={() => setWarn(true)} variant="destructive" size="icon">
