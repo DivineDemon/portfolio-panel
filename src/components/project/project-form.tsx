@@ -58,12 +58,12 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
       response = await editProject({
         id: `${project.id}`,
         body: {
-          company_id: Number(id),
+          company_id: project.company_id,
           features: values.features,
           link: values.link,
           project_name: values.project_name,
           start_year: values.start_year,
-          image: values.image ?? "",
+          image: values.image ?? null,
         },
       });
     } else {
@@ -74,7 +74,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
           link: values.link,
           project_name: values.project_name,
           start_year: values.start_year,
-          image: values.image ?? "",
+          image: values.image ?? null,
         },
       });
     }

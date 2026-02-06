@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",
+    "typecheck": "tsc -b --noEmit",
     "build": "tsc -b && vite build",
-    "format": "prettier src/ --write",
+    "format": "biome format --write",
     "lint": "biome check --write --unsafe .",
     "generate:api": "bun --env-file=.env rtk-query-codegen-openapi src/openapi-config.ts"
   },

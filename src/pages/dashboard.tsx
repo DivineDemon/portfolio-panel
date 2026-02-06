@@ -16,7 +16,7 @@ const Dashboard = () => {
       <div className="flex w-full items-center justify-center">
         <span className="flex-1 text-left font-bold text-xl">Projects</span>
         <Link
-          to="/projects"
+          to="/companies"
           className={cn(
             buttonVariants({
               variant: "default",
