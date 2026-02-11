@@ -3,22 +3,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import type { GetApiProjectsApiResponse } from "@/store/services/apis";
 import { useDeleteApiProjectsByIdMutation } from "@/store/services/apis";
 import { Button, buttonVariants } from "../ui/button";
 import WarningModal from "../warning-modal";
 
+type Project = GetApiProjectsApiResponse["data"][number];
+
 interface ProjectCardProps {
   className?: string;
-  project: {
-    id: number;
-    image: string | null;
-    features: string;
-    link: string;
-    start_year: number;
-    project_name: string;
-    company_id: number;
-    company_name: string | null;
-  };
+  project: Project;
 }
 
 const ProjectCard = ({ className, project }: ProjectCardProps) => {
@@ -52,24 +46,37 @@ const ProjectCard = ({ className, project }: ProjectCardProps) => {
           className,
         )}
       >
-        <div className="flex w-full items-center justify-center border-b pb-2.5">
-          <span className="w-full text-left font-semibold text-lg">{project.project_name}</span>
-          <span className="w-full text-right text-gray-500 text-sm">
-            &#8226;&nbsp;{project.start_year}&nbsp;&#8226;
-          </span>
+        {project.coverImage ? (
+          <img
+            src={project.coverImage}
+            alt={project.title}
+            className="h-40 w-full rounded-t-lg border-b object-cover"
+          />
+        ) : (
+          <div className="flex h-40 w-full items-center justify-center rounded-t-lg border-b bg-muted text-muted-foreground text-sm">
+            No image
+          </div>
+        )}
+        <div className="flex w-full flex-col gap-2">
+          <span className="w-full text-left font-semibold text-lg">{project.title}</span>
+          {project.tagline && (
+            <span className="line-clamp-2 w-full text-left text-muted-foreground text-sm">{project.tagline}</span>
+          )}
+          {project.role && <span className="w-full text-left text-gray-500 text-sm">{project.role}</span>}
+          {(project.techStack?.length ?? 0) > 0 && (
+            <div className="flex w-full flex-wrap gap-1">
+              {project.techStack.slice(0, 3).map((tech, idx) => (
+                <span key={idx} className="rounded bg-muted px-1.5 py-0.5 text-xs">
+                  {tech}
+                </span>
+              ))}
+              {project.techStack.length > 3 && (
+                <span className="text-muted-foreground text-xs">+{project.techStack.length - 3}</span>
+              )}
+            </div>
+          )}
         </div>
-        <ul className="flex w-full list-inside list-disc flex-col items-center justify-center gap-1.5 border-b pb-2.5">
-          {JSON.parse(project.features).map((item: string, idx: number) => (
-            <li key={idx} className="w-full overflow-hidden truncate text-left text-gray-500 text-sm">
-              {item}
-            </li>
-          ))}
-        </ul>
-        <div className="flex w-full items-center justify-center border-b pb-2.5">
-          <span className="w-full overflow-hidden truncate text-left text-sm">{project.company_name}</span>
-          <span className="w-full overflow-hidden truncate text-right text-gray-500 text-sm">{project.link}</span>
-        </div>
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between pt-2">
           <Button onClick={() => setWarn(true)} variant="destructive" size="icon">
             {isLoading ? <Loader2 className="animate-spin" /> : <Trash className="size-[1.2rem]" />}
           </Button>

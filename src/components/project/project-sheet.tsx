@@ -1,20 +1,13 @@
 import type { Dispatch, SetStateAction } from "react";
-
+import type { GetApiProjectsByIdApiResponse } from "@/store/services/apis";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../ui/sheet";
 import ProjectForm from "./project-form";
 
+type Project = GetApiProjectsByIdApiResponse["data"];
+
 interface ProjectSheetProps {
   open: boolean;
-  project?: {
-    id: number;
-    image: string | null;
-    features: string;
-    link: string;
-    start_year: number;
-    project_name: string;
-    company_id: number;
-    company_name: string | null;
-  };
+  project?: Project | null;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -28,7 +21,7 @@ const ProjectSheet = ({ open, project, setOpen }: ProjectSheetProps) => {
             {project ? "Make changes to your project here" : "Add a new project here"}. Click save when you're done.
           </SheetDescription>
         </SheetHeader>
-        <div className="h-full w-full p-4">
+        <div className="h-full w-full overflow-y-auto p-4">
           <ProjectForm project={project} />
         </div>
       </SheetContent>
