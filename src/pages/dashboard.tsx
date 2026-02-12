@@ -1,69 +1,40 @@
-import { Loader2, Plus } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-
-import ProjectCard from "@/components/project/project-card";
-import ProjectSheet from "@/components/project/project-sheet";
-import TestimonialCard from "@/components/testimonial/testimonial-card";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 import { useGetApiProjectsQuery, useGetApiTestimonialsQuery } from "@/store/services/apis";
 
 const Dashboard = () => {
-  const [addProjectOpen, setAddProjectOpen] = useState(false);
   const { data: projects, isLoading: pLoading } = useGetApiProjectsQuery();
   const { data: testimonials, isLoading: tLoading } = useGetApiTestimonialsQuery();
+  const projectsCount = projects?.data?.length ?? 0;
+  const testimonialsCount = testimonials?.data?.length ?? 0;
 
   return (
-    <>
-      <ProjectSheet open={addProjectOpen} setOpen={setAddProjectOpen} />
-      <div className="flex w-full flex-col items-start justify-start gap-5 px-5 pb-5 xl:px-0">
-        <div className="flex w-full items-center justify-center">
-          <span className="flex-1 text-left font-bold text-xl">Projects</span>
-          <Button type="button" variant="outline" size="sm" onClick={() => setAddProjectOpen(true)}>
-            <Plus /> Add Project
-          </Button>
-        </div>
-        <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+    <div className="flex w-full flex-col items-start justify-start gap-6 px-5 pb-5 xl:px-0">
+      <h1 className="w-full text-left font-bold text-2xl">Overview</h1>
+      <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="rounded-xl border bg-background p-5">
+          <p className="text-muted-foreground text-sm">Projects</p>
           {pLoading ? (
-            <div className="col-span-1 flex w-full items-center justify-center md:col-span-2 xl:col-span-3">
-              <Loader2 className="size-10 animate-spin" />
+            <div className="mt-3 flex items-center gap-2">
+              <Loader2 className="size-5 animate-spin" />
+              <span className="text-muted-foreground text-sm">Loading count...</span>
             </div>
           ) : (
-            projects?.data
-              ?.slice(0, 3)
-              .map((project) => <ProjectCard key={project.id} className="col-span-1" project={project} />)
+            <p className="mt-3 font-bold text-3xl">{projectsCount}</p>
           )}
         </div>
-        <div className="flex w-full items-center justify-center border-t pt-5">
-          <span className="flex-1 text-left font-bold text-xl">Testimonials</span>
-          <Link
-            to="/testimonials"
-            className={cn(
-              buttonVariants({
-                variant: "default",
-                size: "sm",
-              }),
-            )}
-          >
-            View All
-          </Link>
-        </div>
-        <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="rounded-xl border bg-background p-5">
+          <p className="text-muted-foreground text-sm">Testimonials</p>
           {tLoading ? (
-            <div className="col-span-1 flex w-full items-center justify-center md:col-span-2 xl:col-span-3">
-              <Loader2 className="size-10 animate-spin" />
+            <div className="mt-3 flex items-center gap-2">
+              <Loader2 className="size-5 animate-spin" />
+              <span className="text-muted-foreground text-sm">Loading count...</span>
             </div>
           ) : (
-            testimonials?.data
-              ?.slice(0, 3)
-              .map((testimonial) => (
-                <TestimonialCard key={testimonial.id} className="col-span-1" testimonial={testimonial} />
-              ))
+            <p className="mt-3 font-bold text-3xl">{testimonialsCount}</p>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

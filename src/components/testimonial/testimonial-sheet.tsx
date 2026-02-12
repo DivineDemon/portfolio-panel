@@ -27,7 +27,7 @@ const TestimonialSheet = ({ open, testimonial, setOpen }: TestimonialSheetProps)
             you're done.
           </SheetDescription>
         </SheetHeader>
-        <div className="h-full w-full p-4">
+        <div className="h-full w-full overflow-y-auto p-4">
           <TestimonialForm testimonial={testimonial} />
         </div>
       </SheetContent>

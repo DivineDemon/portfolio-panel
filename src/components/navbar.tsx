@@ -5,6 +5,12 @@ import { ModeToggle } from "./mode-toggle";
 import NavSheet from "./nav-sheet";
 import { Button } from "./ui/button";
 
+const navLinks = [
+  { to: "/", label: "Home" },
+  { to: "/projects", label: "Projects" },
+  { to: "/testimonials", label: "Testimonials" },
+];
+
 const Navbar = () => {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -17,9 +23,15 @@ const Navbar = () => {
             <Origami className="opacity-85 transition-all duration-200 hover:opacity-100" />
           </Link>
           <div className="flex items-center justify-center gap-10 text-sm md:text-base">
-            <Link to="/testimonials" className="capitalize opacity-85 transition-all duration-200 hover:opacity-100">
-              Testimonials
-            </Link>
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="capitalize opacity-85 transition-all duration-200 hover:opacity-100"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
           <ModeToggle />
         </div>

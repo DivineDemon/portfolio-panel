@@ -97,10 +97,10 @@ export type GetApiProjectsApiResponse = /** status 200 List of projects */ {
     measurableImpact: string;
     metrics:
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         }
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         };
     techStack: string[];
     infrastructure: string[];
@@ -144,10 +144,10 @@ export type PostApiProjectsApiResponse = /** status 201 Project created successf
     measurableImpact: string;
     metrics:
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         }
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         };
     techStack: string[];
     infrastructure: string[];
@@ -187,10 +187,10 @@ export type PostApiProjectsApiArg = {
     measurableImpact: string;
     metrics:
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         }
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         };
     techStack: string[];
     infrastructure: string[];
@@ -232,10 +232,10 @@ export type GetApiProjectsByIdApiResponse = /** status 200 Project details */ {
     measurableImpact: string;
     metrics:
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         }
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         };
     techStack: string[];
     infrastructure: string[];
@@ -281,10 +281,10 @@ export type PutApiProjectsByIdApiResponse = /** status 200 Project updated succe
     measurableImpact: string;
     metrics:
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         }
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         };
     techStack: string[];
     infrastructure: string[];
@@ -325,10 +325,10 @@ export type PutApiProjectsByIdApiArg = {
     measurableImpact?: string;
     metrics?:
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         }
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         };
     techStack?: string[];
     infrastructure?: string[];
@@ -370,10 +370,10 @@ export type DeleteApiProjectsByIdApiResponse = /** status 200 Project deleted su
     measurableImpact: string;
     metrics:
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         }
       | {
-          [key: string]: any;
+          [key: string]: string | number | boolean | null;
         };
     techStack: string[];
     infrastructure: string[];
