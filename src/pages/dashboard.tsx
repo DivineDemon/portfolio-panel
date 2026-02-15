@@ -1,11 +1,14 @@
 import { Package, Users } from "lucide-react";
+import DashboardSkeleton from "@/components/skeleton/dashboard-skeleton";
 import { useGetApiProjectsQuery, useGetApiTestimonialsQuery } from "@/store/services/apis";
 
 const Dashboard = () => {
-  const { data: projects } = useGetApiProjectsQuery();
-  const { data: testimonials } = useGetApiTestimonialsQuery();
+  const { data: projects, isLoading } = useGetApiProjectsQuery();
+  const { data: testimonials, isLoading: tLoading } = useGetApiTestimonialsQuery();
 
-  return (
+  return isLoading || tLoading ? (
+    <DashboardSkeleton />
+  ) : (
     <div className="flex h-full w-full flex-col items-start justify-start gap-5">
       <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
         <div className="col-span-1 flex w-full items-center justify-start gap-2.5 rounded-lg border p-2.5 shadow">

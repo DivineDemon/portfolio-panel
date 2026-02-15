@@ -9,7 +9,9 @@ const Navbar = () => {
 
   return (
     <nav className="flex h-16 w-full items-center justify-between rounded-lg border p-3.5 shadow backdrop-blur-md">
-      <img src={Logo} alt="Logo" className="h-full w-auto" />
+      <Link to="/">
+        <img src={Logo} alt="Logo" className="size-9" />
+      </Link>
       <div className="flex items-center justify-center gap-5">
         {navItems.map((item) => (
           <Link
