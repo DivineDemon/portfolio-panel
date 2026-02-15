@@ -9,7 +9,7 @@ interface ProjectCardProps {
 const ProjectCard = ({ project }: ProjectCardProps) => {
   return (
     <Link
-      to={`/projects/${project.slug}`}
+      to={`/projects/${project.id}`}
       className={cn(
         "group col-span-1 flex h-full shrink-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm",
         "transition-all duration-200 hover:border-border/80 hover:shadow-md focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2",

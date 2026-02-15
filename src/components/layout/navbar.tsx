@@ -19,7 +19,7 @@ const Navbar = () => {
             to={item.link}
             className={cn(
               "text-muted-foreground text-sm transition-all duration-300 hover:text-foreground",
-              pathname === item.link ? "text-foreground" : "",
+              pathname.startsWith(item.link) ? "text-foreground" : "",
             )}
           >
             {item.label}

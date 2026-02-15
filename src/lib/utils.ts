@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export async function imageToUrl(image: File) {
+export async function imageToUrl(image: File): Promise<string> {
   const formData = new FormData();
   formData.append("image", image as File);
 
@@ -24,4 +24,37 @@ export async function imageToUrl(image: File) {
     toast.error((error as Error).message);
     return "";
   }
+}
+
+export async function resolveProjectFormImages(data: {
+  coverImage?: string | FileList;
+  galleryImages?: string[] | FileList | (string | FileList)[];
+}): Promise<{ coverImage: string | undefined; galleryImages: string[] }> {
+  let coverUrl: string | undefined;
+  const cover = data.coverImage;
+  if (typeof cover === "string" && cover) {
+    coverUrl = cover;
+  } else if (cover instanceof FileList && cover.length > 0) {
+    coverUrl = await imageToUrl(cover[0]!);
+  }
+
+  const galleryUrls: string[] = [];
+  const gallery = data.galleryImages;
+  if (Array.isArray(gallery)) {
+    for (const item of gallery) {
+      if (typeof item === "string" && item) {
+        galleryUrls.push(item);
+      } else if (item instanceof FileList && item.length > 0) {
+        const url = await imageToUrl(item[0]!);
+        if (url) galleryUrls.push(url);
+      }
+    }
+  } else if (gallery instanceof FileList && gallery.length > 0) {
+    for (let i = 0; i < gallery.length; i++) {
+      const url = await imageToUrl(gallery[i]!);
+      if (url) galleryUrls.push(url);
+    }
+  }
+
+  return { coverImage: coverUrl, galleryImages: galleryUrls };
 }
