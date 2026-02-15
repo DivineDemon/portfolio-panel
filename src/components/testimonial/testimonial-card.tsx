@@ -37,7 +37,7 @@ const TestimonialCard = ({ testimonial }: TestimonialCardProps) => {
       />
       <article
         className={cn(
-          "flex min-w-[320px] max-w-[360px] shrink-0 flex-col rounded-xl border border-border bg-card p-5 shadow-sm",
+          "flex w-full shrink-0 flex-col rounded-xl border border-border bg-card p-5 shadow-sm",
           "transition-shadow duration-200 hover:shadow-md",
         )}
       >
