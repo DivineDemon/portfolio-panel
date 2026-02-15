@@ -145,7 +145,7 @@ const TestimonialSheet = ({ id }: TestimonialSheetProps) => {
               </Avatar>
             </div>
           </Field>
-          <div className="sticky bottom-0 z-50 mt-auto grid w-full grid-cols-2 gap-4 bg-background pt-4">
+          <div className="mt-auto grid w-full grid-cols-2 gap-4 bg-background">
             <SheetClose className={cn(buttonVariants({ variant: "outline" }))}>Cancel</SheetClose>
             <Button type="submit" variant="default" className="w-full" disabled={isLoading || posting}>
               {isLoading || posting ? <Loader2 className="animate-spin" /> : "Submit"}
