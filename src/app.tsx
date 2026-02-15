@@ -12,9 +12,9 @@ const App = () => {
       <Route element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/projects/new" element={<ProjectCreate />} />
         <Route path="/projects/:id" element={<ProjectDetails />} />
-        <Route path="/testimonials" element={<Testimonials />} />
       </Route>
     </Routes>
   );
