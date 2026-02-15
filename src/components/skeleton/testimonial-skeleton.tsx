@@ -3,11 +3,7 @@ import { cn } from "@/lib/utils";
 
 const TestimonialSkeleton = () => {
   return (
-    <article
-      className={cn(
-        "flex min-w-[320px] max-w-[360px] shrink-0 flex-col rounded-xl border border-border bg-card p-5 shadow-sm",
-      )}
-    >
+    <article className={cn("flex w-full shrink-0 flex-col rounded-xl border border-border bg-card p-5 shadow-sm")}>
       <div className="mb-4 flex items-center gap-3 border-border/80 border-b pb-4">
         <Skeleton className="size-10 shrink-0 rounded-full" />
         <div className="min-w-0 flex-1 space-y-2">
