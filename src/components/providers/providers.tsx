@@ -1,19 +1,19 @@
-import { type ReactNode } from "react";
-
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { Toaster } from "sonner";
-
 import store from "@/store";
-
+import { Toaster } from "../ui/sonner";
 import { ThemeProvider } from "./theme-provider";
 
-const Providers = ({ children }: { children: ReactNode }) => {
+interface ProvidersProps {
+  children: React.ReactNode;
+}
+
+const Providers = ({ children }: ProvidersProps) => {
   return (
     <Provider store={store}>
       <BrowserRouter>
         <ThemeProvider>
-          <Toaster richColors={true} />
+          <Toaster richColors={true} duration={1500} position="top-right" />
           {children}
         </ThemeProvider>
       </BrowserRouter>

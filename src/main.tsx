@@ -4,8 +4,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 
 import "@/assets/css/index.css";
 import App from "./app";
-
-import Providers from "./components/providers";
+import Providers from "./components/providers/providers";
 
 createRoot(document.getElementById("root")!).render(
   <Providers>
