@@ -19,48 +19,30 @@ const stringToArray = z.union([z.string(), z.array(z.string())]).transform((v) =
           .filter(Boolean),
 );
 
-const allowedMetricValue = (v: unknown): v is string | number | boolean =>
-  typeof v === "string" || typeof v === "number" || typeof v === "boolean";
-
-const metricsJsonSchema = z
-  .string()
-  .superRefine((val, ctx) => {
-    const t = val.trim();
-    if (t === "") {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Metrics is required (use {} for empty object)" });
+/** Validates metrics JSON string (no transform). */
+const metricsStringSchema = z.string().superRefine((val, ctx) => {
+  const t = val.trim();
+  if (t === "") {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Metrics is required (use {} for empty object)" });
+    return;
+  }
+  try {
+    const p = JSON.parse(t);
+    if (Array.isArray(p)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Metrics must be a JSON object, not an array" });
       return;
     }
-    try {
-      const p = JSON.parse(t);
-      if (Array.isArray(p)) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Metrics must be a JSON object, not an array" });
-        return;
-      }
-      if (typeof p !== "object" || p === null) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Metrics must be a JSON object" });
-        return;
-      }
-    } catch (e) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: e instanceof Error ? `Invalid JSON: ${e.message}` : "Invalid JSON",
-      });
+    if (typeof p !== "object" || p === null) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Metrics must be a JSON object" });
+      return;
     }
-  })
-  .transform((s): Record<string, string | number | boolean> => {
-    const trimmed = s.trim();
-    if (!trimmed) return {};
-    try {
-      const parsed = JSON.parse(trimmed) as Record<string, unknown>;
-      const result: Record<string, string | number | boolean> = {};
-      for (const [k, v] of Object.entries(parsed)) {
-        if (v != null && allowedMetricValue(v)) result[k] = v;
-      }
-      return result;
-    } catch {
-      return {};
-    }
-  });
+  } catch (e) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: e instanceof Error ? `Invalid JSON: ${e.message}` : "Invalid JSON",
+    });
+  }
+});
 
 const imageValueSchema = z.union([z.url(), z.literal(""), z.instanceof(FileList)]);
 
@@ -73,39 +55,53 @@ const galleryImagesSchema = z
     return value.filter((v): v is string | FileList => v !== "");
   });
 
-export const projectFormSchema = z.object({
-  featured: z.boolean(),
-  published: z.boolean(),
-  slug: z.string().min(1),
-  role: z.string().min(1),
-  title: z.string().min(1),
-  status: z.string().min(1),
-  tagline: z.string().min(1),
-  problem: z.string().min(1),
-  context: z.string().min(1),
-  demoUrl: z.string().min(1),
-  industry: z.string().min(1),
-  strategy: z.string().min(1),
-  teamSize: z.coerce.number().min(1),
-  solution: z.string().min(1),
-  seoTitle: z.string().min(1),
-  execution: z.string().min(1),
-  challenges: z.string().min(1),
+// --- Per-step schemas (validate each step; no transform so merged data matches full schema input) ---
+
+export const basicsFormSchema = z.object({
+  slug: z.string().min(1, "Required"),
+  title: z.string().min(1, "Required"),
+  tagline: z.string().min(1, "Required"),
+  industry: z.string().min(1, "Required"),
+  projectType: z.string().min(1, "Required"),
+  status: z.string().min(1, "Required"),
+  role: z.string().min(1, "Required"),
+  engagementModel: z.string().min(1, "Required"),
+  teamSize: z.coerce.number().min(1, "Required"),
+  durationInMonths: z.coerce.number().min(1, "Required"),
+});
+
+export const storyFormSchema = z.object({
+  problem: z.string().min(1, "Required"),
+  context: z.string().min(1, "Required"),
+  strategy: z.string().min(1, "Required"),
+  architecture: z.string().min(1, "Required"),
+  execution: z.string().min(1, "Required"),
+  challenges: z.string().min(1, "Required"),
+  solution: z.string().min(1, "Required"),
+  measurableImpact: z.string().min(1, "Required"),
+  metrics: metricsStringSchema,
+});
+
+export const techMediaFormSchema = z.object({
   keywords: stringToArray,
-  projectType: z.string().min(1),
   techStack: stringToArray,
-  architecture: z.string().min(1),
-  repositoryUrl: z.string().min(1),
-  seoDescription: z.string().min(1),
-  integrations: stringToArray,
-  engagementModel: z.string().min(1),
   infrastructure: stringToArray,
-  durationInMonths: z.coerce.number().min(1),
-  measurableImpact: z.string().min(1),
-  metrics: metricsJsonSchema,
+  integrations: stringToArray,
   coverImage: imageValueSchema.optional(),
   galleryImages: galleryImagesSchema.optional().default([]),
 });
 
-export type ProjectFormValues = z.input<typeof projectFormSchema>;
-export type ProjectFormOutputValues = z.infer<typeof projectFormSchema>;
+export const seoLinksFormSchema = z.object({
+  seoTitle: z.string().min(1, "Required"),
+  seoDescription: z.string().min(1, "Required"),
+  repositoryUrl: z.string().min(1, "Required"),
+  demoUrl: z.string().min(1, "Required"),
+  featured: z.boolean(),
+  published: z.boolean(),
+});
+
+export type BasicsFormValues = z.infer<typeof basicsFormSchema>;
+export type StoryFormValues = z.infer<typeof storyFormSchema>;
+/** Input type so form state uses string for keywords/etc. */
+export type TechMediaFormValues = z.input<typeof techMediaFormSchema>;
+export type SeoLinksFormValues = z.infer<typeof seoLinksFormSchema>;

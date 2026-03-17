@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
@@ -55,7 +56,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
               setWarn(true);
             }}
           >
-            ✕
+            <X />
           </Button>
           <Link
             to={`/projects/${project.id}`}

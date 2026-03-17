@@ -1,100 +1,116 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { type Resolver, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { ProjectFormStepper } from "@/components/project/project-form-stepper";
-import { type ProjectFormOutputValues, type ProjectFormValues, projectFormSchema } from "@/lib/form-schemas";
-import { resolveProjectFormImages } from "@/lib/utils";
-import {
-  type PutApiProjectsByIdApiArg,
-  useGetApiProjectsByIdQuery,
-  usePutApiProjectsByIdMutation,
-} from "@/store/services/apis";
+import { PROJECT_FORM_STEP_LABELS } from "@/components/project/project-form-config";
+import { ProjectFormStepBasics } from "@/components/project/project-form-step-basics";
+import { ProjectFormStepSeoLinks } from "@/components/project/project-form-step-seo-links";
+import { ProjectFormStepStory } from "@/components/project/project-form-step-story";
+import { ProjectFormStepTechMedia } from "@/components/project/project-form-step-tech-media";
+import type { FullStepData, StepData } from "@/lib/project-form-steps";
+import { mergeStepDataToApiBody, projectResponseToStepData } from "@/lib/project-form-steps";
+import { useGetApiProjectsByIdQuery, usePutApiProjectsByIdMutation } from "@/store/services/apis";
 
-function projectToDefaultValues(project: NonNullable<ReturnType<typeof useGetApiProjectsByIdQuery>["data"]>) {
-  const rawMetrics = project.data.metrics ?? {};
-  const metricsObj = Object.fromEntries(
-    Object.entries(rawMetrics).filter((entry): entry is [string, string | number | boolean] => entry[1] != null),
-  ) as Record<string, string | number | boolean>;
-
-  const toStr = (arr: string[] | undefined) => (Array.isArray(arr) ? arr.join(", ") : "");
-
-  return {
-    metrics: JSON.stringify(metricsObj),
-    slug: project.data.slug ?? "",
-    role: project.data.role ?? "",
-    title: project.data.title ?? "",
-    status: project.data.status ?? "",
-    tagline: project.data.tagline ?? "",
-    problem: project.data.problem ?? "",
-    context: project.data.context ?? "",
-    demoUrl: project.data.demoUrl ?? "",
-    teamSize: project.data.teamSize ?? 1,
-    strategy: project.data.strategy ?? "",
-    industry: project.data.industry ?? "",
-    solution: project.data.solution ?? "",
-    seoTitle: project.data.seoTitle ?? "",
-    keywords: toStr(project.data.keywords),
-    execution: project.data.execution ?? "",
-    techStack: toStr(project.data.techStack),
-    featured: project.data.featured ?? false,
-    coverImage: project.data.coverImage ?? "",
-    challenges: project.data.challenges ?? "",
-    published: project.data.published ?? false,
-    projectType: project.data.projectType ?? "",
-    integrations: toStr(project.data.integrations),
-    architecture: project.data.architecture ?? "",
-    repositoryUrl: project.data.repositoryUrl ?? "",
-    galleryImages: project.data.galleryImages ?? [],
-    infrastructure: toStr(project.data.infrastructure),
-    seoDescription: project.data.seoDescription ?? "",
-    engagementModel: project.data.engagementModel ?? "",
-    durationInMonths: project.data.durationInMonths ?? 1,
-    measurableImpact: project.data.measurableImpact ?? "",
-  } satisfies ProjectFormValues;
-}
-
-function formValuesToApiBody(
-  data: ProjectFormOutputValues,
-  resolved: { coverImage: string | undefined; galleryImages: string[] },
-): PutApiProjectsByIdApiArg["body"] {
-  return {
-    ...data,
-    metrics: data.metrics,
-    coverImage: resolved.coverImage,
-    galleryImages: resolved.galleryImages,
-  };
-}
+const TOTAL_STEPS = 4;
 
 function ProjectDetailsForm({
   project,
 }: {
   project: NonNullable<ReturnType<typeof useGetApiProjectsByIdQuery>["data"]>;
 }) {
-  const form = useForm<ProjectFormValues>({
-    resolver: zodResolver(projectFormSchema) as unknown as Resolver<ProjectFormValues>,
-    defaultValues: projectToDefaultValues(project),
-  });
+  const [stepData, setStepData] = useState<StepData>(() => projectResponseToStepData(project));
+  const [currentStep, setStep] = useState(0);
+  const [putProject, { isLoading: isSubmitting }] = usePutApiProjectsByIdMutation();
 
-  const [updateProject, { isLoading }] = usePutApiProjectsByIdMutation();
+  useEffect(() => {
+    setStepData(projectResponseToStepData(project));
+  }, [project]);
 
-  const onSubmit = async (data: ProjectFormOutputValues) => {
-    const resolved = await resolveProjectFormImages(data);
-    const response = await updateProject({
-      id: project.data.id,
-      body: formValuesToApiBody(data, resolved),
-    });
-
+  const handleFinalSubmit = async (fullData: FullStepData) => {
+    const body = await mergeStepDataToApiBody(fullData);
+    const response = await putProject({ id: String(project.data.id), body });
     if (response.error) {
       // @ts-expect-error - response.error.data.message is not typed
-      toast.error(response.error.data.message ?? "Something went wrong");
+      toast.error(response.error.data?.message ?? "Something went wrong");
     } else {
       toast.success("Project updated successfully!");
     }
   };
 
+  const isFirstStep = currentStep === 0;
+  const isLastStep = currentStep === TOTAL_STEPS - 1;
+
   return (
-    <ProjectFormStepper form={form} onSubmit={onSubmit} submitLabel="Update Project" isSubmitting={isLoading} isEdit />
+    <div className="flex h-full w-full flex-col gap-5 overflow-hidden">
+      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+        <span>
+          Step {currentStep + 1} of {TOTAL_STEPS}
+        </span>
+        <span aria-hidden>·</span>
+        <span className="font-medium text-foreground">{PROJECT_FORM_STEP_LABELS[currentStep]}</span>
+      </div>
+      {currentStep === 0 && (
+        <ProjectFormStepBasics
+          initialValues={stepData.basics}
+          onStepSubmit={(data) => {
+            setStepData((prev) => ({ ...prev, basics: data }));
+            setStep(1);
+          }}
+          onPrev={isFirstStep ? undefined : () => setStep(0)}
+          isFirstStep={isFirstStep}
+          isLastStep={isLastStep}
+          submitLabel="Update Project"
+          isSubmitting={isSubmitting}
+        />
+      )}
+      {currentStep === 1 && (
+        <ProjectFormStepStory
+          initialValues={stepData.story}
+          onStepSubmit={(data) => {
+            setStepData((prev) => ({ ...prev, story: data }));
+            setStep(2);
+          }}
+          onPrev={() => setStep(0)}
+          isFirstStep={false}
+          isLastStep={isLastStep}
+          submitLabel="Update Project"
+          isSubmitting={isSubmitting}
+        />
+      )}
+      {currentStep === 2 && (
+        <ProjectFormStepTechMedia
+          initialValues={stepData.tech}
+          onStepSubmit={(data) => {
+            setStepData((prev) => ({ ...prev, tech: data }));
+            setStep(3);
+          }}
+          onPrev={() => setStep(1)}
+          isFirstStep={false}
+          isLastStep={isLastStep}
+          submitLabel="Update Project"
+          isSubmitting={isSubmitting}
+          isEdit
+        />
+      )}
+      {currentStep === 3 && (
+        <ProjectFormStepSeoLinks
+          initialValues={stepData.seo}
+          onStepSubmit={(data) => {
+            const full: FullStepData = {
+              basics: stepData.basics!,
+              story: stepData.story!,
+              tech: stepData.tech!,
+              seo: data,
+            };
+            void handleFinalSubmit(full);
+          }}
+          onPrev={() => setStep(2)}
+          isFirstStep={false}
+          isLastStep={true}
+          submitLabel="Update Project"
+          isSubmitting={isSubmitting}
+        />
+      )}
+    </div>
   );
 }
 
@@ -102,14 +118,15 @@ const ProjectDetails = () => {
   const { id } = useParams();
   const { data: project } = useGetApiProjectsByIdQuery(
     { id: id ?? "" },
-    {
-      skip: !id,
-      refetchOnMountOrArgChange: true,
-    },
+    { skip: !id, refetchOnMountOrArgChange: true },
   );
 
   if (!project) {
-    return null;
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <p className="text-muted-foreground text-sm">Loading project details…</p>
+      </div>
+    );
   }
 
   return <ProjectDetailsForm project={project} />;
