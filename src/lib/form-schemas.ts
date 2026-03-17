@@ -62,6 +62,17 @@ const metricsJsonSchema = z
     }
   });
 
+const imageValueSchema = z.union([z.url(), z.literal(""), z.instanceof(FileList)]);
+
+const galleryImagesSchema = z
+  .union([z.instanceof(FileList), z.array(imageValueSchema)])
+  .transform((value): (string | FileList)[] => {
+    if (value instanceof FileList) {
+      return [value];
+    }
+    return value.filter((v): v is string | FileList => v !== "");
+  });
+
 export const projectFormSchema = z.object({
   featured: z.boolean(),
   published: z.boolean(),
@@ -92,8 +103,8 @@ export const projectFormSchema = z.object({
   durationInMonths: z.coerce.number().min(1),
   measurableImpact: z.string().min(1),
   metrics: metricsJsonSchema,
-  coverImage: z.union([z.url(), z.literal(""), z.instanceof(FileList)]).optional(),
-  galleryImages: z.array(z.union([z.url(), z.literal(""), z.instanceof(FileList)])),
+  coverImage: imageValueSchema.optional(),
+  galleryImages: galleryImagesSchema.optional().default([]),
 });
 
 export type ProjectFormValues = z.input<typeof projectFormSchema>;

@@ -49,10 +49,10 @@ const ProjectCreate = () => {
   const [postProject, { isLoading }] = usePostApiProjectsMutation();
 
   const onSubmit = async (data: ProjectFormOutputValues) => {
-    const { metrics: _m, ...rest } = data;
     const resolved = await resolveProjectFormImages(data);
     const body = {
-      ...rest,
+      ...data,
+      metrics: data.metrics,
       coverImage: resolved.coverImage ?? "",
       galleryImages: resolved.galleryImages,
     } as Parameters<typeof postProject>[0]["body"];

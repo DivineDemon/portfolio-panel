@@ -58,9 +58,9 @@ function formValuesToApiBody(
   data: ProjectFormOutputValues,
   resolved: { coverImage: string | undefined; galleryImages: string[] },
 ): PutApiProjectsByIdApiArg["body"] {
-  const { metrics: _metrics, coverImage: _cover, galleryImages: _gallery, ...rest } = data;
   return {
-    ...rest,
+    ...data,
+    metrics: data.metrics,
     coverImage: resolved.coverImage,
     galleryImages: resolved.galleryImages,
   };
