@@ -45,8 +45,10 @@ export async function resolveProjectFormImages(data: {
       if (typeof item === "string" && item) {
         galleryUrls.push(item);
       } else if (item instanceof FileList && item.length > 0) {
-        const url = await imageToUrl(item[0]!);
-        if (url) galleryUrls.push(url);
+        for (let i = 0; i < item.length; i++) {
+          const url = await imageToUrl(item[i]!);
+          if (url) galleryUrls.push(url);
+        }
       }
     }
   } else if (gallery instanceof FileList && gallery.length > 0) {
