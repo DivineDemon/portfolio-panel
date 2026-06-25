@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-import { createSessionToken, getAdminPassword, serializeSessionCookie, timingSafePasswordMatch } from "../_lib/auth";
+import { createSessionToken, getAdminPassword, serializeSessionCookie, timingSafePasswordMatch } from "../_lib/auth.js";
 
 interface LoginBody {
   password?: string;
