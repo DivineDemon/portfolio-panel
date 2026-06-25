@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 
+import { AppLogoIcon } from "@/components/brand/app-logo";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -75,6 +76,9 @@ export default function LoginPage() {
     <div className="flex min-h-svh items-center justify-center p-6">
       <Card className="w-full max-w-md">
         <CardHeader>
+          <div className="mb-2 flex justify-center">
+            <AppLogoIcon className="size-10" />
+          </div>
           <CardTitle>Sign in</CardTitle>
           <CardDescription>Enter your admin password to access the dashboard.</CardDescription>
         </CardHeader>

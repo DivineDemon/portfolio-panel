@@ -1,6 +1,7 @@
-import { ChevronsUpDown, Layers, LogOut } from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+import { AppLogo } from "@/components/brand/app-logo";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -43,13 +44,7 @@ export function DashboardSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link to="/dashboard">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Layers className="size-4" />
-                </span>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Portfolio Panel</span>
-                  <span className="truncate text-muted-foreground text-xs">Content management</span>
-                </div>
+                <AppLogo showWordmark iconClassName="size-8" />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

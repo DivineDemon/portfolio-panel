@@ -1,7 +1,7 @@
-import { Layers } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import { AppLogoIcon } from "@/components/brand/app-logo";
 import { useAuth } from "@/components/providers/auth-provider";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { Button } from "@/components/ui/button";
@@ -43,10 +43,12 @@ export function LandingHeader() {
         )}
       >
         <div className="w-[187px]">
-          <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-background">
-              <Layers className="size-4" />
-            </span>
+          <Link
+            to="/"
+            className="flex items-center gap-2 transition-opacity hover:opacity-80"
+            aria-label="Portfolio Panel home"
+          >
+            <AppLogoIcon className="size-8" />
           </Link>
         </div>
 
