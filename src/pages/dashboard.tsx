@@ -1,6 +1,21 @@
+import { BarChart3, FolderKanban, MessageSquareQuote } from "lucide-react";
+import { Link } from "react-router-dom";
+
+import DashboardSkeleton from "@/components/skeleton/dashboard-skeleton";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useGetApiProjectsQuery, useGetApiTestimonialsQuery } from "@/store/services/apis";
 
 export default function DashboardPage() {
+  const { data: projects, isLoading: projectsLoading } = useGetApiProjectsQuery();
+  const { data: testimonials, isLoading: testimonialsLoading } = useGetApiTestimonialsQuery();
+
+  if (projectsLoading || testimonialsLoading) {
+    return <DashboardSkeleton />;
+  }
+
+  const projectCount = projects?.data.length ?? 0;
+  const testimonialCount = testimonials?.data.length ?? 0;
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -8,16 +23,54 @@ export default function DashboardPage() {
         <p className="text-muted-foreground text-sm">Overview of your portfolio content.</p>
       </div>
 
-      <Card className="max-w-xl">
+      <div className="grid gap-5 md:grid-cols-2">
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <FolderKanban className="size-6" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <CardDescription>Projects</CardDescription>
+              <CardTitle className="text-3xl tabular-nums">{projectCount}</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Link to="/dashboard/projects" className="text-primary text-sm hover:underline">
+              View all projects
+            </Link>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <MessageSquareQuote className="size-6" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <CardDescription>Testimonials</CardDescription>
+              <CardTitle className="text-3xl tabular-nums">{testimonialCount}</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Link to="/dashboard/testimonials" className="text-primary text-sm hover:underline">
+              View all testimonials
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
         <CardHeader>
-          <CardTitle>Welcome back</CardTitle>
-          <CardDescription>Project and testimonial management will be added in upcoming phases.</CardDescription>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="size-5" />
+            Analytics
+          </CardTitle>
+          <CardDescription>Traffic and engagement insights for your portfolio.</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground text-sm">
-            Use the sidebar to navigate between projects and testimonials. Your session is verified on each protected
-            route.
-          </p>
+          <div className="flex min-h-32 items-center justify-center rounded-lg border border-dashed bg-muted/30 px-6 py-10 text-center">
+            <p className="text-muted-foreground text-sm">Analytics coming soon.</p>
+          </div>
         </CardContent>
       </Card>
     </div>

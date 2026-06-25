@@ -12,6 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,8 +26,8 @@ import { useDashboardBreadcrumbs } from "@/hooks/use-dashboard-breadcrumbs";
 
 export function DashboardNavbar() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
   const breadcrumbs = useDashboardBreadcrumbs();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     await logout();
@@ -60,26 +61,31 @@ export function DashboardNavbar() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex shrink-0 items-center gap-1">
-        <AnimatedThemeToggler variant="ghost" size="icon" className="size-8" />
+      <AnimatedThemeToggler variant="ghost" size="icon" className="size-8 shrink-0" />
 
-        <DropdownMenu>
-          <DropdownMenuTrigger className="rounded-full outline-none ring-ring focus-visible:ring-2">
-            <Avatar size="sm">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="size-8 shrink-0 rounded-full">
+            <Avatar className="size-8">
               <AvatarFallback className="bg-primary/10 font-medium text-primary text-xs">A</AvatarFallback>
             </Avatar>
-            <span className="sr-only">Open user menu</span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuLabel>Admin</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive" onClick={() => void handleLogout()}>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+            <span className="sr-only">Account menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="min-w-48">
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col gap-0.5">
+              <span className="font-medium text-sm">Admin</span>
+              <span className="text-muted-foreground text-xs">Signed in</span>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive" onClick={() => void handleLogout()}>
+            <LogOut />
+            Log out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </header>
   );
 }
