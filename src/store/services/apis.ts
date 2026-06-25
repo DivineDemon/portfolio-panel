@@ -73,186 +73,78 @@ const injectedRtkApi = api
   });
 
 export { injectedRtkApi as appApis };
+
+type ProjectMetricValue = string | number | boolean | string[] | null;
+type ProjectMetrics = { [key: string]: ProjectMetricValue } | null;
+type EngagementType = "client-work" | "founder-built" | "open-source" | "internal-tool";
+
+type ProjectRecord = {
+  id: number;
+  slug: string;
+  title: string;
+  headlineResult: string;
+  industry: string | null;
+  role: string;
+  engagementModel: string | null;
+  teamSize: number | null;
+  durationInMonths: number | null;
+  problem: string;
+  situation: string | null;
+  approach: string;
+  architecture: string;
+  execution: string;
+  whatMadeThisHard: string | null;
+  whatWeBuilt: string;
+  results: string;
+  clientTestimonial: string | null;
+  businessOutcome: string | null;
+  beforeAfter: string | null;
+  engagementType: EngagementType | null;
+  cardOutcome: string | null;
+  displayOrder: number | null;
+  isLive: boolean;
+  metrics: ProjectMetrics;
+  techStack: string[];
+  infrastructure: string[];
+  integrations: string[];
+  coverImage: string;
+  galleryImages: string[];
+  galleryCaptions: string[];
+  demoUrl: string | null;
+  repositoryUrl: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  keywords: string[];
+  featured: boolean;
+  published: boolean;
+  createdAt: string | null;
+  updatedAt: string | null;
+};
+
+type CreateProjectBody = Omit<ProjectRecord, "id" | "createdAt" | "updatedAt"> & {
+  updatedAt?: string | null;
+};
+
+type UpdateProjectBody = Partial<CreateProjectBody>;
+
 export type GetApiProjectsApiResponse = /** status 200 List of projects */ {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    slug: string;
-    title: string;
-    tagline: string;
-    industry: string | null;
-    projectType: string | null;
-    status: string | null;
-    role: string;
-    engagementModel: string | null;
-    teamSize: number | null;
-    durationInMonths: number | null;
-    problem: string;
-    context: string | null;
-    strategy: string;
-    architecture: string;
-    execution: string;
-    challenges: string | null;
-    solution: string;
-    measurableImpact: string;
-    metrics:
-      | {
-          [key: string]: string | number | boolean | null;
-        }
-      | {
-          [key: string]: string | number | boolean | null;
-        };
-    techStack: string[];
-    infrastructure: string[];
-    integrations: string[];
-    coverImage: string;
-    galleryImages: string[];
-    demoUrl: string | null;
-    repositoryUrl: string | null;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    featured: boolean;
-    published: boolean;
-    createdAt: string | null;
-    updatedAt: string | null;
-  }[];
+  data: ProjectRecord[];
 };
 export type GetApiProjectsApiArg = void;
 export type PostApiProjectsApiResponse = /** status 201 Project created successfully */ {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    slug: string;
-    title: string;
-    tagline: string;
-    industry: string | null;
-    projectType: string | null;
-    status: string | null;
-    role: string;
-    engagementModel: string | null;
-    teamSize: number | null;
-    durationInMonths: number | null;
-    problem: string;
-    context: string | null;
-    strategy: string;
-    architecture: string;
-    execution: string;
-    challenges: string | null;
-    solution: string;
-    measurableImpact: string;
-    metrics:
-      | {
-          [key: string]: string | number | boolean | null;
-        }
-      | {
-          [key: string]: string | number | boolean | null;
-        };
-    techStack: string[];
-    infrastructure: string[];
-    integrations: string[];
-    coverImage: string;
-    galleryImages: string[];
-    demoUrl: string | null;
-    repositoryUrl: string | null;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    featured: boolean;
-    published: boolean;
-    createdAt: string | null;
-    updatedAt: string | null;
-  };
+  data: ProjectRecord;
 };
 export type PostApiProjectsApiArg = {
-  body: {
-    slug: string;
-    title: string;
-    tagline: string;
-    industry: string | null;
-    projectType: string | null;
-    status: string | null;
-    role: string;
-    engagementModel: string | null;
-    teamSize: number | null;
-    durationInMonths: number | null;
-    problem: string;
-    context: string | null;
-    strategy: string;
-    architecture: string;
-    execution: string;
-    challenges: string | null;
-    solution: string;
-    measurableImpact: string;
-    metrics:
-      | {
-          [key: string]: string | number | boolean | null;
-        }
-      | {
-          [key: string]: string | number | boolean | null;
-        };
-    techStack: string[];
-    infrastructure: string[];
-    integrations: string[];
-    coverImage: string;
-    galleryImages: string[];
-    demoUrl: string | null;
-    repositoryUrl: string | null;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    featured: boolean;
-    published: boolean;
-    updatedAt?: string | null;
-  };
+  body: CreateProjectBody;
 };
 export type GetApiProjectsByIdApiResponse = /** status 200 Project details */ {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    slug: string;
-    title: string;
-    tagline: string;
-    industry: string | null;
-    projectType: string | null;
-    status: string | null;
-    role: string;
-    engagementModel: string | null;
-    teamSize: number | null;
-    durationInMonths: number | null;
-    problem: string;
-    context: string | null;
-    strategy: string;
-    architecture: string;
-    execution: string;
-    challenges: string | null;
-    solution: string;
-    measurableImpact: string;
-    metrics:
-      | {
-          [key: string]: string | number | boolean | null;
-        }
-      | {
-          [key: string]: string | number | boolean | null;
-        };
-    techStack: string[];
-    infrastructure: string[];
-    integrations: string[];
-    coverImage: string;
-    galleryImages: string[];
-    demoUrl: string | null;
-    repositoryUrl: string | null;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    featured: boolean;
-    published: boolean;
-    createdAt: string | null;
-    updatedAt: string | null;
-  };
+  data: ProjectRecord;
 };
 export type GetApiProjectsByIdApiArg = {
   id: string;
@@ -260,137 +152,16 @@ export type GetApiProjectsByIdApiArg = {
 export type PutApiProjectsByIdApiResponse = /** status 200 Project updated successfully */ {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    slug: string;
-    title: string;
-    tagline: string;
-    industry: string | null;
-    projectType: string | null;
-    status: string | null;
-    role: string;
-    engagementModel: string | null;
-    teamSize: number | null;
-    durationInMonths: number | null;
-    problem: string;
-    context: string | null;
-    strategy: string;
-    architecture: string;
-    execution: string;
-    challenges: string | null;
-    solution: string;
-    measurableImpact: string;
-    metrics:
-      | {
-          [key: string]: string | number | boolean | null;
-        }
-      | {
-          [key: string]: string | number | boolean | null;
-        };
-    techStack: string[];
-    infrastructure: string[];
-    integrations: string[];
-    coverImage: string;
-    galleryImages: string[];
-    demoUrl: string | null;
-    repositoryUrl: string | null;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    featured: boolean;
-    published: boolean;
-    createdAt: string | null;
-    updatedAt: string | null;
-  };
+  data: ProjectRecord;
 };
 export type PutApiProjectsByIdApiArg = {
   id: string;
-  body: {
-    slug?: string;
-    title?: string;
-    tagline?: string;
-    industry?: string | null;
-    projectType?: string | null;
-    status?: string | null;
-    role?: string;
-    engagementModel?: string | null;
-    teamSize?: number | null;
-    durationInMonths?: number | null;
-    problem?: string;
-    context?: string | null;
-    strategy?: string;
-    architecture?: string;
-    execution?: string;
-    challenges?: string | null;
-    solution?: string;
-    measurableImpact?: string;
-    metrics?:
-      | {
-          [key: string]: string | number | boolean | null;
-        }
-      | {
-          [key: string]: string | number | boolean | null;
-        };
-    techStack?: string[];
-    infrastructure?: string[];
-    integrations?: string[];
-    coverImage?: string;
-    galleryImages?: string[];
-    demoUrl?: string | null;
-    repositoryUrl?: string | null;
-    seoTitle?: string | null;
-    seoDescription?: string | null;
-    keywords?: string[];
-    featured?: boolean;
-    published?: boolean;
-    updatedAt?: string | null;
-  };
+  body: UpdateProjectBody;
 };
 export type DeleteApiProjectsByIdApiResponse = /** status 200 Project deleted successfully */ {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    slug: string;
-    title: string;
-    tagline: string;
-    industry: string | null;
-    projectType: string | null;
-    status: string | null;
-    role: string;
-    engagementModel: string | null;
-    teamSize: number | null;
-    durationInMonths: number | null;
-    problem: string;
-    context: string | null;
-    strategy: string;
-    architecture: string;
-    execution: string;
-    challenges: string | null;
-    solution: string;
-    measurableImpact: string;
-    metrics:
-      | {
-          [key: string]: string | number | boolean | null;
-        }
-      | {
-          [key: string]: string | number | boolean | null;
-        };
-    techStack: string[];
-    infrastructure: string[];
-    integrations: string[];
-    coverImage: string;
-    galleryImages: string[];
-    demoUrl: string | null;
-    repositoryUrl: string | null;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    featured: boolean;
-    published: boolean;
-    createdAt: string | null;
-    updatedAt: string | null;
-  };
+  data: ProjectRecord;
 };
 export type DeleteApiProjectsByIdApiArg = {
   id: string;

@@ -1,4 +1,10 @@
-import type { BasicsFormValues, SeoLinksFormValues, StoryFormValues, TechMediaFormValues } from "@/lib/form-schemas";
+import type {
+  BasicsFormValues,
+  ProjectMetricValue,
+  SeoLinksFormValues,
+  StoryFormValues,
+  TechMediaFormValues,
+} from "@/lib/form-schemas";
 import type { GetApiProjectsByIdApiResponse, PostApiProjectsApiArg } from "@/store/services/apis";
 
 function toStr(arr: string[] | undefined): string {
@@ -15,36 +21,49 @@ export function slugifyTitle(title: string): string {
     .replace(/^-|-$/g, "");
 }
 
+function isMetricValue(value: unknown): value is ProjectMetricValue {
+  if (value === null) return true;
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") return true;
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function serializeMetrics(metrics: Record<string, unknown> | null | undefined): string {
+  const rawMetrics = metrics ?? {};
+  const metricsObj = Object.fromEntries(
+    Object.entries(rawMetrics).filter((entry): entry is [string, ProjectMetricValue] => isMetricValue(entry[1])),
+  );
+  return JSON.stringify(metricsObj);
+}
+
 export function projectResponseToStepData(project: GetApiProjectsByIdApiResponse): StepData {
   const d = project.data;
-  const rawMetrics = d.metrics ?? {};
-  const metricsObj = Object.fromEntries(
-    Object.entries(rawMetrics).filter((entry): entry is [string, string | number | boolean] => entry[1] != null),
-  );
 
   return {
     basics: {
       slug: d.slug ?? "",
       title: d.title ?? "",
-      tagline: d.tagline ?? "",
+      headlineResult: d.headlineResult ?? "",
       industry: d.industry ?? "",
-      projectType: d.projectType ?? "",
-      status: d.status ?? "",
       role: d.role ?? "",
-      engagementModel: d.engagementModel ?? "",
       teamSize: Number(d.teamSize) || 1,
       durationInMonths: Number(d.durationInMonths) || 1,
+      engagementType: (d.engagementType ?? "") as BasicsFormValues["engagementType"],
+      isLive: d.isLive ?? false,
+      engagementModel: d.engagementModel ?? "",
     },
     story: {
       problem: d.problem ?? "",
-      context: d.context ?? "",
-      strategy: d.strategy ?? "",
+      situation: d.situation ?? "",
+      beforeAfter: d.beforeAfter ?? "",
+      approach: d.approach ?? "",
+      whatMadeThisHard: d.whatMadeThisHard ?? "",
+      businessOutcome: d.businessOutcome ?? "",
+      results: d.results ?? "",
+      clientTestimonial: d.clientTestimonial ?? "",
       architecture: d.architecture ?? "",
       execution: d.execution ?? "",
-      challenges: d.challenges ?? "",
-      solution: d.solution ?? "",
-      measurableImpact: d.measurableImpact ?? "",
-      metrics: JSON.stringify(metricsObj),
+      whatWeBuilt: d.whatWeBuilt ?? "",
+      metrics: serializeMetrics(d.metrics),
     },
     tech: {
       keywords: toStr(d.keywords),
@@ -53,12 +72,15 @@ export function projectResponseToStepData(project: GetApiProjectsByIdApiResponse
       integrations: toStr(d.integrations),
       coverImage: d.coverImage ?? undefined,
       galleryImages: d.galleryImages ?? [],
+      galleryCaptions: (d.galleryCaptions ?? []).join("\n"),
     },
     seo: {
       seoTitle: d.seoTitle ?? "",
       seoDescription: d.seoDescription ?? "",
       repositoryUrl: d.repositoryUrl ?? "",
       demoUrl: d.demoUrl ?? "",
+      cardOutcome: d.cardOutcome ?? "",
+      displayOrder: d.displayOrder ?? "",
       featured: d.featured ?? false,
       published: d.published ?? false,
     },
@@ -90,15 +112,14 @@ function stringToArray(v: string | string[] | undefined): string[] {
   return [];
 }
 
-function parseMetrics(s: string | undefined): Record<string, string | number | boolean | null> {
+function parseMetrics(s: string | undefined): Record<string, ProjectMetricValue> {
   const t = (s ?? "").trim();
   if (!t) return {};
   try {
     const p = JSON.parse(t) as Record<string, unknown>;
-    const out: Record<string, string | number | boolean | null> = {};
+    const out: Record<string, ProjectMetricValue> = {};
     for (const [k, v] of Object.entries(p)) {
-      if (v === null || v === undefined) continue;
-      if (typeof v === "string" || typeof v === "number" || typeof v === "boolean") out[k] = v;
+      if (isMetricValue(v)) out[k] = v;
     }
     return out;
   } catch {
@@ -107,28 +128,36 @@ function parseMetrics(s: string | undefined): Record<string, string | number | b
 }
 
 export async function mergeStepDataToApiBody(data: FullStepData): Promise<PostApiProjectsApiArg["body"]> {
+  const displayOrder =
+    data.seo.displayOrder === "" || data.seo.displayOrder === undefined ? null : Number(data.seo.displayOrder);
+
   return {
     slug: data.basics.slug,
     title: data.basics.title,
-    tagline: data.basics.tagline,
+    headlineResult: data.basics.headlineResult,
     industry: data.basics.industry || null,
-    projectType: data.basics.projectType || null,
-    status: data.basics.status || null,
     role: data.basics.role,
     engagementModel: data.basics.engagementModel || null,
     teamSize: data.basics.teamSize ?? null,
     durationInMonths: data.basics.durationInMonths ?? null,
+    engagementType: data.basics.engagementType || null,
+    isLive: data.basics.isLive,
     problem: data.story.problem,
-    context: data.story.context || null,
-    strategy: data.story.strategy,
+    situation: data.story.situation || null,
+    beforeAfter: data.story.beforeAfter || null,
+    approach: data.story.approach,
+    whatMadeThisHard: data.story.whatMadeThisHard || null,
+    businessOutcome: data.story.businessOutcome || null,
+    results: data.story.results,
+    clientTestimonial: data.story.clientTestimonial || null,
     architecture: data.story.architecture,
     execution: data.story.execution,
-    challenges: data.story.challenges || null,
-    solution: data.story.solution,
-    measurableImpact: data.story.measurableImpact,
+    whatWeBuilt: data.story.whatWeBuilt,
     metrics: parseMetrics(
       typeof data.story.metrics === "string" ? data.story.metrics : JSON.stringify(data.story.metrics ?? {}),
     ),
+    cardOutcome: data.seo.cardOutcome || null,
+    displayOrder,
     keywords: stringToArray(data.tech.keywords),
     techStack: stringToArray(data.tech.techStack),
     infrastructure: stringToArray(data.tech.infrastructure),
@@ -137,6 +166,7 @@ export async function mergeStepDataToApiBody(data: FullStepData): Promise<PostAp
     galleryImages: Array.isArray(data.tech.galleryImages)
       ? data.tech.galleryImages.filter((v): v is string => typeof v === "string" && v.length > 0)
       : [],
+    galleryCaptions: Array.isArray(data.tech.galleryCaptions) ? data.tech.galleryCaptions : [],
     demoUrl: data.seo.demoUrl || null,
     repositoryUrl: data.seo.repositoryUrl || null,
     seoTitle: data.seo.seoTitle || null,

@@ -5,31 +5,37 @@ import type { Resolver } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { JsonObjectField } from "@/components/ui/json-object-field";
 import { MarkdownField } from "@/components/ui/markdown-field";
+import { MetricsKeyValueField } from "@/components/ui/metrics-key-value-field";
 import { type StoryFormValues, storyFormSchema } from "@/lib/form-schemas";
 
 const DEFAULTS: StoryFormValues = {
   problem: "",
-  context: "",
-  strategy: "",
+  situation: "",
+  beforeAfter: "",
+  approach: "",
+  whatMadeThisHard: "",
+  businessOutcome: "",
+  results: "",
+  clientTestimonial: "",
   architecture: "",
   execution: "",
-  challenges: "",
-  solution: "",
-  measurableImpact: "",
+  whatWeBuilt: "",
   metrics: "{}",
 };
 
 const STORY_MARKDOWN_FIELDS = [
+  { name: "clientTestimonial" as const, label: "Client Testimonial", optional: true },
   { name: "problem" as const, label: "Problem" },
-  { name: "context" as const, label: "Context" },
-  { name: "strategy" as const, label: "Strategy" },
+  { name: "situation" as const, label: "Situation" },
+  { name: "beforeAfter" as const, label: "Before / After", optional: true },
+  { name: "approach" as const, label: "Approach" },
+  { name: "whatMadeThisHard" as const, label: "What Made This Hard" },
+  { name: "businessOutcome" as const, label: "Business Outcome", optional: true },
+  { name: "results" as const, label: "Results" },
+  { name: "whatWeBuilt" as const, label: "What We Built" },
   { name: "architecture" as const, label: "Architecture" },
   { name: "execution" as const, label: "Execution" },
-  { name: "challenges" as const, label: "Challenges" },
-  { name: "solution" as const, label: "Solution" },
-  { name: "measurableImpact" as const, label: "Measurable Impact" },
 ];
 
 export type ProjectFormStepStoryProps = {
@@ -79,12 +85,10 @@ export function ProjectFormStepStory({
           <FieldError errors={errors[name] ? [errors[name]] : undefined} />
         </Field>
       ))}
-      <JsonObjectField<StoryFormValues>
+      <MetricsKeyValueField<StoryFormValues>
+        key={initialValues?.metrics ?? "new-metrics"}
         name="metrics"
         control={control}
-        label="Metrics (JSON object)"
-        placeholder='{"conversionRate": 0.15, "usersReached": 1000}'
-        rows={8}
         error={errors.metrics}
       />
       <div className="mt-auto flex w-full items-center justify-end gap-4 border-t pt-4">

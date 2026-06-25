@@ -97,13 +97,17 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 ) : (
                   <Badge variant="outline">Draft</Badge>
                 )}
+                {project.isLive && <Badge variant="secondary">Live</Badge>}
+                {project.engagementType && <Badge variant="outline">{project.engagementType.replace(/-/g, " ")}</Badge>}
               </div>
             </div>
             <div className="flex flex-1 flex-col gap-2 p-4">
               <h3 className="font-semibold text-foreground text-lg transition-colors group-hover:text-foreground/90">
                 {project.title}
               </h3>
-              <p className="line-clamp-2 text-muted-foreground text-sm leading-relaxed">{project.tagline}</p>
+              <p className="line-clamp-2 text-muted-foreground text-sm leading-relaxed">
+                {project.cardOutcome || project.headlineResult}
+              </p>
               {project.industry && (
                 <span className="mt-auto w-fit rounded border border-border/60 bg-muted/50 px-2 py-0.5 text-muted-foreground text-xs">
                   {project.industry}

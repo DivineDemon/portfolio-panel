@@ -14,6 +14,8 @@ const DEFAULTS: SeoLinksFormValues = {
   seoDescription: "",
   repositoryUrl: "",
   demoUrl: "",
+  cardOutcome: "",
+  displayOrder: "",
   featured: false,
   published: false,
 };
@@ -59,6 +61,36 @@ export function ProjectFormStepSeoLinks({
       className="grid max-h-[calc(100vh-164px)] w-full grid-cols-1 items-start justify-start gap-5 overflow-y-auto md:grid-cols-2"
     >
       <Field className="md:col-span-2">
+        <FieldLabel htmlFor="cardOutcome">Card Outcome</FieldLabel>
+        <Input
+          id="cardOutcome"
+          type="text"
+          placeholder="One-line business outcome for homepage cards"
+          {...register("cardOutcome")}
+        />
+        <FieldError errors={errors.cardOutcome ? [errors.cardOutcome] : undefined} />
+      </Field>
+      <Field>
+        <FieldLabel htmlFor="displayOrder">Display Order</FieldLabel>
+        <Input
+          id="displayOrder"
+          type="number"
+          placeholder="Homepage sort order (1 = first)"
+          min={1}
+          {...register("displayOrder")}
+        />
+        <FieldError errors={errors.displayOrder ? [errors.displayOrder] : undefined} />
+      </Field>
+      <Field>
+        <FieldLabel htmlFor="featured">Featured</FieldLabel>
+        <Controller
+          name="featured"
+          control={control}
+          render={({ field }) => <Switch id="featured" checked={field.value} onCheckedChange={field.onChange} />}
+        />
+        <FieldError errors={errors.featured ? [errors.featured] : undefined} />
+      </Field>
+      <Field className="md:col-span-2">
         <FieldLabel htmlFor="seoTitle">SEO Title</FieldLabel>
         <Input id="seoTitle" type="text" placeholder="SEO Title" required {...register("seoTitle")} />
         <FieldError errors={errors.seoTitle ? [errors.seoTitle] : undefined} />
@@ -77,15 +109,6 @@ export function ProjectFormStepSeoLinks({
         <FieldLabel htmlFor="demoUrl">Demo URL</FieldLabel>
         <Input id="demoUrl" type="text" placeholder="Demo URL" required {...register("demoUrl")} />
         <FieldError errors={errors.demoUrl ? [errors.demoUrl] : undefined} />
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="featured">Featured</FieldLabel>
-        <Controller
-          name="featured"
-          control={control}
-          render={({ field }) => <Switch id="featured" checked={field.value} onCheckedChange={field.onChange} />}
-        />
-        <FieldError errors={errors.featured ? [errors.featured] : undefined} />
       </Field>
       <Field>
         <FieldLabel htmlFor="published">Published</FieldLabel>

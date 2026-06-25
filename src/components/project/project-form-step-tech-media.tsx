@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { type TechMediaFormValues, techMediaFormSchema } from "@/lib/form-schemas";
 import { resolveProjectFormImages } from "@/lib/upload";
 
@@ -16,6 +17,7 @@ const DEFAULTS: TechMediaFormValues = {
   integrations: "",
   coverImage: undefined,
   galleryImages: [],
+  galleryCaptions: "",
 };
 
 export type ProjectFormStepTechMediaProps = {
@@ -166,6 +168,16 @@ export function ProjectFormStepTechMedia({
           )}
         />
         <FieldError errors={errors.galleryImages ? [errors.galleryImages] : undefined} />
+      </Field>
+      <Field className="md:col-span-2">
+        <FieldLabel htmlFor="galleryCaptions">Gallery Captions (one per line)</FieldLabel>
+        <Textarea
+          id="galleryCaptions"
+          rows={4}
+          placeholder={"Dashboard with real-time call analytics\nAgent configuration panel for conversation flows"}
+          {...register("galleryCaptions")}
+        />
+        <FieldError errors={errors.galleryCaptions ? [errors.galleryCaptions] : undefined} />
       </Field>
 
       <div className="col-span-2 mt-auto flex w-full items-center justify-end gap-4 border-t pt-4">

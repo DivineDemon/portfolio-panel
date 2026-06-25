@@ -17,6 +17,14 @@ const stringToArray = z.union([z.string(), z.array(z.string())]).transform((v) =
           .filter(Boolean),
 );
 
+const engagementTypeValues = ["client-work", "founder-built", "open-source", "internal-tool"] as const;
+
+function isValidMetricValue(value: unknown): boolean {
+  if (value === null) return true;
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") return true;
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
 const metricsStringSchema = z.string().superRefine((val, ctx) => {
   const t = val.trim();
   if (t === "") {
@@ -32,6 +40,14 @@ const metricsStringSchema = z.string().superRefine((val, ctx) => {
     if (typeof p !== "object" || p === null) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Metrics must be a JSON object" });
       return;
+    }
+    for (const [key, value] of Object.entries(p)) {
+      if (!isValidMetricValue(value)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Invalid metric value for "${key}": must be string, number, boolean, null, or string array`,
+        });
+      }
     }
   } catch (e) {
     ctx.addIssue({
@@ -55,26 +71,38 @@ const galleryImagesSchema = z
 export const basicsFormSchema = z.object({
   slug: z.string().min(1, "Required"),
   title: z.string().min(1, "Required"),
-  tagline: z.string().min(1, "Required"),
+  headlineResult: z.string().min(1, "Required"),
   industry: z.string().min(1, "Required"),
-  projectType: z.string().min(1, "Required"),
-  status: z.string().min(1, "Required"),
   role: z.string().min(1, "Required"),
-  engagementModel: z.string().min(1, "Required"),
   teamSize: z.coerce.number().min(1, "Required"),
   durationInMonths: z.coerce.number().min(1, "Required"),
+  engagementType: z.union([z.enum(engagementTypeValues), z.literal("")]),
+  isLive: z.boolean(),
+  engagementModel: z.string().optional(),
 });
 
 export const storyFormSchema = z.object({
   problem: z.string().min(1, "Required"),
-  context: z.string().min(1, "Required"),
-  strategy: z.string().min(1, "Required"),
+  situation: z.string().min(1, "Required"),
+  beforeAfter: z.string().optional(),
+  approach: z.string().min(1, "Required"),
+  whatMadeThisHard: z.string().min(1, "Required"),
+  businessOutcome: z.string().optional(),
+  results: z.string().min(1, "Required"),
+  clientTestimonial: z.string().optional(),
   architecture: z.string().min(1, "Required"),
   execution: z.string().min(1, "Required"),
-  challenges: z.string().min(1, "Required"),
-  solution: z.string().min(1, "Required"),
-  measurableImpact: z.string().min(1, "Required"),
+  whatWeBuilt: z.string().min(1, "Required"),
   metrics: metricsStringSchema,
+});
+
+const galleryCaptionsSchema = z.union([z.string(), z.array(z.string())]).transform((value) => {
+  if (Array.isArray(value)) return value;
+  if (value === "") return [];
+  return value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
 });
 
 export const techMediaFormSchema = z.object({
@@ -84,6 +112,7 @@ export const techMediaFormSchema = z.object({
   integrations: stringToArray,
   coverImage: imageValueSchema.optional(),
   galleryImages: galleryImagesSchema.optional().default([]),
+  galleryCaptions: galleryCaptionsSchema.optional().default([]),
 });
 
 export const seoLinksFormSchema = z.object({
@@ -91,6 +120,8 @@ export const seoLinksFormSchema = z.object({
   seoDescription: z.string().min(1, "Required"),
   repositoryUrl: z.string().min(1, "Required"),
   demoUrl: z.string().min(1, "Required"),
+  cardOutcome: z.string().optional(),
+  displayOrder: z.union([z.coerce.number().int().positive(), z.literal("")]),
   featured: z.boolean(),
   published: z.boolean(),
 });
@@ -108,3 +139,13 @@ export type StoryFormValues = z.infer<typeof storyFormSchema>;
 export type TechMediaFormValues = z.input<typeof techMediaFormSchema>;
 export type SeoLinksFormValues = z.infer<typeof seoLinksFormSchema>;
 export type TestimonialFormValues = z.infer<typeof testimonialFormSchema>;
+
+export type ProjectMetricValue = string | number | boolean | string[] | null;
+export type ProjectMetrics = Record<string, ProjectMetricValue>;
+
+export const ENGAGEMENT_TYPE_OPTIONS = [
+  { value: "client-work", label: "Client work" },
+  { value: "founder-built", label: "Founder-built" },
+  { value: "open-source", label: "Open source" },
+  { value: "internal-tool", label: "Internal tool" },
+] as const;
