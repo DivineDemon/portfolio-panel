@@ -10,6 +10,9 @@ import ProjectCreatePage from "@/pages/project-create";
 import ProjectDetailsPage from "@/pages/project-details";
 import ProjectsPage from "@/pages/projects";
 import QuickLinkPage from "@/pages/quick-link";
+import WorkflowCreatePage from "@/pages/workflow-create";
+import WorkflowDetailsPage from "@/pages/workflow-details";
+import WorkflowsPage from "@/pages/workflows";
 
 const App = () => {
   return (
@@ -29,6 +32,9 @@ const App = () => {
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="projects/new" element={<ProjectCreatePage />} />
           <Route path="projects/:id" element={<ProjectDetailsPage />} />
+          <Route path="workflows" element={<WorkflowsPage />} />
+          <Route path="workflows/create" element={<WorkflowCreatePage />} />
+          <Route path="workflows/:id" element={<WorkflowDetailsPage />} />
           <Route path="clients" element={<ClientsPage />} />
           <Route path="quick-link" element={<QuickLinkPage />} />
         </Route>

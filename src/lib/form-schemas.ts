@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { workflowJsonStringSchema } from "@/lib/workflow-json";
 
 export const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
@@ -150,3 +151,34 @@ export const ENGAGEMENT_TYPE_OPTIONS = [
   { value: "open-source", label: "Open source" },
   { value: "internal-tool", label: "Internal tool" },
 ] as const;
+
+export const workflowBasicsFormSchema = z.object({
+  slug: z.string().min(1, "Required"),
+  title: z.string().min(1, "Required"),
+  headlineResult: z.string().min(1, "Required"),
+  clientId: z.union([z.coerce.number().int().positive(), z.literal("")]),
+  integrations: stringToArray,
+  coverImage: imageValueSchema.optional(),
+});
+
+export const workflowStoryFormSchema = z.object({
+  problem: z.string(),
+  approach: z.string(),
+  results: z.string(),
+  metrics: metricsStringSchema,
+});
+
+export const workflowPublishFormSchema = z.object({
+  workflowJson: workflowJsonStringSchema,
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
+  keywords: stringToArray,
+  cardOutcome: z.string().optional(),
+  displayOrder: z.union([z.coerce.number().int().positive(), z.literal("")]),
+  featured: z.boolean(),
+  published: z.boolean(),
+});
+
+export type WorkflowBasicsFormValues = z.input<typeof workflowBasicsFormSchema>;
+export type WorkflowStoryFormValues = z.infer<typeof workflowStoryFormSchema>;
+export type WorkflowPublishFormValues = z.input<typeof workflowPublishFormSchema>;

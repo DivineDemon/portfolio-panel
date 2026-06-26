@@ -1,5 +1,5 @@
 import { api } from "./core";
-export const addTagTypes = ["Projects", "Clients", "Quick Link"] as const;
+export const addTagTypes = ["Projects", "n8n Workflows", "Clients", "Quick Link"] as const;
 const injectedRtkApi = api
   .enhanceEndpoints({
     addTagTypes,
@@ -36,6 +36,37 @@ const injectedRtkApi = api
           method: "DELETE",
         }),
         invalidatesTags: ["Projects"],
+      }),
+      getApiN8NWorkflows: build.query<GetApiN8NWorkflowsApiResponse, GetApiN8NWorkflowsApiArg>({
+        query: () => ({ url: `/api/n8n-workflows` }),
+        providesTags: ["n8n Workflows"],
+      }),
+      postApiN8NWorkflows: build.mutation<PostApiN8NWorkflowsApiResponse, PostApiN8NWorkflowsApiArg>({
+        query: (queryArg) => ({
+          url: `/api/n8n-workflows`,
+          method: "POST",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["n8n Workflows"],
+      }),
+      getApiN8NWorkflowsById: build.query<GetApiN8NWorkflowsByIdApiResponse, GetApiN8NWorkflowsByIdApiArg>({
+        query: (queryArg) => ({ url: `/api/n8n-workflows/${queryArg.id}` }),
+        providesTags: ["n8n Workflows"],
+      }),
+      putApiN8NWorkflowsById: build.mutation<PutApiN8NWorkflowsByIdApiResponse, PutApiN8NWorkflowsByIdApiArg>({
+        query: (queryArg) => ({
+          url: `/api/n8n-workflows/${queryArg.id}`,
+          method: "PUT",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["n8n Workflows"],
+      }),
+      deleteApiN8NWorkflowsById: build.mutation<DeleteApiN8NWorkflowsByIdApiResponse, DeleteApiN8NWorkflowsByIdApiArg>({
+        query: (queryArg) => ({
+          url: `/api/n8n-workflows/${queryArg.id}`,
+          method: "DELETE",
+        }),
+        invalidatesTags: ["n8n Workflows"],
       }),
       getApiClients: build.query<GetApiClientsApiResponse, GetApiClientsApiArg>({
         query: () => ({ url: `/api/clients` }),
@@ -78,7 +109,7 @@ const injectedRtkApi = api
           method: "PUT",
           body: queryArg.body,
         }),
-        invalidatesTags: ["Quick Link", "Projects"],
+        invalidatesTags: ["Quick Link"],
       }),
       putApiQuickLinkBulk: build.mutation<PutApiQuickLinkBulkApiResponse, PutApiQuickLinkBulkApiArg>({
         query: (queryArg) => ({
@@ -86,7 +117,7 @@ const injectedRtkApi = api
           method: "PUT",
           body: queryArg.body,
         }),
-        invalidatesTags: ["Quick Link", "Projects"],
+        invalidatesTags: ["Quick Link"],
       }),
     }),
     overrideExisting: false,
@@ -534,6 +565,1847 @@ export type DeleteApiProjectsByIdApiResponse = /** status 200 Project deleted su
 export type DeleteApiProjectsByIdApiArg = {
   id: string;
 };
+export type GetApiN8NWorkflowsApiResponse = /** status 200 List of n8n workflows */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    headlineResult: string;
+    problem: string;
+    approach: string;
+    results: string;
+    workflowJson: {
+      name?: string;
+      active?: boolean;
+      nodes: {
+        id: string;
+        name: string;
+        type: string;
+        typeVersion?: number | string;
+        position:
+          | [number, number]
+          | {
+              x: number;
+              y: number;
+            };
+        parameters?: {
+          [key: string]:
+            | string
+            | number
+            | boolean
+            | null
+            | {
+                [key: string]: string | number | boolean | null;
+              }
+            | (
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+              )[]
+            | {
+                [key: string]: string | number | boolean | null;
+              }[]
+            | {
+                [key: string]:
+                  | string
+                  | number
+                  | boolean
+                  | null
+                  | {
+                      [key: string]: string | number | boolean | null;
+                    }
+                  | (
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: string | number | boolean | null;
+                        }
+                    )[];
+              };
+        };
+        credentials?: {
+          [key: string]: {
+            id?: string;
+            name?: string;
+          };
+        };
+        disabled?: boolean;
+        notes?: string;
+        webhookId?: string;
+        continueOnFail?: boolean;
+        alwaysOutputData?: boolean;
+        executeOnce?: boolean;
+        retryOnFail?: boolean;
+        maxTries?: number;
+        waitBetweenTries?: number;
+        onError?: string;
+      }[];
+      connections: {
+        [key: string]: {
+          [key: string]: {
+            node: string;
+            type: string;
+            index: number;
+          }[][];
+        };
+      };
+      settings?: {
+        executionOrder?: "v0" | "v1";
+        timezone?: string;
+        saveManualExecutions?: boolean;
+        saveDataErrorExecution?: "all" | "none";
+        saveDataSuccessExecution?: "all" | "none";
+        callerPolicy?: string;
+        errorWorkflow?: string;
+      };
+      staticData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      pinData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      meta?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      tags?: {
+        id?: string;
+        name: string;
+        createdAt?: string;
+        updatedAt?: string;
+      }[];
+      versionId?: string;
+      id?: string;
+    };
+    integrations: string[];
+    metrics:
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        }
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        };
+    coverImage: string;
+    clientId: number | null;
+    client?: {
+      id: number;
+      image: string | null;
+      company: string;
+      content: string;
+      designation: string;
+      clientName: string;
+      feedback: string | null;
+    } | null;
+    cardOutcome: string | null;
+    displayOrder: number | null;
+    featured: boolean;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    createdAt: string | null;
+    updatedAt: string | null;
+  }[];
+};
+export type GetApiN8NWorkflowsApiArg = void;
+export type PostApiN8NWorkflowsApiResponse = /** status 201 n8n workflow created successfully */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    headlineResult: string;
+    problem: string;
+    approach: string;
+    results: string;
+    workflowJson: {
+      name?: string;
+      active?: boolean;
+      nodes: {
+        id: string;
+        name: string;
+        type: string;
+        typeVersion?: number | string;
+        position:
+          | [number, number]
+          | {
+              x: number;
+              y: number;
+            };
+        parameters?: {
+          [key: string]:
+            | string
+            | number
+            | boolean
+            | null
+            | {
+                [key: string]: string | number | boolean | null;
+              }
+            | (
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+              )[]
+            | {
+                [key: string]: string | number | boolean | null;
+              }[]
+            | {
+                [key: string]:
+                  | string
+                  | number
+                  | boolean
+                  | null
+                  | {
+                      [key: string]: string | number | boolean | null;
+                    }
+                  | (
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: string | number | boolean | null;
+                        }
+                    )[];
+              };
+        };
+        credentials?: {
+          [key: string]: {
+            id?: string;
+            name?: string;
+          };
+        };
+        disabled?: boolean;
+        notes?: string;
+        webhookId?: string;
+        continueOnFail?: boolean;
+        alwaysOutputData?: boolean;
+        executeOnce?: boolean;
+        retryOnFail?: boolean;
+        maxTries?: number;
+        waitBetweenTries?: number;
+        onError?: string;
+      }[];
+      connections: {
+        [key: string]: {
+          [key: string]: {
+            node: string;
+            type: string;
+            index: number;
+          }[][];
+        };
+      };
+      settings?: {
+        executionOrder?: "v0" | "v1";
+        timezone?: string;
+        saveManualExecutions?: boolean;
+        saveDataErrorExecution?: "all" | "none";
+        saveDataSuccessExecution?: "all" | "none";
+        callerPolicy?: string;
+        errorWorkflow?: string;
+      };
+      staticData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      pinData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      meta?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      tags?: {
+        id?: string;
+        name: string;
+        createdAt?: string;
+        updatedAt?: string;
+      }[];
+      versionId?: string;
+      id?: string;
+    };
+    integrations: string[];
+    metrics:
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        }
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        };
+    coverImage: string;
+    clientId: number | null;
+    client?: {
+      id: number;
+      image: string | null;
+      company: string;
+      content: string;
+      designation: string;
+      clientName: string;
+      feedback: string | null;
+    } | null;
+    cardOutcome: string | null;
+    displayOrder: number | null;
+    featured: boolean;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    createdAt: string | null;
+    updatedAt: string | null;
+  };
+};
+export type PostApiN8NWorkflowsApiArg = {
+  body: {
+    slug: string;
+    title: string;
+    headlineResult: string;
+    problem: string;
+    approach: string;
+    results: string;
+    workflowJson: {
+      name?: string;
+      active?: boolean;
+      nodes: {
+        id: string;
+        name: string;
+        type: string;
+        typeVersion?: number | string;
+        position:
+          | [number, number]
+          | {
+              x: number;
+              y: number;
+            };
+        parameters?: {
+          [key: string]:
+            | string
+            | number
+            | boolean
+            | null
+            | {
+                [key: string]: string | number | boolean | null;
+              }
+            | (
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+              )[]
+            | {
+                [key: string]: string | number | boolean | null;
+              }[]
+            | {
+                [key: string]:
+                  | string
+                  | number
+                  | boolean
+                  | null
+                  | {
+                      [key: string]: string | number | boolean | null;
+                    }
+                  | (
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: string | number | boolean | null;
+                        }
+                    )[];
+              };
+        };
+        credentials?: {
+          [key: string]: {
+            id?: string;
+            name?: string;
+          };
+        };
+        disabled?: boolean;
+        notes?: string;
+        webhookId?: string;
+        continueOnFail?: boolean;
+        alwaysOutputData?: boolean;
+        executeOnce?: boolean;
+        retryOnFail?: boolean;
+        maxTries?: number;
+        waitBetweenTries?: number;
+        onError?: string;
+      }[];
+      connections: {
+        [key: string]: {
+          [key: string]: {
+            node: string;
+            type: string;
+            index: number;
+          }[][];
+        };
+      };
+      settings?: {
+        executionOrder?: "v0" | "v1";
+        timezone?: string;
+        saveManualExecutions?: boolean;
+        saveDataErrorExecution?: "all" | "none";
+        saveDataSuccessExecution?: "all" | "none";
+        callerPolicy?: string;
+        errorWorkflow?: string;
+      };
+      staticData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      pinData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      meta?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      tags?: {
+        id?: string;
+        name: string;
+        createdAt?: string;
+        updatedAt?: string;
+      }[];
+      versionId?: string;
+      id?: string;
+    };
+    integrations: string[];
+    metrics:
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        }
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        };
+    coverImage: string;
+    clientId: number | null;
+    client?: {
+      id: number;
+      image: string | null;
+      company: string;
+      content: string;
+      designation: string;
+      clientName: string;
+      feedback: string | null;
+    } | null;
+    cardOutcome: string | null;
+    displayOrder: number | null;
+    featured: boolean;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    updatedAt?: string | null;
+  };
+};
+export type GetApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow details */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    headlineResult: string;
+    problem: string;
+    approach: string;
+    results: string;
+    workflowJson: {
+      name?: string;
+      active?: boolean;
+      nodes: {
+        id: string;
+        name: string;
+        type: string;
+        typeVersion?: number | string;
+        position:
+          | [number, number]
+          | {
+              x: number;
+              y: number;
+            };
+        parameters?: {
+          [key: string]:
+            | string
+            | number
+            | boolean
+            | null
+            | {
+                [key: string]: string | number | boolean | null;
+              }
+            | (
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+              )[]
+            | {
+                [key: string]: string | number | boolean | null;
+              }[]
+            | {
+                [key: string]:
+                  | string
+                  | number
+                  | boolean
+                  | null
+                  | {
+                      [key: string]: string | number | boolean | null;
+                    }
+                  | (
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: string | number | boolean | null;
+                        }
+                    )[];
+              };
+        };
+        credentials?: {
+          [key: string]: {
+            id?: string;
+            name?: string;
+          };
+        };
+        disabled?: boolean;
+        notes?: string;
+        webhookId?: string;
+        continueOnFail?: boolean;
+        alwaysOutputData?: boolean;
+        executeOnce?: boolean;
+        retryOnFail?: boolean;
+        maxTries?: number;
+        waitBetweenTries?: number;
+        onError?: string;
+      }[];
+      connections: {
+        [key: string]: {
+          [key: string]: {
+            node: string;
+            type: string;
+            index: number;
+          }[][];
+        };
+      };
+      settings?: {
+        executionOrder?: "v0" | "v1";
+        timezone?: string;
+        saveManualExecutions?: boolean;
+        saveDataErrorExecution?: "all" | "none";
+        saveDataSuccessExecution?: "all" | "none";
+        callerPolicy?: string;
+        errorWorkflow?: string;
+      };
+      staticData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      pinData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      meta?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      tags?: {
+        id?: string;
+        name: string;
+        createdAt?: string;
+        updatedAt?: string;
+      }[];
+      versionId?: string;
+      id?: string;
+    };
+    integrations: string[];
+    metrics:
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        }
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        };
+    coverImage: string;
+    clientId: number | null;
+    client?: {
+      id: number;
+      image: string | null;
+      company: string;
+      content: string;
+      designation: string;
+      clientName: string;
+      feedback: string | null;
+    } | null;
+    cardOutcome: string | null;
+    displayOrder: number | null;
+    featured: boolean;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    createdAt: string | null;
+    updatedAt: string | null;
+  };
+};
+export type GetApiN8NWorkflowsByIdApiArg = {
+  id: string;
+};
+export type PutApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow updated successfully */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    headlineResult: string;
+    problem: string;
+    approach: string;
+    results: string;
+    workflowJson: {
+      name?: string;
+      active?: boolean;
+      nodes: {
+        id: string;
+        name: string;
+        type: string;
+        typeVersion?: number | string;
+        position:
+          | [number, number]
+          | {
+              x: number;
+              y: number;
+            };
+        parameters?: {
+          [key: string]:
+            | string
+            | number
+            | boolean
+            | null
+            | {
+                [key: string]: string | number | boolean | null;
+              }
+            | (
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+              )[]
+            | {
+                [key: string]: string | number | boolean | null;
+              }[]
+            | {
+                [key: string]:
+                  | string
+                  | number
+                  | boolean
+                  | null
+                  | {
+                      [key: string]: string | number | boolean | null;
+                    }
+                  | (
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: string | number | boolean | null;
+                        }
+                    )[];
+              };
+        };
+        credentials?: {
+          [key: string]: {
+            id?: string;
+            name?: string;
+          };
+        };
+        disabled?: boolean;
+        notes?: string;
+        webhookId?: string;
+        continueOnFail?: boolean;
+        alwaysOutputData?: boolean;
+        executeOnce?: boolean;
+        retryOnFail?: boolean;
+        maxTries?: number;
+        waitBetweenTries?: number;
+        onError?: string;
+      }[];
+      connections: {
+        [key: string]: {
+          [key: string]: {
+            node: string;
+            type: string;
+            index: number;
+          }[][];
+        };
+      };
+      settings?: {
+        executionOrder?: "v0" | "v1";
+        timezone?: string;
+        saveManualExecutions?: boolean;
+        saveDataErrorExecution?: "all" | "none";
+        saveDataSuccessExecution?: "all" | "none";
+        callerPolicy?: string;
+        errorWorkflow?: string;
+      };
+      staticData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      pinData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      meta?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      tags?: {
+        id?: string;
+        name: string;
+        createdAt?: string;
+        updatedAt?: string;
+      }[];
+      versionId?: string;
+      id?: string;
+    };
+    integrations: string[];
+    metrics:
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        }
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        };
+    coverImage: string;
+    clientId: number | null;
+    client?: {
+      id: number;
+      image: string | null;
+      company: string;
+      content: string;
+      designation: string;
+      clientName: string;
+      feedback: string | null;
+    } | null;
+    cardOutcome: string | null;
+    displayOrder: number | null;
+    featured: boolean;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    createdAt: string | null;
+    updatedAt: string | null;
+  };
+};
+export type PutApiN8NWorkflowsByIdApiArg = {
+  id: string;
+  body: {
+    slug?: string;
+    title?: string;
+    headlineResult?: string;
+    problem?: string;
+    approach?: string;
+    results?: string;
+    workflowJson?: {
+      name?: string;
+      active?: boolean;
+      nodes: {
+        id: string;
+        name: string;
+        type: string;
+        typeVersion?: number | string;
+        position:
+          | [number, number]
+          | {
+              x: number;
+              y: number;
+            };
+        parameters?: {
+          [key: string]:
+            | string
+            | number
+            | boolean
+            | null
+            | {
+                [key: string]: string | number | boolean | null;
+              }
+            | (
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+              )[]
+            | {
+                [key: string]: string | number | boolean | null;
+              }[]
+            | {
+                [key: string]:
+                  | string
+                  | number
+                  | boolean
+                  | null
+                  | {
+                      [key: string]: string | number | boolean | null;
+                    }
+                  | (
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: string | number | boolean | null;
+                        }
+                    )[];
+              };
+        };
+        credentials?: {
+          [key: string]: {
+            id?: string;
+            name?: string;
+          };
+        };
+        disabled?: boolean;
+        notes?: string;
+        webhookId?: string;
+        continueOnFail?: boolean;
+        alwaysOutputData?: boolean;
+        executeOnce?: boolean;
+        retryOnFail?: boolean;
+        maxTries?: number;
+        waitBetweenTries?: number;
+        onError?: string;
+      }[];
+      connections: {
+        [key: string]: {
+          [key: string]: {
+            node: string;
+            type: string;
+            index: number;
+          }[][];
+        };
+      };
+      settings?: {
+        executionOrder?: "v0" | "v1";
+        timezone?: string;
+        saveManualExecutions?: boolean;
+        saveDataErrorExecution?: "all" | "none";
+        saveDataSuccessExecution?: "all" | "none";
+        callerPolicy?: string;
+        errorWorkflow?: string;
+      };
+      staticData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      pinData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      meta?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      tags?: {
+        id?: string;
+        name: string;
+        createdAt?: string;
+        updatedAt?: string;
+      }[];
+      versionId?: string;
+      id?: string;
+    };
+    integrations?: string[];
+    metrics?:
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        }
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        };
+    coverImage?: string;
+    clientId?: number | null;
+    client?: {
+      id: number;
+      image: string | null;
+      company: string;
+      content: string;
+      designation: string;
+      clientName: string;
+      feedback: string | null;
+    } | null;
+    cardOutcome?: string | null;
+    displayOrder?: number | null;
+    featured?: boolean;
+    published?: boolean;
+    seoTitle?: string | null;
+    seoDescription?: string | null;
+    keywords?: string[];
+    updatedAt?: string | null;
+  };
+};
+export type DeleteApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow deleted successfully */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    headlineResult: string;
+    problem: string;
+    approach: string;
+    results: string;
+    workflowJson: {
+      name?: string;
+      active?: boolean;
+      nodes: {
+        id: string;
+        name: string;
+        type: string;
+        typeVersion?: number | string;
+        position:
+          | [number, number]
+          | {
+              x: number;
+              y: number;
+            };
+        parameters?: {
+          [key: string]:
+            | string
+            | number
+            | boolean
+            | null
+            | {
+                [key: string]: string | number | boolean | null;
+              }
+            | (
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+              )[]
+            | {
+                [key: string]: string | number | boolean | null;
+              }[]
+            | {
+                [key: string]:
+                  | string
+                  | number
+                  | boolean
+                  | null
+                  | {
+                      [key: string]: string | number | boolean | null;
+                    }
+                  | (
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: string | number | boolean | null;
+                        }
+                    )[];
+              };
+        };
+        credentials?: {
+          [key: string]: {
+            id?: string;
+            name?: string;
+          };
+        };
+        disabled?: boolean;
+        notes?: string;
+        webhookId?: string;
+        continueOnFail?: boolean;
+        alwaysOutputData?: boolean;
+        executeOnce?: boolean;
+        retryOnFail?: boolean;
+        maxTries?: number;
+        waitBetweenTries?: number;
+        onError?: string;
+      }[];
+      connections: {
+        [key: string]: {
+          [key: string]: {
+            node: string;
+            type: string;
+            index: number;
+          }[][];
+        };
+      };
+      settings?: {
+        executionOrder?: "v0" | "v1";
+        timezone?: string;
+        saveManualExecutions?: boolean;
+        saveDataErrorExecution?: "all" | "none";
+        saveDataSuccessExecution?: "all" | "none";
+        callerPolicy?: string;
+        errorWorkflow?: string;
+      };
+      staticData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      pinData?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      meta?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | null
+          | {
+              [key: string]: string | number | boolean | null;
+            }
+          | (
+              | string
+              | number
+              | boolean
+              | null
+              | {
+                  [key: string]: string | number | boolean | null;
+                }
+            )[]
+          | {
+              [key: string]: string | number | boolean | null;
+            }[]
+          | {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: string | number | boolean | null;
+                  }
+                | (
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: string | number | boolean | null;
+                      }
+                  )[];
+            };
+      };
+      tags?: {
+        id?: string;
+        name: string;
+        createdAt?: string;
+        updatedAt?: string;
+      }[];
+      versionId?: string;
+      id?: string;
+    };
+    integrations: string[];
+    metrics:
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        }
+      | {
+          [key: string]: string | number | boolean | string[] | null;
+        };
+    coverImage: string;
+    clientId: number | null;
+    client?: {
+      id: number;
+      image: string | null;
+      company: string;
+      content: string;
+      designation: string;
+      clientName: string;
+      feedback: string | null;
+    } | null;
+    cardOutcome: string | null;
+    displayOrder: number | null;
+    featured: boolean;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    createdAt: string | null;
+    updatedAt: string | null;
+  };
+};
+export type DeleteApiN8NWorkflowsByIdApiArg = {
+  id: string;
+};
 export type GetApiClientsApiResponse = /** status 200 List of clients */ {
   success: boolean;
   message: string;
@@ -726,6 +2598,11 @@ export const {
   useGetApiProjectsByIdQuery,
   usePutApiProjectsByIdMutation,
   useDeleteApiProjectsByIdMutation,
+  useGetApiN8NWorkflowsQuery,
+  usePostApiN8NWorkflowsMutation,
+  useGetApiN8NWorkflowsByIdQuery,
+  usePutApiN8NWorkflowsByIdMutation,
+  useDeleteApiN8NWorkflowsByIdMutation,
   useGetApiClientsQuery,
   usePostApiClientsMutation,
   useGetApiClientsByIdQuery,

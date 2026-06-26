@@ -1,0 +1,100 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect } from "react";
+import type { Resolver } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { MarkdownField } from "@/components/ui/markdown-field";
+import { MetricsKeyValueField } from "@/components/ui/metrics-key-value-field";
+import { type WorkflowStoryFormValues, workflowStoryFormSchema } from "@/lib/form-schemas";
+
+const DEFAULTS: WorkflowStoryFormValues = {
+  problem: "",
+  approach: "",
+  results: "",
+  metrics: "{}",
+};
+
+const STORY_MARKDOWN_FIELDS = [
+  { name: "problem" as const, label: "Problem" },
+  { name: "approach" as const, label: "Approach" },
+  { name: "results" as const, label: "Results" },
+];
+
+export type WorkflowFormStepStoryProps = {
+  initialValues?: Partial<WorkflowStoryFormValues>;
+  onStepSubmit: (data: WorkflowStoryFormValues) => void;
+  onPrev?: () => void;
+  isFirstStep: boolean;
+  isLastStep: boolean;
+  submitLabel?: string;
+  isSubmitting?: boolean;
+};
+
+export function WorkflowFormStepStory({
+  initialValues,
+  onStepSubmit,
+  onPrev,
+  isFirstStep,
+  isLastStep,
+  submitLabel = "Submit",
+  isSubmitting = false,
+}: WorkflowFormStepStoryProps) {
+  const form = useForm<WorkflowStoryFormValues>({
+    resolver: zodResolver(workflowStoryFormSchema) as Resolver<WorkflowStoryFormValues>,
+    defaultValues: { ...DEFAULTS, ...initialValues },
+  });
+
+  useEffect(() => {
+    if (initialValues) form.reset({ ...DEFAULTS, ...initialValues });
+  }, [initialValues, form]);
+
+  const { control } = form;
+  const errors = form.formState.errors;
+
+  const handleSubmit = form.handleSubmit((data) => {
+    onStepSubmit(data);
+  });
+
+  return (
+    <form onSubmit={handleSubmit} className="flex min-h-0 w-full flex-1 flex-col">
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="flex w-full flex-col items-start justify-start gap-5 pb-5">
+          {STORY_MARKDOWN_FIELDS.map(({ name, label }) => (
+            <Field key={name}>
+              <FieldLabel htmlFor={name}>{label}</FieldLabel>
+              <MarkdownField control={control} name={name} id={name} height={180} />
+              <FieldError errors={errors[name] ? [errors[name]] : undefined} />
+            </Field>
+          ))}
+          <MetricsKeyValueField<WorkflowStoryFormValues>
+            key={initialValues?.metrics ?? "new-metrics"}
+            name="metrics"
+            control={control}
+            error={errors.metrics}
+          />
+        </div>
+      </div>
+
+      <div className="flex w-full shrink-0 items-center justify-end gap-4 border-t pt-4">
+        {!isFirstStep && onPrev && (
+          <Button type="button" variant="outline" onClick={onPrev} disabled={isSubmitting}>
+            <ChevronLeft className="size-4" />
+            Previous
+          </Button>
+        )}
+        {isLastStep ? (
+          <Button type="submit" disabled={isSubmitting}>
+            {submitLabel}
+          </Button>
+        ) : (
+          <Button type="submit" disabled={isSubmitting}>
+            Next
+            <ChevronRight className="size-4" />
+          </Button>
+        )}
+      </div>
+    </form>
+  );
+}
