@@ -9,7 +9,8 @@ Admin dashboard for managing portfolio content — projects and clients — back
 - **Dashboard** — project and client counts with analytics placeholder
 - **Projects** — list, create, edit, and delete portfolio projects via a 4-step form (basics, story, tech & media, SEO & links)
 - **Clients** — create, edit, and delete clients (name, company, designation, testimonial, feedback, photo) in a slide-over sheet
-- **Project–client linking** — assign a client to a project from the basics step; case studies display that client's testimonial
+- **Quick Link** — link or reassign existing projects to clients without the full project wizard
+- **Project–client linking** — assign a client from the project basics step, or use Quick Link for existing projects
 - **Image uploads** — cover, gallery, and client photos uploaded to [ImgBB](https://imgbb.com/)
 - **Dark / light theme** — system-aware theme toggle
 - **OpenAPI-driven API client** — RTK Query hooks generated from the backend OpenAPI schema
@@ -120,6 +121,7 @@ src/
 | `/dashboard/projects/new` | Protected | Create project |
 | `/dashboard/projects/:id` | Protected | Edit project |
 | `/dashboard/clients` | Protected | Client list and management |
+| `/dashboard/quick-link` | Protected | Link projects to clients |
 
 ## Deployment
 

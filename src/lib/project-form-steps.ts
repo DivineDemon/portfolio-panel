@@ -142,7 +142,7 @@ export async function mergeStepDataToApiBody(data: FullStepData): Promise<PostAp
     engagementModel: data.basics.engagementModel || null,
     teamSize: data.basics.teamSize ?? null,
     durationInMonths: data.basics.durationInMonths ?? null,
-    engagementType: data.basics.engagementType || null,
+    engagementType: (data.basics.engagementType || null) as unknown as PostApiProjectsApiArg["body"]["engagementType"],
     clientId,
     isLive: data.basics.isLive,
     problem: data.story.problem,

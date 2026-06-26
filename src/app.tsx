@@ -9,6 +9,7 @@ import LoginPage from "@/pages/login";
 import ProjectCreatePage from "@/pages/project-create";
 import ProjectDetailsPage from "@/pages/project-details";
 import ProjectsPage from "@/pages/projects";
+import QuickLinkPage from "@/pages/quick-link";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="projects/new" element={<ProjectCreatePage />} />
           <Route path="projects/:id" element={<ProjectDetailsPage />} />
           <Route path="clients" element={<ClientsPage />} />
+          <Route path="quick-link" element={<QuickLinkPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

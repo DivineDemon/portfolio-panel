@@ -1,4 +1,4 @@
-import { FolderKanban, LayoutDashboard, type LucideIcon, MessageSquareQuote } from "lucide-react";
+import { FolderKanban, LayoutDashboard, Link2, type LucideIcon, MessageSquareQuote } from "lucide-react";
 
 export interface DashboardNavItem {
   title: string;
@@ -21,5 +21,10 @@ export const dashboardNavItems: DashboardNavItem[] = [
     title: "Clients",
     href: "/dashboard/clients",
     icon: MessageSquareQuote,
+  },
+  {
+    title: "Quick Link",
+    href: "/dashboard/quick-link",
+    icon: Link2,
   },
 ];

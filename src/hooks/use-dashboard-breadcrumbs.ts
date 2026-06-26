@@ -11,6 +11,7 @@ export interface BreadcrumbSegment {
 const SEGMENT_LABELS: Record<string, string> = {
   projects: "Projects",
   clients: "Clients",
+  "quick-link": "Quick Link",
   new: "New project",
 };
 
@@ -48,9 +49,9 @@ export function useDashboardBreadcrumbs(): BreadcrumbSegment[] {
       path += `/${segment}`;
       const isLast = index === segments.length - 1;
 
-      if (segment === "projects" || segment === "clients") {
+      if (segment === "projects" || segment === "clients" || segment === "quick-link") {
         crumbs.push({
-          label: SEGMENT_LABELS[segment],
+          label: SEGMENT_LABELS[segment] ?? segment,
           href: isLast ? undefined : path,
         });
         continue;
