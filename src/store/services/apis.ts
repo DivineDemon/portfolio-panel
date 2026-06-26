@@ -1,5 +1,5 @@
 import { api } from "./core";
-export const addTagTypes = ["Projects", "Testimonials"] as const;
+export const addTagTypes = ["Projects", "Clients"] as const;
 const injectedRtkApi = api
   .enhanceEndpoints({
     addTagTypes,
@@ -37,36 +37,36 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ["Projects"],
       }),
-      getApiTestimonials: build.query<GetApiTestimonialsApiResponse, GetApiTestimonialsApiArg>({
-        query: () => ({ url: `/api/testimonials` }),
-        providesTags: ["Testimonials"],
+      getApiClients: build.query<GetApiClientsApiResponse, GetApiClientsApiArg>({
+        query: () => ({ url: `/api/clients` }),
+        providesTags: ["Clients"],
       }),
-      postApiTestimonials: build.mutation<PostApiTestimonialsApiResponse, PostApiTestimonialsApiArg>({
+      postApiClients: build.mutation<PostApiClientsApiResponse, PostApiClientsApiArg>({
         query: (queryArg) => ({
-          url: `/api/testimonials`,
+          url: `/api/clients`,
           method: "POST",
           body: queryArg.body,
         }),
-        invalidatesTags: ["Testimonials"],
+        invalidatesTags: ["Clients"],
       }),
-      getApiTestimonialsById: build.query<GetApiTestimonialsByIdApiResponse, GetApiTestimonialsByIdApiArg>({
-        query: (queryArg) => ({ url: `/api/testimonials/${queryArg.id}` }),
-        providesTags: ["Testimonials"],
+      getApiClientsById: build.query<GetApiClientsByIdApiResponse, GetApiClientsByIdApiArg>({
+        query: (queryArg) => ({ url: `/api/clients/${queryArg.id}` }),
+        providesTags: ["Clients"],
       }),
-      putApiTestimonialsById: build.mutation<PutApiTestimonialsByIdApiResponse, PutApiTestimonialsByIdApiArg>({
+      putApiClientsById: build.mutation<PutApiClientsByIdApiResponse, PutApiClientsByIdApiArg>({
         query: (queryArg) => ({
-          url: `/api/testimonials/${queryArg.id}`,
+          url: `/api/clients/${queryArg.id}`,
           method: "PUT",
           body: queryArg.body,
         }),
-        invalidatesTags: ["Testimonials"],
+        invalidatesTags: ["Clients"],
       }),
-      deleteApiTestimonialsById: build.mutation<DeleteApiTestimonialsByIdApiResponse, DeleteApiTestimonialsByIdApiArg>({
+      deleteApiClientsById: build.mutation<DeleteApiClientsByIdApiResponse, DeleteApiClientsByIdApiArg>({
         query: (queryArg) => ({
-          url: `/api/testimonials/${queryArg.id}`,
+          url: `/api/clients/${queryArg.id}`,
           method: "DELETE",
         }),
-        invalidatesTags: ["Testimonials"],
+        invalidatesTags: ["Clients"],
       }),
     }),
     overrideExisting: false,
@@ -77,6 +77,16 @@ export { injectedRtkApi as appApis };
 type ProjectMetricValue = string | number | boolean | string[] | null;
 type ProjectMetrics = { [key: string]: ProjectMetricValue } | null;
 type EngagementType = "client-work" | "founder-built" | "open-source" | "internal-tool";
+
+type ClientRecord = {
+  id: number;
+  image: string | null;
+  company: string;
+  content: string;
+  designation: string;
+  clientName: string;
+  feedback: string | null;
+};
 
 type ProjectRecord = {
   id: number;
@@ -96,7 +106,8 @@ type ProjectRecord = {
   whatMadeThisHard: string | null;
   whatWeBuilt: string;
   results: string;
-  clientTestimonial: string | null;
+  clientId: number | null;
+  client?: ClientRecord | null;
   businessOutcome: string | null;
   beforeAfter: string | null;
   engagementType: EngagementType | null;
@@ -121,7 +132,7 @@ type ProjectRecord = {
   updatedAt: string | null;
 };
 
-type CreateProjectBody = Omit<ProjectRecord, "id" | "createdAt" | "updatedAt"> & {
+type CreateProjectBody = Omit<ProjectRecord, "id" | "createdAt" | "updatedAt" | "client"> & {
   updatedAt?: string | null;
 };
 
@@ -166,90 +177,57 @@ export type DeleteApiProjectsByIdApiResponse = /** status 200 Project deleted su
 export type DeleteApiProjectsByIdApiArg = {
   id: string;
 };
-export type GetApiTestimonialsApiResponse = /** status 200 List of testimonials */ {
+export type GetApiClientsApiResponse = /** status 200 List of clients */ {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    image: string | null;
-    company: string;
-    content: string;
-    designation: string;
-    client_name: string;
-  }[];
+  data: ClientRecord[];
 };
-export type GetApiTestimonialsApiArg = void;
-export type PostApiTestimonialsApiResponse = /** status 201 Testimonial created successfully */ {
+export type GetApiClientsApiArg = void;
+export type PostApiClientsApiResponse = /** status 201 Client created successfully */ {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    image: string | null;
-    company: string;
-    content: string;
-    designation: string;
-    client_name: string;
-  };
+  data: ClientRecord;
 };
-export type PostApiTestimonialsApiArg = {
+export type PostApiClientsApiArg = {
   body: {
     image?: string;
     company: string;
     content: string;
     designation: string;
-    client_name: string;
+    clientName: string;
+    feedback?: string;
   };
 };
-export type GetApiTestimonialsByIdApiResponse = /** status 200 Testimonial details */ {
+export type GetApiClientsByIdApiResponse = /** status 200 Client details */ {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    image: string | null;
-    company: string;
-    content: string;
-    designation: string;
-    client_name: string;
-  };
+  data: ClientRecord;
 };
-export type GetApiTestimonialsByIdApiArg = {
+export type GetApiClientsByIdApiArg = {
   id: string;
 };
-export type PutApiTestimonialsByIdApiResponse = /** status 200 Testimonial updated successfully */ {
+export type PutApiClientsByIdApiResponse = /** status 200 Client updated successfully */ {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    image: string | null;
-    company: string;
-    content: string;
-    designation: string;
-    client_name: string;
-  };
+  data: ClientRecord;
 };
-export type PutApiTestimonialsByIdApiArg = {
+export type PutApiClientsByIdApiArg = {
   id: string;
   body: {
     image?: string;
     company?: string;
     content?: string;
     designation?: string;
-    client_name?: string;
+    clientName?: string;
+    feedback?: string;
   };
 };
-export type DeleteApiTestimonialsByIdApiResponse = /** status 200 Testimonial deleted successfully */ {
+export type DeleteApiClientsByIdApiResponse = /** status 200 Client deleted successfully */ {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    image: string | null;
-    company: string;
-    content: string;
-    designation: string;
-    client_name: string;
-  };
+  data: ClientRecord;
 };
-export type DeleteApiTestimonialsByIdApiArg = {
+export type DeleteApiClientsByIdApiArg = {
   id: string;
 };
 export const {
@@ -258,9 +236,9 @@ export const {
   useGetApiProjectsByIdQuery,
   usePutApiProjectsByIdMutation,
   useDeleteApiProjectsByIdMutation,
-  useGetApiTestimonialsQuery,
-  usePostApiTestimonialsMutation,
-  useGetApiTestimonialsByIdQuery,
-  usePutApiTestimonialsByIdMutation,
-  useDeleteApiTestimonialsByIdMutation,
+  useGetApiClientsQuery,
+  usePostApiClientsMutation,
+  useGetApiClientsByIdQuery,
+  usePutApiClientsByIdMutation,
+  useDeleteApiClientsByIdMutation,
 } = injectedRtkApi;

@@ -18,8 +18,8 @@ export const dashboardNavItems: DashboardNavItem[] = [
     icon: FolderKanban,
   },
   {
-    title: "Testimonials",
-    href: "/dashboard/testimonials",
+    title: "Clients",
+    href: "/dashboard/clients",
     icon: MessageSquareQuote,
   },
 ];

@@ -17,20 +17,21 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { type TestimonialFormValues, testimonialFormSchema } from "@/lib/form-schemas";
+import { type ClientFormValues, clientFormSchema } from "@/lib/form-schemas";
 import { imageToUrl } from "@/lib/upload";
 import { cn } from "@/lib/utils";
 import {
-  useGetApiTestimonialsByIdQuery,
-  usePostApiTestimonialsMutation,
-  usePutApiTestimonialsByIdMutation,
+  useGetApiClientsByIdQuery,
+  usePostApiClientsMutation,
+  usePutApiClientsByIdMutation,
 } from "@/store/services/apis";
 
-const EMPTY_DEFAULTS: TestimonialFormValues = {
+const EMPTY_DEFAULTS: ClientFormValues = {
   company: "",
   content: "",
   designation: "",
-  client_name: "",
+  clientName: "",
+  feedback: "",
   image: "",
 };
 
@@ -42,26 +43,26 @@ function getMutationErrorMessage(error: unknown): string {
   return "Something went wrong";
 }
 
-interface TestimonialSheetProps {
+interface ClientSheetProps {
   id?: number;
 }
 
-export default function TestimonialSheet({ id }: TestimonialSheetProps) {
+export default function ClientSheet({ id }: ClientSheetProps) {
   const [open, setOpen] = useState(false);
-  const { data: testimonial } = useGetApiTestimonialsByIdQuery(
+  const { data: client } = useGetApiClientsByIdQuery(
     { id: `${id}` },
     { skip: !id || !open, refetchOnMountOrArgChange: true },
   );
-  const [putTestimonial, { isLoading: isUpdating }] = usePutApiTestimonialsByIdMutation();
-  const [postTestimonial, { isLoading: isCreating }] = usePostApiTestimonialsMutation();
+  const [putClient, { isLoading: isUpdating }] = usePutApiClientsByIdMutation();
+  const [postClient, { isLoading: isCreating }] = usePostApiClientsMutation();
 
-  const form = useForm<TestimonialFormValues>({
-    resolver: zodResolver(testimonialFormSchema),
+  const form = useForm<ClientFormValues>({
+    resolver: zodResolver(clientFormSchema),
     defaultValues: EMPTY_DEFAULTS,
   });
 
   const imageValue = form.watch("image");
-  const clientName = form.watch("client_name");
+  const clientName = form.watch("clientName");
 
   const previewUrl = useMemo(() => {
     if (typeof imageValue === "string" && imageValue) return imageValue;
@@ -76,18 +77,19 @@ export default function TestimonialSheet({ id }: TestimonialSheetProps) {
 
   useEffect(() => {
     if (!open) return;
-    if (id && testimonial) {
+    if (id && client) {
       form.reset({
-        company: testimonial.data.company,
-        content: testimonial.data.content,
-        image: testimonial.data.image ?? "",
-        designation: testimonial.data.designation,
-        client_name: testimonial.data.client_name,
+        company: client.data.company,
+        content: client.data.content,
+        image: client.data.image ?? "",
+        designation: client.data.designation,
+        clientName: client.data.clientName,
+        feedback: client.data.feedback ?? "",
       });
     } else if (!id) {
       form.reset(EMPTY_DEFAULTS);
     }
-  }, [open, id, testimonial, form]);
+  }, [open, id, client, form]);
 
   const onSubmit = form.handleSubmit(async (values) => {
     try {
@@ -104,11 +106,12 @@ export default function TestimonialSheet({ id }: TestimonialSheetProps) {
         company: values.company,
         content: values.content,
         designation: values.designation,
-        client_name: values.client_name,
+        clientName: values.clientName,
+        ...(values.feedback?.trim() && { feedback: values.feedback.trim() }),
         ...(imageUrl && { image: imageUrl }),
       };
 
-      const response = id ? await putTestimonial({ id: `${id}`, body }) : await postTestimonial({ body });
+      const response = id ? await putClient({ id: `${id}`, body }) : await postClient({ body });
 
       if ("error" in response && response.error) {
         toast.error(getMutationErrorMessage(response.error));
@@ -131,14 +134,14 @@ export default function TestimonialSheet({ id }: TestimonialSheetProps) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button type="button" variant={id ? "outline" : "default"} className={id ? "w-full" : undefined}>
-          {id ? "Edit" : "Add testimonial"}
+          {id ? "Edit" : "Add client"}
         </Button>
       </SheetTrigger>
       <SheetContent className="gap-0 space-y-0 sm:max-w-md">
         <SheetHeader className="border-b">
-          <SheetTitle>{id ? "Edit testimonial" : "Add testimonial"}</SheetTitle>
+          <SheetTitle>{id ? "Edit client" : "Add client"}</SheetTitle>
           <SheetDescription>
-            {id ? "Update the client testimonial details." : "Add a new client testimonial to your portfolio."}
+            {id ? "Update the client details and testimonial." : "Add a new client to link with projects."}
           </SheetDescription>
         </SheetHeader>
         <form
@@ -146,16 +149,16 @@ export default function TestimonialSheet({ id }: TestimonialSheetProps) {
           onSubmit={onSubmit}
         >
           <FieldGroup className="w-full gap-4">
-            <Field data-invalid={!!form.formState.errors.client_name}>
-              <FieldLabel htmlFor="client_name">Client name</FieldLabel>
+            <Field data-invalid={!!form.formState.errors.clientName}>
+              <FieldLabel htmlFor="clientName">Client name</FieldLabel>
               <FieldContent>
                 <Input
-                  id="client_name"
+                  id="clientName"
                   placeholder="Jane Doe"
                   disabled={isSubmitting}
-                  {...form.register("client_name")}
+                  {...form.register("clientName")}
                 />
-                <FieldError errors={[form.formState.errors.client_name]} />
+                <FieldError errors={[form.formState.errors.clientName]} />
               </FieldContent>
             </Field>
 
@@ -181,7 +184,7 @@ export default function TestimonialSheet({ id }: TestimonialSheetProps) {
             </Field>
 
             <Field data-invalid={!!form.formState.errors.content}>
-              <FieldLabel htmlFor="content">Content</FieldLabel>
+              <FieldLabel htmlFor="content">Testimonial</FieldLabel>
               <FieldContent>
                 <Textarea
                   id="content"
@@ -191,6 +194,20 @@ export default function TestimonialSheet({ id }: TestimonialSheetProps) {
                   {...form.register("content")}
                 />
                 <FieldError errors={[form.formState.errors.content]} />
+              </FieldContent>
+            </Field>
+
+            <Field data-invalid={!!form.formState.errors.feedback}>
+              <FieldLabel htmlFor="feedback">Feedback comment</FieldLabel>
+              <FieldContent>
+                <Textarea
+                  id="feedback"
+                  placeholder="Additional feedback or context (optional)"
+                  rows={3}
+                  disabled={isSubmitting}
+                  {...form.register("feedback")}
+                />
+                <FieldError errors={[form.formState.errors.feedback]} />
               </FieldContent>
             </Field>
 

@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { type BasicsFormValues, basicsFormSchema, ENGAGEMENT_TYPE_OPTIONS } from "@/lib/form-schemas";
 import { slugifyTitle } from "@/lib/project-form-steps";
+import { useGetApiClientsQuery } from "@/store/services/apis";
 
 const DEFAULTS: BasicsFormValues = {
   slug: "",
@@ -20,6 +21,7 @@ const DEFAULTS: BasicsFormValues = {
   teamSize: 1,
   durationInMonths: 1,
   engagementType: "",
+  clientId: "",
   isLive: false,
   engagementModel: "",
 };
@@ -46,6 +48,8 @@ export function ProjectFormStepBasics({
   autoSlug = true,
 }: ProjectFormStepBasicsProps) {
   const slugManuallyEdited = useRef(false);
+  const { data: clientsResponse } = useGetApiClientsQuery();
+  const clients = clientsResponse?.data ?? [];
 
   const form = useForm<BasicsFormValues>({
     resolver: zodResolver(basicsFormSchema) as Resolver<BasicsFormValues>,
@@ -158,6 +162,33 @@ export function ProjectFormStepBasics({
               )}
             />
             <FieldError errors={errors.engagementType ? [errors.engagementType] : undefined} />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="clientId">Client</FieldLabel>
+            <Controller
+              name="clientId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value === "" ? "none" : String(field.value)}
+                  onValueChange={(value) => field.onChange(value === "none" ? "" : Number(value))}
+                >
+                  <SelectTrigger id="clientId" className="w-full" aria-invalid={errors.clientId ? true : undefined}>
+                    <SelectValue placeholder="Select client (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No client</SelectItem>
+                    {clients.map((client) => (
+                      <SelectItem key={client.id} value={String(client.id)}>
+                        {client.clientName}
+                        {client.company ? ` · ${client.company}` : ""}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <FieldError errors={errors.clientId ? [errors.clientId] : undefined} />
           </Field>
           <Field>
             <FieldLabel htmlFor="isLive">Live</FieldLabel>

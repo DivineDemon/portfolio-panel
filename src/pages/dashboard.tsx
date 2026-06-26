@@ -3,18 +3,18 @@ import { Link } from "react-router-dom";
 
 import DashboardSkeleton from "@/components/skeleton/dashboard-skeleton";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGetApiProjectsQuery, useGetApiTestimonialsQuery } from "@/store/services/apis";
+import { useGetApiClientsQuery, useGetApiProjectsQuery } from "@/store/services/apis";
 
 export default function DashboardPage() {
   const { data: projects, isLoading: projectsLoading } = useGetApiProjectsQuery();
-  const { data: testimonials, isLoading: testimonialsLoading } = useGetApiTestimonialsQuery();
+  const { data: clients, isLoading: clientsLoading } = useGetApiClientsQuery();
 
-  if (projectsLoading || testimonialsLoading) {
+  if (projectsLoading || clientsLoading) {
     return <DashboardSkeleton />;
   }
 
   const projectCount = projects?.data.length ?? 0;
-  const testimonialCount = testimonials?.data.length ?? 0;
+  const clientCount = clients?.data.length ?? 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -47,13 +47,13 @@ export default function DashboardPage() {
               <MessageSquareQuote className="size-6" />
             </div>
             <div className="min-w-0 flex-1">
-              <CardDescription>Testimonials</CardDescription>
-              <CardTitle className="text-3xl tabular-nums">{testimonialCount}</CardTitle>
+              <CardDescription>Clients</CardDescription>
+              <CardTitle className="text-3xl tabular-nums">{clientCount}</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
-            <Link to="/dashboard/testimonials" className="text-primary text-sm hover:underline">
-              View all testimonials
+            <Link to="/dashboard/clients" className="text-primary text-sm hover:underline">
+              View all clients
             </Link>
           </CardContent>
         </Card>

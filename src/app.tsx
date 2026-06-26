@@ -2,13 +2,13 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
+import ClientsPage from "@/pages/clients";
 import DashboardPage from "@/pages/dashboard";
 import LandingPage from "@/pages/landing";
 import LoginPage from "@/pages/login";
 import ProjectCreatePage from "@/pages/project-create";
 import ProjectDetailsPage from "@/pages/project-details";
 import ProjectsPage from "@/pages/projects";
-import TestimonialsPage from "@/pages/testimonials";
 
 const App = () => {
   return (
@@ -28,7 +28,7 @@ const App = () => {
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="projects/new" element={<ProjectCreatePage />} />
           <Route path="projects/:id" element={<ProjectDetailsPage />} />
-          <Route path="testimonials" element={<TestimonialsPage />} />
+          <Route path="clients" element={<ClientsPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

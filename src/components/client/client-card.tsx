@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import TestimonialSheet from "@/components/testimonial/testimonial-sheet";
+import ClientSheet from "@/components/client/client-sheet";
 import { Button } from "@/components/ui/button";
 import { WarningModal } from "@/components/warning-dialog";
 import { cn } from "@/lib/utils";
-import { type GetApiTestimonialsApiResponse, useDeleteApiTestimonialsByIdMutation } from "@/store/services/apis";
+import { type GetApiClientsApiResponse, useDeleteApiClientsByIdMutation } from "@/store/services/apis";
 
-interface TestimonialCardProps {
-  testimonial: GetApiTestimonialsApiResponse["data"][number];
+interface ClientCardProps {
+  client: GetApiClientsApiResponse["data"][number];
 }
 
 function getMutationErrorMessage(error: unknown): string {
@@ -18,12 +18,12 @@ function getMutationErrorMessage(error: unknown): string {
   return "Something went wrong";
 }
 
-export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
+export default function ClientCard({ client }: ClientCardProps) {
   const [warn, setWarn] = useState(false);
-  const [deleteTestimonial, { isLoading }] = useDeleteApiTestimonialsByIdMutation();
+  const [deleteClient, { isLoading }] = useDeleteApiClientsByIdMutation();
 
   const handleDelete = async () => {
-    const response = await deleteTestimonial({ id: `${testimonial.id}` });
+    const response = await deleteClient({ id: `${client.id}` });
 
     if ("error" in response && response.error) {
       toast.error(getMutationErrorMessage(response.error));
@@ -40,8 +40,8 @@ export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
         loading={isLoading}
         onOpenChange={setWarn}
         onConfirm={handleDelete}
-        title="Delete testimonial"
-        subtitle="Are you sure you want to delete this testimonial? This action cannot be undone."
+        title="Delete client"
+        subtitle="Are you sure you want to delete this client? Linked projects will be unlinked. This action cannot be undone."
         confirmText="Delete"
       />
       <article
@@ -51,10 +51,10 @@ export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
         )}
       >
         <div className="mb-4 flex items-center gap-3 border-border/80 border-b pb-4">
-          {testimonial.image ? (
+          {client.image ? (
             <img
-              alt={testimonial.client_name}
-              src={testimonial.image}
+              alt={client.clientName}
+              src={client.image}
               className="size-10 shrink-0 rounded-full border border-border object-cover"
             />
           ) : (
@@ -62,22 +62,27 @@ export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
               className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border bg-muted font-medium text-muted-foreground text-sm"
               aria-hidden
             >
-              {testimonial.client_name.charAt(0)}
+              {client.clientName.charAt(0)}
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <p className="truncate font-medium text-foreground text-sm">{testimonial.client_name}</p>
+            <p className="truncate font-medium text-foreground text-sm">{client.clientName}</p>
             <p className="truncate text-muted-foreground text-xs">
-              {testimonial.designation}
-              {testimonial.company && ` · ${testimonial.company}`}
+              {client.designation}
+              {client.company && ` · ${client.company}`}
             </p>
           </div>
         </div>
-        <p className="line-clamp-3 text-foreground text-sm leading-relaxed" title={testimonial.content}>
-          {testimonial.content}
+        <p className="line-clamp-3 text-foreground text-sm leading-relaxed" title={client.content}>
+          {client.content}
         </p>
+        {client.feedback?.trim() && (
+          <p className="mt-3 line-clamp-2 text-muted-foreground text-xs leading-relaxed" title={client.feedback}>
+            {client.feedback}
+          </p>
+        )}
         <div className="mt-5 grid w-full grid-cols-2 items-center justify-center gap-2.5 border-t pt-5">
-          <TestimonialSheet id={testimonial.id} />
+          <ClientSheet id={client.id} />
           <Button type="button" variant="destructive" className="w-full" onClick={() => setWarn(true)}>
             Delete
           </Button>

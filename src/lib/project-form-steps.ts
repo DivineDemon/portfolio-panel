@@ -48,6 +48,7 @@ export function projectResponseToStepData(project: GetApiProjectsByIdApiResponse
       teamSize: Number(d.teamSize) || 1,
       durationInMonths: Number(d.durationInMonths) || 1,
       engagementType: (d.engagementType ?? "") as BasicsFormValues["engagementType"],
+      clientId: d.clientId ?? "",
       isLive: d.isLive ?? false,
       engagementModel: d.engagementModel ?? "",
     },
@@ -59,7 +60,6 @@ export function projectResponseToStepData(project: GetApiProjectsByIdApiResponse
       whatMadeThisHard: d.whatMadeThisHard ?? "",
       businessOutcome: d.businessOutcome ?? "",
       results: d.results ?? "",
-      clientTestimonial: d.clientTestimonial ?? "",
       architecture: d.architecture ?? "",
       execution: d.execution ?? "",
       whatWeBuilt: d.whatWeBuilt ?? "",
@@ -130,6 +130,8 @@ function parseMetrics(s: string | undefined): Record<string, ProjectMetricValue>
 export async function mergeStepDataToApiBody(data: FullStepData): Promise<PostApiProjectsApiArg["body"]> {
   const displayOrder =
     data.seo.displayOrder === "" || data.seo.displayOrder === undefined ? null : Number(data.seo.displayOrder);
+  const clientId =
+    data.basics.clientId === "" || data.basics.clientId === undefined ? null : Number(data.basics.clientId);
 
   return {
     slug: data.basics.slug,
@@ -141,6 +143,7 @@ export async function mergeStepDataToApiBody(data: FullStepData): Promise<PostAp
     teamSize: data.basics.teamSize ?? null,
     durationInMonths: data.basics.durationInMonths ?? null,
     engagementType: data.basics.engagementType || null,
+    clientId,
     isLive: data.basics.isLive,
     problem: data.story.problem,
     situation: data.story.situation || null,
@@ -149,7 +152,6 @@ export async function mergeStepDataToApiBody(data: FullStepData): Promise<PostAp
     whatMadeThisHard: data.story.whatMadeThisHard || null,
     businessOutcome: data.story.businessOutcome || null,
     results: data.story.results,
-    clientTestimonial: data.story.clientTestimonial || null,
     architecture: data.story.architecture,
     execution: data.story.execution,
     whatWeBuilt: data.story.whatWeBuilt,

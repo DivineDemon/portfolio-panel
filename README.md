@@ -1,15 +1,16 @@
 # Portfolio Panel
 
-Admin dashboard for managing portfolio content — projects and testimonials — backed by a REST API.
+Admin dashboard for managing portfolio content — projects and clients — backed by a REST API.
 
 ## Features
 
 - **Landing page** — public marketing entry with sign-in CTA
 - **Single-user auth** — password login via Vercel serverless functions and httpOnly JWT cookie
-- **Dashboard** — project and testimonial counts with analytics placeholder
+- **Dashboard** — project and client counts with analytics placeholder
 - **Projects** — list, create, edit, and delete portfolio projects via a 4-step form (basics, story, tech & media, SEO & links)
-- **Testimonials** — create, edit, and delete client testimonials in a slide-over sheet
-- **Image uploads** — cover and gallery images uploaded to [ImgBB](https://imgbb.com/)
+- **Clients** — create, edit, and delete clients (name, company, designation, testimonial, feedback, photo) in a slide-over sheet
+- **Project–client linking** — assign a client to a project from the basics step; case studies display that client's testimonial
+- **Image uploads** — cover, gallery, and client photos uploaded to [ImgBB](https://imgbb.com/)
 - **Dark / light theme** — system-aware theme toggle
 - **OpenAPI-driven API client** — RTK Query hooks generated from the backend OpenAPI schema
 
@@ -49,7 +50,7 @@ Admin dashboard for managing portfolio content — projects and testimonials —
    | Variable | Where | Description |
    | --- | --- | --- |
    | `VITE_BASE_API_URL` | Client | Base URL of the portfolio API (e.g. `https://pb.sv.mushoodhanif.com`) |
-   | `VITE_PUBLIC_IMGBB_KEY` | Client | ImgBB API key for uploading project and testimonial images |
+   | `VITE_PUBLIC_IMGBB_KEY` | Client | ImgBB API key for uploading project and client images |
    | `ADMIN_PASSWORD` | Server | Single admin login password |
    | `AUTH_SECRET` | Server | JWT signing secret (32+ random characters) |
 
@@ -92,13 +93,13 @@ Admin dashboard for managing portfolio content — projects and testimonials —
 api/auth/                   # Vercel serverless auth handlers
 src/
 ├── app.tsx                 # Route definitions
-├── pages/                  # Landing, login, dashboard, projects, testimonials
+├── pages/                  # Landing, login, dashboard, projects, clients
 ├── components/
 │   ├── auth/               # Protected route wrapper
+│   ├── client/             # Client cards and sheet form
 │   ├── landing/            # Public landing page
 │   ├── layout/             # Dashboard shell, sidebar, navbar
 │   ├── project/            # Project cards and multistep form
-│   ├── testimonial/        # Testimonial cards and sheet form
 │   ├── skeleton/           # Loading skeletons
 │   └── ui/                 # shadcn/ui primitives
 ├── store/
@@ -118,7 +119,7 @@ src/
 | `/dashboard/projects` | Protected | Project list |
 | `/dashboard/projects/new` | Protected | Create project |
 | `/dashboard/projects/:id` | Protected | Edit project |
-| `/dashboard/testimonials` | Protected | Testimonial list and management |
+| `/dashboard/clients` | Protected | Client list and management |
 
 ## Deployment
 

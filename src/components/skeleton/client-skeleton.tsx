@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-export default function TestimonialSkeleton() {
+export default function ClientSkeleton() {
   return (
     <article className={cn("flex w-full shrink-0 flex-col rounded-xl border border-border bg-card p-5 shadow-sm")}>
       <div className="mb-4 flex items-center gap-3 border-border/80 border-b pb-4">

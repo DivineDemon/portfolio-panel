@@ -77,6 +77,7 @@ export const basicsFormSchema = z.object({
   teamSize: z.coerce.number().min(1, "Required"),
   durationInMonths: z.coerce.number().min(1, "Required"),
   engagementType: z.union([z.enum(engagementTypeValues), z.literal("")]),
+  clientId: z.union([z.coerce.number().int().positive(), z.literal("")]),
   isLive: z.boolean(),
   engagementModel: z.string().optional(),
 });
@@ -89,7 +90,6 @@ export const storyFormSchema = z.object({
   whatMadeThisHard: z.string().min(1, "Required"),
   businessOutcome: z.string().optional(),
   results: z.string().min(1, "Required"),
-  clientTestimonial: z.string().optional(),
   architecture: z.string().min(1, "Required"),
   execution: z.string().min(1, "Required"),
   whatWeBuilt: z.string().min(1, "Required"),
@@ -126,11 +126,12 @@ export const seoLinksFormSchema = z.object({
   published: z.boolean(),
 });
 
-export const testimonialFormSchema = z.object({
+export const clientFormSchema = z.object({
   company: z.string().min(1, "Required"),
   content: z.string().min(1, "Required"),
   designation: z.string().min(1, "Required"),
-  client_name: z.string().min(1, "Required"),
+  clientName: z.string().min(1, "Required"),
+  feedback: z.string().optional(),
   image: z.union([z.url(), z.literal(""), z.instanceof(FileList)]).optional(),
 });
 
@@ -138,7 +139,7 @@ export type BasicsFormValues = z.infer<typeof basicsFormSchema>;
 export type StoryFormValues = z.infer<typeof storyFormSchema>;
 export type TechMediaFormValues = z.input<typeof techMediaFormSchema>;
 export type SeoLinksFormValues = z.infer<typeof seoLinksFormSchema>;
-export type TestimonialFormValues = z.infer<typeof testimonialFormSchema>;
+export type ClientFormValues = z.infer<typeof clientFormSchema>;
 
 export type ProjectMetricValue = string | number | boolean | string[] | null;
 export type ProjectMetrics = Record<string, ProjectMetricValue>;

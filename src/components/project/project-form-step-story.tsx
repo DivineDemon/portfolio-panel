@@ -17,7 +17,6 @@ const DEFAULTS: StoryFormValues = {
   whatMadeThisHard: "",
   businessOutcome: "",
   results: "",
-  clientTestimonial: "",
   architecture: "",
   execution: "",
   whatWeBuilt: "",
@@ -25,7 +24,6 @@ const DEFAULTS: StoryFormValues = {
 };
 
 const STORY_MARKDOWN_FIELDS = [
-  { name: "clientTestimonial" as const, label: "Client Testimonial", optional: true },
   { name: "problem" as const, label: "Problem" },
   { name: "situation" as const, label: "Situation" },
   { name: "beforeAfter" as const, label: "Before / After", optional: true },
