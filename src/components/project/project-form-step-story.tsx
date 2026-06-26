@@ -74,24 +74,26 @@ export function ProjectFormStepStory({
   });
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex max-h-[calc(100vh-164px)] w-full flex-col items-start justify-start gap-5 overflow-y-auto"
-    >
-      {STORY_MARKDOWN_FIELDS.map(({ name, label }) => (
-        <Field key={name}>
-          <FieldLabel htmlFor={name}>{label}</FieldLabel>
-          <MarkdownField control={control} name={name} id={name} height={180} />
-          <FieldError errors={errors[name] ? [errors[name]] : undefined} />
-        </Field>
-      ))}
-      <MetricsKeyValueField<StoryFormValues>
-        key={initialValues?.metrics ?? "new-metrics"}
-        name="metrics"
-        control={control}
-        error={errors.metrics}
-      />
-      <div className="mt-auto flex w-full items-center justify-end gap-4 border-t pt-4">
+    <form onSubmit={handleSubmit} className="flex min-h-0 w-full flex-1 flex-col">
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="flex w-full flex-col items-start justify-start gap-5 pb-5">
+          {STORY_MARKDOWN_FIELDS.map(({ name, label }) => (
+            <Field key={name}>
+              <FieldLabel htmlFor={name}>{label}</FieldLabel>
+              <MarkdownField control={control} name={name} id={name} height={180} />
+              <FieldError errors={errors[name] ? [errors[name]] : undefined} />
+            </Field>
+          ))}
+          <MetricsKeyValueField<StoryFormValues>
+            key={initialValues?.metrics ?? "new-metrics"}
+            name="metrics"
+            control={control}
+            error={errors.metrics}
+          />
+        </div>
+      </div>
+
+      <div className="flex w-full shrink-0 items-center justify-end gap-4 border-t pt-4">
         {!isFirstStep && onPrev && (
           <Button type="button" variant="outline" onClick={onPrev} disabled={isSubmitting}>
             <ChevronLeft className="size-4" />

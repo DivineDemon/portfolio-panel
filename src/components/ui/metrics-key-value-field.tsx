@@ -5,8 +5,8 @@ import { Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { ProjectMetricValue } from "@/lib/form-schemas";
-import { cn } from "@/lib/utils";
 
 type MetricRowType = "string" | "number" | "boolean" | "array";
 
@@ -17,11 +17,12 @@ type MetricRow = {
   value: string;
 };
 
-const selectClassName = cn(
-  "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs",
-  "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none",
-  "disabled:cursor-not-allowed disabled:opacity-50",
-);
+const METRIC_TYPE_OPTIONS: { value: MetricRowType; label: string }[] = [
+  { value: "string", label: "Text" },
+  { value: "number", label: "Number" },
+  { value: "boolean", label: "Boolean" },
+  { value: "array", label: "List" },
+];
 
 function createRowId(): string {
   return `metric-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
@@ -171,32 +172,37 @@ function MetricsKeyValueEditor({
                 disabled={disabled}
                 onChange={(event) => updateRow(row.id, { key: event.target.value })}
               />
-              <select
-                className={selectClassName}
+              <Select
                 value={row.type}
                 disabled={disabled}
-                onChange={(event) =>
+                onValueChange={(type) =>
                   updateRow(row.id, {
-                    type: event.target.value as MetricRowType,
-                    value: event.target.value === "boolean" ? "true" : row.value,
+                    type: type as MetricRowType,
+                    value: type === "boolean" ? "true" : row.value,
                   })
                 }
               >
-                <option value="string">Text</option>
-                <option value="number">Number</option>
-                <option value="boolean">Boolean</option>
-                <option value="array">List</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {METRIC_TYPE_OPTIONS.map(({ value, label }) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {row.type === "boolean" ? (
-                <select
-                  className={selectClassName}
-                  value={row.value}
-                  disabled={disabled}
-                  onChange={(event) => updateRow(row.id, { value: event.target.value })}
-                >
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </select>
+                <Select value={row.value} disabled={disabled} onValueChange={(value) => updateRow(row.id, { value })}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">True</SelectItem>
+                    <SelectItem value="false">False</SelectItem>
+                  </SelectContent>
+                </Select>
               ) : (
                 <Input
                   placeholder={row.type === "array" ? "Comma-separated values" : "Value"}

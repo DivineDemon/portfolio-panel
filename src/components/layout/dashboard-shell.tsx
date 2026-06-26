@@ -8,10 +8,10 @@ export function DashboardShell() {
   return (
     <SidebarProvider>
       <DashboardSidebar />
-      <SidebarInset>
+      <SidebarInset className="min-h-0">
         <DashboardNavbar />
-        <div className="flex flex-1 flex-col overflow-auto">
-          <div className="mx-auto w-full max-w-6xl flex-1 p-4 sm:p-6">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          <div className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col p-5">
             <Outlet />
           </div>
         </div>

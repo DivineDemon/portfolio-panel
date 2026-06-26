@@ -46,13 +46,13 @@ export default function ProjectCreatePage() {
   const isLastStep = currentStep === TOTAL_STEPS - 1;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
+    <div className="flex min-h-0 flex-1 flex-col gap-6">
+      <div className="shrink-0">
         <h1 className="font-semibold text-2xl tracking-tight">New project</h1>
         <p className="text-muted-foreground text-sm">Create a new portfolio project entry.</p>
       </div>
 
-      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+      <div className="flex shrink-0 items-center gap-2 text-muted-foreground text-sm">
         <span>
           Step {currentStep + 1} of {TOTAL_STEPS}
         </span>
@@ -60,65 +60,67 @@ export default function ProjectCreatePage() {
         <span className="font-medium text-foreground">{PROJECT_FORM_STEP_LABELS[currentStep]}</span>
       </div>
 
-      {currentStep === 0 && (
-        <ProjectFormStepBasics
-          initialValues={stepData.basics}
-          onStepSubmit={(data) => {
-            setStepData((prev) => ({ ...prev, basics: data }));
-            setStep(1);
-          }}
-          onPrev={isFirstStep ? undefined : () => setStep(0)}
-          isFirstStep={isFirstStep}
-          isLastStep={isLastStep}
-          isSubmitting={isSubmitting}
-        />
-      )}
-      {currentStep === 1 && (
-        <ProjectFormStepStoryLazy
-          initialValues={stepData.story}
-          onStepSubmit={(data) => {
-            setStepData((prev) => ({ ...prev, story: data }));
-            setStep(2);
-          }}
-          onPrev={() => setStep(0)}
-          isFirstStep={false}
-          isLastStep={isLastStep}
-          isSubmitting={isSubmitting}
-        />
-      )}
-      {currentStep === 2 && (
-        <ProjectFormStepTechMedia
-          initialValues={stepData.tech}
-          onStepSubmit={(data) => {
-            setStepData((prev) => ({ ...prev, tech: data }));
-            setStep(3);
-          }}
-          onPrev={() => setStep(1)}
-          isFirstStep={false}
-          isLastStep={isLastStep}
-          isSubmitting={isSubmitting}
-          isEdit={false}
-        />
-      )}
-      {currentStep === 3 && (
-        <ProjectFormStepSeoLinks
-          initialValues={stepData.seo}
-          onStepSubmit={(data) => {
-            const full: FullStepData = {
-              basics: stepData.basics!,
-              story: stepData.story!,
-              tech: stepData.tech!,
-              seo: data,
-            };
-            void handleFinalSubmit(full);
-          }}
-          onPrev={() => setStep(2)}
-          isFirstStep={false}
-          isLastStep={true}
-          submitLabel="Create project"
-          isSubmitting={isSubmitting}
-        />
-      )}
+      <div key={currentStep} className="flex min-h-0 flex-1 flex-col">
+        {currentStep === 0 && (
+          <ProjectFormStepBasics
+            initialValues={stepData.basics}
+            onStepSubmit={(data) => {
+              setStepData((prev) => ({ ...prev, basics: data }));
+              setStep(1);
+            }}
+            onPrev={isFirstStep ? undefined : () => setStep(0)}
+            isFirstStep={isFirstStep}
+            isLastStep={isLastStep}
+            isSubmitting={isSubmitting}
+          />
+        )}
+        {currentStep === 1 && (
+          <ProjectFormStepStoryLazy
+            initialValues={stepData.story}
+            onStepSubmit={(data) => {
+              setStepData((prev) => ({ ...prev, story: data }));
+              setStep(2);
+            }}
+            onPrev={() => setStep(0)}
+            isFirstStep={false}
+            isLastStep={isLastStep}
+            isSubmitting={isSubmitting}
+          />
+        )}
+        {currentStep === 2 && (
+          <ProjectFormStepTechMedia
+            initialValues={stepData.tech}
+            onStepSubmit={(data) => {
+              setStepData((prev) => ({ ...prev, tech: data }));
+              setStep(3);
+            }}
+            onPrev={() => setStep(1)}
+            isFirstStep={false}
+            isLastStep={isLastStep}
+            isSubmitting={isSubmitting}
+            isEdit={false}
+          />
+        )}
+        {currentStep === 3 && (
+          <ProjectFormStepSeoLinks
+            initialValues={stepData.seo}
+            onStepSubmit={(data) => {
+              const full: FullStepData = {
+                basics: stepData.basics!,
+                story: stepData.story!,
+                tech: stepData.tech!,
+                seo: data,
+              };
+              void handleFinalSubmit(full);
+            }}
+            onPrev={() => setStep(2)}
+            isFirstStep={false}
+            isLastStep={true}
+            submitLabel="Create project"
+            isSubmitting={isSubmitting}
+          />
+        )}
+      </div>
     </div>
   );
 }

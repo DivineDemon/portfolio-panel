@@ -86,101 +86,105 @@ export function ProjectFormStepTechMedia({
         : [];
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="grid max-h-[calc(100vh-164px)] w-full grid-cols-1 items-start justify-start gap-5 overflow-y-auto md:grid-cols-2"
-    >
-      <Field>
-        <FieldLabel htmlFor="keywords">Keywords (comma-separated)</FieldLabel>
-        <Input id="keywords" type="text" placeholder="Keywords" {...register("keywords")} />
-        <FieldError errors={errors.keywords ? [errors.keywords] : undefined} />
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="techStack">Tech Stack (comma-separated)</FieldLabel>
-        <Input id="techStack" type="text" placeholder="Tech Stack" {...register("techStack")} />
-        <FieldError errors={errors.techStack ? [errors.techStack] : undefined} />
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="infrastructure">Infrastructure (comma-separated)</FieldLabel>
-        <Input id="infrastructure" type="text" placeholder="Infrastructure" {...register("infrastructure")} />
-        <FieldError errors={errors.infrastructure ? [errors.infrastructure] : undefined} />
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="integrations">Integrations (comma-separated)</FieldLabel>
-        <Input id="integrations" type="text" placeholder="Integrations" {...register("integrations")} />
-        <FieldError errors={errors.integrations ? [errors.integrations] : undefined} />
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="coverImage">Cover Image</FieldLabel>
-        <Controller
-          name="coverImage"
-          control={control}
-          render={({ field: { value, onChange, onBlur, ref } }) => (
-            <div className="space-y-2">
-              {coverPreview && (
-                <div className="relative aspect-video w-full max-w-md overflow-hidden rounded-md border bg-muted">
-                  <img src={coverPreview} alt="Cover preview" className="h-full w-full object-cover" />
-                </div>
-              )}
-              <Input
-                ref={ref}
-                type="file"
-                id="coverImage"
-                accept="image/*"
-                onChange={(e) => onChange(e.target.files?.length ? e.target.files : undefined)}
-                onBlur={onBlur}
-                required={!isEdit && !value}
-                className="p-0 file:mr-2.5 file:h-9 file:bg-primary file:px-2.5 file:py-0"
-              />
-            </div>
-          )}
-        />
-        <FieldError errors={errors.coverImage ? [errors.coverImage] : undefined} />
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="galleryImages">Gallery Images</FieldLabel>
-        <Controller
-          name="galleryImages"
-          control={control}
-          render={({ field: { value, onChange, onBlur, ref } }) => (
-            <div className="space-y-2">
-              {galleryPreviews.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {galleryPreviews.map((url, i) => (
-                    <div key={url} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md border bg-muted">
-                      <img src={url} alt={`Gallery ${i + 1}`} className="h-full w-full object-cover" />
+    <form onSubmit={handleSubmit} className="flex min-h-0 w-full flex-1 flex-col">
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="grid w-full grid-cols-1 items-start justify-start gap-5 pb-5 md:grid-cols-2">
+          <Field>
+            <FieldLabel htmlFor="keywords">Keywords (comma-separated)</FieldLabel>
+            <Input id="keywords" type="text" placeholder="Keywords" {...register("keywords")} />
+            <FieldError errors={errors.keywords ? [errors.keywords] : undefined} />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="techStack">Tech Stack (comma-separated)</FieldLabel>
+            <Input id="techStack" type="text" placeholder="Tech Stack" {...register("techStack")} />
+            <FieldError errors={errors.techStack ? [errors.techStack] : undefined} />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="infrastructure">Infrastructure (comma-separated)</FieldLabel>
+            <Input id="infrastructure" type="text" placeholder="Infrastructure" {...register("infrastructure")} />
+            <FieldError errors={errors.infrastructure ? [errors.infrastructure] : undefined} />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="integrations">Integrations (comma-separated)</FieldLabel>
+            <Input id="integrations" type="text" placeholder="Integrations" {...register("integrations")} />
+            <FieldError errors={errors.integrations ? [errors.integrations] : undefined} />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="coverImage">Cover Image</FieldLabel>
+            <Controller
+              name="coverImage"
+              control={control}
+              render={({ field: { value, onChange, onBlur, ref } }) => (
+                <div className="space-y-2">
+                  {coverPreview && (
+                    <div className="relative aspect-video w-full max-w-md overflow-hidden rounded-md border bg-muted">
+                      <img src={coverPreview} alt="Cover preview" className="h-full w-full object-cover" />
                     </div>
-                  ))}
+                  )}
+                  <Input
+                    ref={ref}
+                    type="file"
+                    id="coverImage"
+                    accept="image/*"
+                    onChange={(e) => onChange(e.target.files?.length ? e.target.files : undefined)}
+                    onBlur={onBlur}
+                    required={!isEdit && !value}
+                    className="p-0 file:mr-2.5 file:h-9 file:bg-primary file:px-2.5 file:py-0"
+                  />
                 </div>
               )}
-              <Input
-                ref={ref}
-                type="file"
-                id="galleryImages"
-                accept="image/*"
-                multiple
-                onChange={(e) => onChange(e.target.files?.length ? e.target.files : undefined)}
-                onBlur={onBlur}
-                required={!isEdit && (!value || (Array.isArray(value) && value.length === 0))}
-                className="p-0 file:mr-2.5 file:h-9 file:bg-primary file:px-2.5 file:py-0"
-              />
-            </div>
-          )}
-        />
-        <FieldError errors={errors.galleryImages ? [errors.galleryImages] : undefined} />
-      </Field>
-      <Field className="md:col-span-2">
-        <FieldLabel htmlFor="galleryCaptions">Gallery Captions (one per line)</FieldLabel>
-        <Textarea
-          id="galleryCaptions"
-          rows={4}
-          placeholder={"Dashboard with real-time call analytics\nAgent configuration panel for conversation flows"}
-          {...register("galleryCaptions")}
-        />
-        <FieldError errors={errors.galleryCaptions ? [errors.galleryCaptions] : undefined} />
-      </Field>
+            />
+            <FieldError errors={errors.coverImage ? [errors.coverImage] : undefined} />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="galleryImages">Gallery Images</FieldLabel>
+            <Controller
+              name="galleryImages"
+              control={control}
+              render={({ field: { value, onChange, onBlur, ref } }) => (
+                <div className="space-y-2">
+                  {galleryPreviews.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {galleryPreviews.map((url, i) => (
+                        <div
+                          key={url}
+                          className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md border bg-muted"
+                        >
+                          <img src={url} alt={`Gallery ${i + 1}`} className="h-full w-full object-cover" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <Input
+                    ref={ref}
+                    type="file"
+                    id="galleryImages"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => onChange(e.target.files?.length ? e.target.files : undefined)}
+                    onBlur={onBlur}
+                    required={!isEdit && (!value || (Array.isArray(value) && value.length === 0))}
+                    className="p-0 file:mr-2.5 file:h-9 file:bg-primary file:px-2.5 file:py-0"
+                  />
+                </div>
+              )}
+            />
+            <FieldError errors={errors.galleryImages ? [errors.galleryImages] : undefined} />
+          </Field>
+          <Field className="md:col-span-2">
+            <FieldLabel htmlFor="galleryCaptions">Gallery Captions (one per line)</FieldLabel>
+            <Textarea
+              id="galleryCaptions"
+              rows={4}
+              placeholder={"Dashboard with real-time call analytics\nAgent configuration panel for conversation flows"}
+              {...register("galleryCaptions")}
+            />
+            <FieldError errors={errors.galleryCaptions ? [errors.galleryCaptions] : undefined} />
+          </Field>
+        </div>
+      </div>
 
-      <div className="col-span-2 mt-auto flex w-full items-center justify-end gap-4 border-t pt-4">
+      <div className="flex w-full shrink-0 items-center justify-end gap-4 border-t pt-4">
         {!isFirstStep && onPrev && (
           <Button type="button" variant="outline" onClick={onPrev} disabled={isSubmitting}>
             <ChevronLeft className="size-4" />

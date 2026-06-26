@@ -98,7 +98,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                   <Badge variant="outline">Draft</Badge>
                 )}
                 {project.isLive && <Badge variant="secondary">Live</Badge>}
-                {project.engagementType && <Badge variant="outline">{project.engagementType.replace(/-/g, " ")}</Badge>}
+                {project.engagementType && <Badge variant="default">{project.engagementType.replace(/-/g, " ")}</Badge>}
               </div>
             </div>
             <div className="flex flex-1 flex-col gap-2 p-4">
