@@ -25,6 +25,12 @@ function WorkflowJsonPreview({ value }: { value: string }) {
         Workflow preview
       </div>
       <dl className="grid gap-2 text-sm sm:grid-cols-2">
+        {preview.workflowCount > 1 && (
+          <div>
+            <dt className="text-muted-foreground">Workflows</dt>
+            <dd className="font-medium">{preview.workflowCount}</dd>
+          </div>
+        )}
         <div>
           <dt className="text-muted-foreground">Nodes</dt>
           <dd className="font-medium">{preview.nodeCount}</dd>
@@ -72,7 +78,8 @@ export function WorkflowJsonField<T extends FieldValues>({ name, control, error 
         <Field>
           <FieldLabel htmlFor={name}>Workflow JSON</FieldLabel>
           <p className="text-muted-foreground text-sm">
-            Upload an n8n export (.json) or paste the workflow JSON below. Credentials are stripped on save.
+            Upload an n8n export (.json) or paste valid JSON below. Multiple workflows in one file are supported.
+            Credentials are stripped on save.
           </p>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -97,7 +104,7 @@ export function WorkflowJsonField<T extends FieldValues>({ name, control, error 
           <Textarea
             id={name}
             placeholder='{"nodes": [...], "connections": {...}}'
-            className="min-h-[240px] font-mono text-sm"
+            className="field-sizing-fixed h-72 max-h-72 min-h-48 resize-none overflow-y-auto font-mono text-sm"
             value={field.value ?? ""}
             onChange={field.onChange}
             onBlur={field.onBlur}

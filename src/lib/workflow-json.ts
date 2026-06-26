@@ -88,6 +88,44 @@ export const workflowJsonObjectSchema = z.object({
   id: z.string().optional(),
 });
 
+/** Parse one or more JSON values from a string (supports concatenated JSON objects). */
+export function parseJsonValues(input: string): unknown[] {
+  const trimmed = input.trim();
+  if (!trimmed) return [];
+
+  try {
+    return [JSON.parse(trimmed)];
+  } catch {
+    // Fall through to incremental parse for multiple concatenated values.
+  }
+
+  const values: unknown[] = [];
+  let index = 0;
+
+  while (index < trimmed.length) {
+    while (index < trimmed.length && /\s/.test(trimmed[index]!)) index++;
+    if (index >= trimmed.length) break;
+
+    let found = false;
+    for (let end = index + 1; end <= trimmed.length; end++) {
+      try {
+        values.push(JSON.parse(trimmed.slice(index, end)));
+        index = end;
+        found = true;
+        break;
+      } catch {
+        // Extend slice until JSON.parse succeeds.
+      }
+    }
+
+    if (!found) {
+      throw new SyntaxError(`Unexpected token at position ${index + 1}`);
+    }
+  }
+
+  return values;
+}
+
 export const workflowJsonStringSchema = z.string().superRefine((val, ctx) => {
   const trimmed = val.trim();
   if (!trimmed) {
@@ -95,14 +133,7 @@ export const workflowJsonStringSchema = z.string().superRefine((val, ctx) => {
     return;
   }
   try {
-    const parsed = JSON.parse(trimmed) as unknown;
-    const result = workflowJsonObjectSchema.safeParse(parsed);
-    if (!result.success) {
-      ctx.addIssue({
-        code: "custom",
-        message: "Workflow JSON must include valid nodes and connections",
-      });
-    }
+    parseJsonValues(trimmed);
   } catch (error) {
     ctx.addIssue({
       code: "custom",
@@ -112,8 +143,12 @@ export const workflowJsonStringSchema = z.string().superRefine((val, ctx) => {
 });
 
 export function parseWorkflowJsonString(value: string): WorkflowJsonObject {
-  const parsed = JSON.parse(value.trim()) as unknown;
-  return workflowJsonObjectSchema.parse(parsed);
+  const values = parseJsonValues(value);
+  if (values.length === 0) {
+    throw new Error("Workflow JSON is required");
+  }
+  const parsed = values.length === 1 ? values[0] : values;
+  return parsed as WorkflowJsonObject;
 }
 
 export function formatNodeTypeShort(type: unknown): string {
@@ -140,13 +175,44 @@ export function findTriggerType(nodes: WorkflowJsonObject["nodes"]): string | nu
   return trigger ? formatNodeTypeShort(trigger.type) : null;
 }
 
+function extractWorkflowPreview(workflow: unknown) {
+  if (!workflow || typeof workflow !== "object" || !("nodes" in workflow)) return null;
+  const nodes = workflow.nodes;
+  if (!Array.isArray(nodes)) return null;
+
+  return {
+    nodeCount: nodes.length,
+    triggerType: findTriggerType(nodes as WorkflowJsonObject["nodes"]),
+    integrations: extractIntegrationsFromNodes(nodes as WorkflowJsonObject["nodes"]),
+  };
+}
+
+function collectWorkflowPreviews(values: unknown[]) {
+  const previews = values.flatMap((value) => {
+    if (Array.isArray(value)) {
+      return value.map(extractWorkflowPreview).filter((preview) => preview !== null);
+    }
+    const preview = extractWorkflowPreview(value);
+    return preview ? [preview] : [];
+  });
+  return previews;
+}
+
 export function getWorkflowJsonPreview(value: string) {
   try {
-    const workflow = parseWorkflowJsonString(value);
+    const values = parseJsonValues(value);
+    const previews = collectWorkflowPreviews(values);
+    if (previews.length === 0) return null;
+
+    if (previews.length === 1) {
+      return { workflowCount: 1, ...previews[0]! };
+    }
+
     return {
-      nodeCount: workflow.nodes.length,
-      triggerType: findTriggerType(workflow.nodes),
-      integrations: extractIntegrationsFromNodes(workflow.nodes),
+      workflowCount: previews.length,
+      nodeCount: previews.reduce((sum, preview) => sum + preview.nodeCount, 0),
+      triggerType: previews[0]!.triggerType,
+      integrations: [...new Set(previews.flatMap((preview) => preview.integrations))].sort(),
     };
   } catch {
     return null;

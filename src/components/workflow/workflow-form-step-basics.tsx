@@ -173,6 +173,7 @@ export function WorkflowFormStepBasics({
                   ref={ref}
                   onBlur={onBlur}
                   onChange={(event) => onChange(event.target.files ?? undefined)}
+                  className="p-0 file:mr-2.5 file:h-9 file:bg-primary file:px-2.5 file:text-black"
                 />
               )}
             />
