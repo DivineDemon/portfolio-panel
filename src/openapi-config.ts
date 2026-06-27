@@ -7,7 +7,7 @@ const config: ConfigFile = {
   outputFile: "./store/services/apis.ts",
   exportName: "appApis",
   hooks: true,
-  tag: true,
+  tag: false,
 };
 
 export default config;

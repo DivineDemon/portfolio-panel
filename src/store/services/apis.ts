@@ -1,200 +1,167 @@
 import { api } from "./core";
-export const addTagTypes = ["Projects", "n8n Workflows", "Clients", "Quick Link", "Pages", "Blog"] as const;
-const injectedRtkApi = api
-  .enhanceEndpoints({
-    addTagTypes,
-  })
-  .injectEndpoints({
-    endpoints: (build) => ({
-      getApiProjects: build.query<GetApiProjectsApiResponse, GetApiProjectsApiArg>({
-        query: () => ({ url: `/api/projects` }),
-        providesTags: ["Projects"],
-      }),
-      postApiProjects: build.mutation<PostApiProjectsApiResponse, PostApiProjectsApiArg>({
-        query: (queryArg) => ({
-          url: `/api/projects`,
-          method: "POST",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Projects"],
-      }),
-      getApiProjectsById: build.query<GetApiProjectsByIdApiResponse, GetApiProjectsByIdApiArg>({
-        query: (queryArg) => ({ url: `/api/projects/${queryArg.id}` }),
-        providesTags: ["Projects"],
-      }),
-      putApiProjectsById: build.mutation<PutApiProjectsByIdApiResponse, PutApiProjectsByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/projects/${queryArg.id}`,
-          method: "PUT",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Projects"],
-      }),
-      deleteApiProjectsById: build.mutation<DeleteApiProjectsByIdApiResponse, DeleteApiProjectsByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/projects/${queryArg.id}`,
-          method: "DELETE",
-        }),
-        invalidatesTags: ["Projects"],
-      }),
-      getApiN8NWorkflows: build.query<GetApiN8NWorkflowsApiResponse, GetApiN8NWorkflowsApiArg>({
-        query: () => ({ url: `/api/n8n-workflows` }),
-        providesTags: ["n8n Workflows"],
-      }),
-      postApiN8NWorkflows: build.mutation<PostApiN8NWorkflowsApiResponse, PostApiN8NWorkflowsApiArg>({
-        query: (queryArg) => ({
-          url: `/api/n8n-workflows`,
-          method: "POST",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["n8n Workflows"],
-      }),
-      getApiN8NWorkflowsById: build.query<GetApiN8NWorkflowsByIdApiResponse, GetApiN8NWorkflowsByIdApiArg>({
-        query: (queryArg) => ({ url: `/api/n8n-workflows/${queryArg.id}` }),
-        providesTags: ["n8n Workflows"],
-      }),
-      putApiN8NWorkflowsById: build.mutation<PutApiN8NWorkflowsByIdApiResponse, PutApiN8NWorkflowsByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/n8n-workflows/${queryArg.id}`,
-          method: "PUT",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["n8n Workflows"],
-      }),
-      deleteApiN8NWorkflowsById: build.mutation<DeleteApiN8NWorkflowsByIdApiResponse, DeleteApiN8NWorkflowsByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/n8n-workflows/${queryArg.id}`,
-          method: "DELETE",
-        }),
-        invalidatesTags: ["n8n Workflows"],
-      }),
-      getApiClients: build.query<GetApiClientsApiResponse, GetApiClientsApiArg>({
-        query: () => ({ url: `/api/clients` }),
-        providesTags: ["Clients"],
-      }),
-      postApiClients: build.mutation<PostApiClientsApiResponse, PostApiClientsApiArg>({
-        query: (queryArg) => ({
-          url: `/api/clients`,
-          method: "POST",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Clients"],
-      }),
-      getApiClientsById: build.query<GetApiClientsByIdApiResponse, GetApiClientsByIdApiArg>({
-        query: (queryArg) => ({ url: `/api/clients/${queryArg.id}` }),
-        providesTags: ["Clients"],
-      }),
-      putApiClientsById: build.mutation<PutApiClientsByIdApiResponse, PutApiClientsByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/clients/${queryArg.id}`,
-          method: "PUT",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Clients"],
-      }),
-      deleteApiClientsById: build.mutation<DeleteApiClientsByIdApiResponse, DeleteApiClientsByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/clients/${queryArg.id}`,
-          method: "DELETE",
-        }),
-        invalidatesTags: ["Clients"],
-      }),
-      getApiQuickLink: build.query<GetApiQuickLinkApiResponse, GetApiQuickLinkApiArg>({
-        query: () => ({ url: `/api/quick-link` }),
-        providesTags: ["Quick Link"],
-      }),
-      putApiQuickLink: build.mutation<PutApiQuickLinkApiResponse, PutApiQuickLinkApiArg>({
-        query: (queryArg) => ({
-          url: `/api/quick-link`,
-          method: "PUT",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Quick Link"],
-      }),
-      putApiQuickLinkBulk: build.mutation<PutApiQuickLinkBulkApiResponse, PutApiQuickLinkBulkApiArg>({
-        query: (queryArg) => ({
-          url: `/api/quick-link/bulk`,
-          method: "PUT",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Quick Link"],
-      }),
-      putApiQuickLinkWorkflowsBulk: build.mutation<
-        PutApiQuickLinkWorkflowsBulkApiResponse,
-        PutApiQuickLinkWorkflowsBulkApiArg
-      >({
-        query: (queryArg) => ({
-          url: `/api/quick-link/workflows/bulk`,
-          method: "PUT",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Quick Link"],
-      }),
-      getApiPages: build.query<GetApiPagesApiResponse, GetApiPagesApiArg>({
-        query: () => ({ url: `/api/pages` }),
-        providesTags: ["Pages"],
-      }),
-      postApiPages: build.mutation<PostApiPagesApiResponse, PostApiPagesApiArg>({
-        query: (queryArg) => ({
-          url: `/api/pages`,
-          method: "POST",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Pages"],
-      }),
-      getApiPagesById: build.query<GetApiPagesByIdApiResponse, GetApiPagesByIdApiArg>({
-        query: (queryArg) => ({ url: `/api/pages/${queryArg.id}` }),
-        providesTags: ["Pages"],
-      }),
-      putApiPagesById: build.mutation<PutApiPagesByIdApiResponse, PutApiPagesByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/pages/${queryArg.id}`,
-          method: "PUT",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Pages"],
-      }),
-      deleteApiPagesById: build.mutation<DeleteApiPagesByIdApiResponse, DeleteApiPagesByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/pages/${queryArg.id}`,
-          method: "DELETE",
-        }),
-        invalidatesTags: ["Pages"],
-      }),
-      getApiBlogPosts: build.query<GetApiBlogPostsApiResponse, GetApiBlogPostsApiArg>({
-        query: () => ({ url: `/api/blog-posts` }),
-        providesTags: ["Blog"],
-      }),
-      postApiBlogPosts: build.mutation<PostApiBlogPostsApiResponse, PostApiBlogPostsApiArg>({
-        query: (queryArg) => ({
-          url: `/api/blog-posts`,
-          method: "POST",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Blog"],
-      }),
-      getApiBlogPostsById: build.query<GetApiBlogPostsByIdApiResponse, GetApiBlogPostsByIdApiArg>({
-        query: (queryArg) => ({ url: `/api/blog-posts/${queryArg.id}` }),
-        providesTags: ["Blog"],
-      }),
-      putApiBlogPostsById: build.mutation<PutApiBlogPostsByIdApiResponse, PutApiBlogPostsByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/blog-posts/${queryArg.id}`,
-          method: "PUT",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Blog"],
-      }),
-      deleteApiBlogPostsById: build.mutation<DeleteApiBlogPostsByIdApiResponse, DeleteApiBlogPostsByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/blog-posts/${queryArg.id}`,
-          method: "DELETE",
-        }),
-        invalidatesTags: ["Blog"],
+
+const injectedRtkApi = api.injectEndpoints({
+  endpoints: (build) => ({
+    getApiProjects: build.query<GetApiProjectsApiResponse, GetApiProjectsApiArg>({
+      query: () => ({ url: `/api/projects` }),
+    }),
+    postApiProjects: build.mutation<PostApiProjectsApiResponse, PostApiProjectsApiArg>({
+      query: (queryArg) => ({
+        url: `/api/projects`,
+        method: "POST",
+        body: queryArg.body,
       }),
     }),
-    overrideExisting: false,
-  });
+    getApiProjectsById: build.query<GetApiProjectsByIdApiResponse, GetApiProjectsByIdApiArg>({
+      query: (queryArg) => ({ url: `/api/projects/${queryArg.id}` }),
+    }),
+    putApiProjectsById: build.mutation<PutApiProjectsByIdApiResponse, PutApiProjectsByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/projects/${queryArg.id}`,
+        method: "PUT",
+        body: queryArg.body,
+      }),
+    }),
+    deleteApiProjectsById: build.mutation<DeleteApiProjectsByIdApiResponse, DeleteApiProjectsByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/projects/${queryArg.id}`,
+        method: "DELETE",
+      }),
+    }),
+    getApiN8NWorkflows: build.query<GetApiN8NWorkflowsApiResponse, GetApiN8NWorkflowsApiArg>({
+      query: () => ({ url: `/api/n8n-workflows` }),
+    }),
+    postApiN8NWorkflows: build.mutation<PostApiN8NWorkflowsApiResponse, PostApiN8NWorkflowsApiArg>({
+      query: (queryArg) => ({
+        url: `/api/n8n-workflows`,
+        method: "POST",
+        body: queryArg.body,
+      }),
+    }),
+    getApiN8NWorkflowsById: build.query<GetApiN8NWorkflowsByIdApiResponse, GetApiN8NWorkflowsByIdApiArg>({
+      query: (queryArg) => ({ url: `/api/n8n-workflows/${queryArg.id}` }),
+    }),
+    putApiN8NWorkflowsById: build.mutation<PutApiN8NWorkflowsByIdApiResponse, PutApiN8NWorkflowsByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/n8n-workflows/${queryArg.id}`,
+        method: "PUT",
+        body: queryArg.body,
+      }),
+    }),
+    deleteApiN8NWorkflowsById: build.mutation<DeleteApiN8NWorkflowsByIdApiResponse, DeleteApiN8NWorkflowsByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/n8n-workflows/${queryArg.id}`,
+        method: "DELETE",
+      }),
+    }),
+    getApiClients: build.query<GetApiClientsApiResponse, GetApiClientsApiArg>({
+      query: () => ({ url: `/api/clients` }),
+    }),
+    postApiClients: build.mutation<PostApiClientsApiResponse, PostApiClientsApiArg>({
+      query: (queryArg) => ({
+        url: `/api/clients`,
+        method: "POST",
+        body: queryArg.body,
+      }),
+    }),
+    getApiClientsById: build.query<GetApiClientsByIdApiResponse, GetApiClientsByIdApiArg>({
+      query: (queryArg) => ({ url: `/api/clients/${queryArg.id}` }),
+    }),
+    putApiClientsById: build.mutation<PutApiClientsByIdApiResponse, PutApiClientsByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/clients/${queryArg.id}`,
+        method: "PUT",
+        body: queryArg.body,
+      }),
+    }),
+    deleteApiClientsById: build.mutation<DeleteApiClientsByIdApiResponse, DeleteApiClientsByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/clients/${queryArg.id}`,
+        method: "DELETE",
+      }),
+    }),
+    getApiQuickLink: build.query<GetApiQuickLinkApiResponse, GetApiQuickLinkApiArg>({
+      query: () => ({ url: `/api/quick-link` }),
+    }),
+    putApiQuickLink: build.mutation<PutApiQuickLinkApiResponse, PutApiQuickLinkApiArg>({
+      query: (queryArg) => ({
+        url: `/api/quick-link`,
+        method: "PUT",
+        body: queryArg.body,
+      }),
+    }),
+    putApiQuickLinkBulk: build.mutation<PutApiQuickLinkBulkApiResponse, PutApiQuickLinkBulkApiArg>({
+      query: (queryArg) => ({
+        url: `/api/quick-link/bulk`,
+        method: "PUT",
+        body: queryArg.body,
+      }),
+    }),
+    putApiQuickLinkWorkflowsBulk: build.mutation<
+      PutApiQuickLinkWorkflowsBulkApiResponse,
+      PutApiQuickLinkWorkflowsBulkApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/quick-link/workflows/bulk`,
+        method: "PUT",
+        body: queryArg.body,
+      }),
+    }),
+    getApiPages: build.query<GetApiPagesApiResponse, GetApiPagesApiArg>({
+      query: () => ({ url: `/api/pages` }),
+    }),
+    postApiPages: build.mutation<PostApiPagesApiResponse, PostApiPagesApiArg>({
+      query: (queryArg) => ({
+        url: `/api/pages`,
+        method: "POST",
+        body: queryArg.body,
+      }),
+    }),
+    getApiPagesById: build.query<GetApiPagesByIdApiResponse, GetApiPagesByIdApiArg>({
+      query: (queryArg) => ({ url: `/api/pages/${queryArg.id}` }),
+    }),
+    putApiPagesById: build.mutation<PutApiPagesByIdApiResponse, PutApiPagesByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/pages/${queryArg.id}`,
+        method: "PUT",
+        body: queryArg.body,
+      }),
+    }),
+    deleteApiPagesById: build.mutation<DeleteApiPagesByIdApiResponse, DeleteApiPagesByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/pages/${queryArg.id}`,
+        method: "DELETE",
+      }),
+    }),
+    getApiBlogPosts: build.query<GetApiBlogPostsApiResponse, GetApiBlogPostsApiArg>({
+      query: () => ({ url: `/api/blog-posts` }),
+    }),
+    postApiBlogPosts: build.mutation<PostApiBlogPostsApiResponse, PostApiBlogPostsApiArg>({
+      query: (queryArg) => ({
+        url: `/api/blog-posts`,
+        method: "POST",
+        body: queryArg.body,
+      }),
+    }),
+    getApiBlogPostsById: build.query<GetApiBlogPostsByIdApiResponse, GetApiBlogPostsByIdApiArg>({
+      query: (queryArg) => ({ url: `/api/blog-posts/${queryArg.id}` }),
+    }),
+    putApiBlogPostsById: build.mutation<PutApiBlogPostsByIdApiResponse, PutApiBlogPostsByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/blog-posts/${queryArg.id}`,
+        method: "PUT",
+        body: queryArg.body,
+      }),
+    }),
+    deleteApiBlogPostsById: build.mutation<DeleteApiBlogPostsByIdApiResponse, DeleteApiBlogPostsByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/blog-posts/${queryArg.id}`,
+        method: "DELETE",
+      }),
+    }),
+  }),
+  overrideExisting: false,
+});
 
 export { injectedRtkApi as appApis };
 export type GetApiProjectsApiResponse = /** status 200 List of projects */ {
@@ -2351,7 +2318,7 @@ export type GetApiPagesApiResponse = /** status 200 List of pages */ {
     id: number;
     slug: string;
     title: string;
-    pageType: "persona" | "process" | "index";
+    pageType: "persona" | "index";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;
@@ -2374,7 +2341,7 @@ export type PostApiPagesApiResponse = /** status 201 Page created */ {
     id: number;
     slug: string;
     title: string;
-    pageType: "persona" | "process" | "index";
+    pageType: "persona" | "index";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;
@@ -2393,7 +2360,7 @@ export type PostApiPagesApiArg = {
   body: {
     slug: string;
     title: string;
-    pageType: "persona" | "process" | "index";
+    pageType: "persona" | "index";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;
@@ -2414,7 +2381,7 @@ export type GetApiPagesByIdApiResponse = /** status 200 Page details */ {
     id: number;
     slug: string;
     title: string;
-    pageType: "persona" | "process" | "index";
+    pageType: "persona" | "index";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;
@@ -2439,7 +2406,7 @@ export type PutApiPagesByIdApiResponse = /** status 200 Page updated */ {
     id: number;
     slug: string;
     title: string;
-    pageType: "persona" | "process" | "index";
+    pageType: "persona" | "index";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;
@@ -2459,7 +2426,7 @@ export type PutApiPagesByIdApiArg = {
   body: {
     slug?: string;
     title?: string;
-    pageType?: "persona" | "process" | "index";
+    pageType?: "persona" | "index";
     content?: string;
     excerpt?: string | null;
     seoTitle?: string | null;
@@ -2480,7 +2447,7 @@ export type DeleteApiPagesByIdApiResponse = /** status 200 Page deleted */ {
     id: number;
     slug: string;
     title: string;
-    pageType: "persona" | "process" | "index";
+    pageType: "persona" | "index";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;

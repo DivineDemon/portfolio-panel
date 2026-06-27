@@ -22,7 +22,7 @@ export default function PagesPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="font-semibold text-2xl tracking-tight">Pages</h1>
-          <p className="text-muted-foreground text-sm">CMS-managed landing pages — personas and process.</p>
+          <p className="text-muted-foreground text-sm">CMS-managed landing pages — personas and index pages.</p>
         </div>
         <Button asChild>
           <Link to="/dashboard/pages/new">

@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import { api } from "./services/core";
 import "./services/apis";
+import "./services/api-cache";
 
 const store = configureStore({
   reducer: {

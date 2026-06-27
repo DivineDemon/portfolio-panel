@@ -142,7 +142,7 @@ export const clientFormSchema = z.object({
 export const pageFormSchema = z.object({
   slug: z.string().min(1, "Required"),
   title: z.string().min(1, "Required"),
-  pageType: z.enum(["persona", "process", "index"]),
+  pageType: z.enum(["persona", "index"]),
   content: z.string().min(1, "Required"),
   excerpt: z.string().optional(),
   seoTitle: z.string().optional(),
@@ -162,7 +162,7 @@ export const blogPostFormSchema = z.object({
   title: z.string().min(1, "Required"),
   excerpt: z.string().optional(),
   content: z.string().min(1, "Required"),
-  coverImage: z.string().optional(),
+  coverImage: imageValueSchema.optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
   keywords: z.string().optional(),
@@ -170,7 +170,7 @@ export const blogPostFormSchema = z.object({
   published: z.boolean(),
 });
 
-export type BlogPostFormValues = z.infer<typeof blogPostFormSchema>;
+export type BlogPostFormValues = z.input<typeof blogPostFormSchema>;
 
 export type BasicsFormValues = z.infer<typeof basicsFormSchema>;
 export type StoryFormValues = z.infer<typeof storyFormSchema>;

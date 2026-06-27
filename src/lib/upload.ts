@@ -72,3 +72,8 @@ export async function resolveProjectFormImages(data: {
 
   return { coverImage: coverUrl, galleryImages: galleryUrls };
 }
+
+export async function resolveCoverImage(coverImage?: string | FileList): Promise<string | undefined> {
+  const { coverImage: coverUrl } = await resolveProjectFormImages({ coverImage });
+  return coverUrl;
+}

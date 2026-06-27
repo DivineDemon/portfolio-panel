@@ -1,8 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeft, Loader2 } from "lucide-react";
-import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import { Controller, type Resolver, useForm } from "react-hook-form";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { pageDetailToFormValues } from "@/lib/cms-form";
 import { type PageFormValues, pageFormSchema } from "@/lib/form-schemas";
 import {
   useGetApiPagesByIdQuery,
@@ -52,39 +52,32 @@ function getMutationErrorMessage(error: unknown): string {
   return "Something went wrong";
 }
 
-export default function PageEditorPage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const isEdit = Boolean(id);
+function PageEditorSkeleton() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-48" />
+      <Skeleton className="h-96 w-full" />
+    </div>
+  );
+}
 
-  const { data: page, isLoading } = useGetApiPagesByIdQuery({ id: id ?? "" }, { skip: !isEdit });
+function PageEditorForm({
+  pageId,
+  initialValues,
+  isEdit,
+}: {
+  pageId?: string;
+  initialValues: PageFormValues;
+  isEdit: boolean;
+}) {
+  const navigate = useNavigate();
   const [createPage, { isLoading: isCreating }] = usePostApiPagesMutation();
   const [updatePage, { isLoading: isUpdating }] = usePutApiPagesByIdMutation();
 
   const form = useForm<PageFormValues>({
     resolver: zodResolver(pageFormSchema) as Resolver<PageFormValues>,
-    defaultValues: DEFAULTS,
+    defaultValues: initialValues,
   });
-
-  useEffect(() => {
-    if (!page?.data) return;
-    const p = page.data;
-    form.reset({
-      slug: p.slug,
-      title: p.title,
-      pageType: p.pageType,
-      content: p.content,
-      excerpt: p.excerpt ?? "",
-      seoTitle: p.seoTitle ?? "",
-      seoDescription: p.seoDescription ?? "",
-      keywords: p.keywords.join(", "),
-      relatedProjectSlugs: p.relatedProjectSlugs.join(", "),
-      relatedWorkflowSlugs: p.relatedWorkflowSlugs.join(", "),
-      sortOrder: p.sortOrder ?? "",
-      featured: p.featured,
-      published: p.published,
-    });
-  }, [page, form]);
 
   const onSubmit = form.handleSubmit(async (values) => {
     const body = {
@@ -104,7 +97,7 @@ export default function PageEditorPage() {
       publishedAt: values.published ? new Date().toISOString() : null,
     };
 
-    const response = isEdit ? await updatePage({ id: id!, body }) : await createPage({ body });
+    const response = isEdit ? await updatePage({ id: pageId!, body }) : await createPage({ body });
 
     if ("error" in response && response.error) {
       toast.error(getMutationErrorMessage(response.error));
@@ -119,28 +112,11 @@ export default function PageEditorPage() {
 
   const isSubmitting = isCreating || isUpdating || form.formState.isSubmitting;
 
-  if (isEdit && isLoading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-96 w-full" />
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-3">
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/dashboard/pages">
-            <ChevronLeft className="size-4" />
-            Pages
-          </Link>
-        </Button>
-        <div>
-          <h1 className="font-semibold text-2xl tracking-tight">{isEdit ? "Edit page" : "New page"}</h1>
-          <p className="text-muted-foreground text-sm">Markdown body, SEO fields, and related case study links.</p>
-        </div>
+      <div>
+        <h1 className="font-semibold text-2xl tracking-tight">{isEdit ? "Edit page" : "New page"}</h1>
+        <p className="text-muted-foreground text-sm">Markdown body, SEO fields, and related case study links.</p>
       </div>
 
       <form onSubmit={onSubmit} className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -189,7 +165,7 @@ export default function PageEditorPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {(["persona", "process", "index"] as const).map((type) => (
+                        {(["persona", "index"] as const).map((type) => (
                           <SelectItem key={type} value={type}>
                             {type}
                           </SelectItem>
@@ -203,7 +179,7 @@ export default function PageEditorPage() {
                 <FieldLabel htmlFor="sortOrder">Sort order</FieldLabel>
                 <Input id="sortOrder" type="number" {...form.register("sortOrder")} disabled={isSubmitting} />
               </Field>
-              <Field className="flex items-center justify-between gap-3">
+              <Field className="flex flex-row items-center justify-between gap-3">
                 <FieldLabel htmlFor="published">Published</FieldLabel>
                 <Controller
                   control={form.control}
@@ -218,7 +194,7 @@ export default function PageEditorPage() {
                   )}
                 />
               </Field>
-              <Field className="flex items-center justify-between gap-3">
+              <Field className="flex flex-row items-center justify-between gap-3">
                 <FieldLabel htmlFor="featured">Featured</FieldLabel>
                 <Controller
                   control={form.control}
@@ -284,4 +260,32 @@ export default function PageEditorPage() {
       </form>
     </div>
   );
+}
+
+export default function PageEditorPage() {
+  const { id } = useParams();
+  const isEdit = Boolean(id);
+
+  const {
+    data: page,
+    isLoading,
+    isError,
+  } = useGetApiPagesByIdQuery({ id: id ?? "" }, { skip: !isEdit, refetchOnMountOrArgChange: true });
+
+  if (isEdit && (isLoading || !page)) {
+    return <PageEditorSkeleton />;
+  }
+
+  if (isEdit && isError) {
+    return (
+      <div className="flex flex-col gap-2">
+        <h1 className="font-semibold text-2xl tracking-tight">Edit page</h1>
+        <p className="text-destructive text-sm">Unable to load page details.</p>
+      </div>
+    );
+  }
+
+  const initialValues = isEdit && page ? pageDetailToFormValues(page.data) : DEFAULTS;
+
+  return <PageEditorForm key={id ?? "new"} pageId={id} initialValues={initialValues} isEdit={isEdit} />;
 }

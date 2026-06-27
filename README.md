@@ -67,7 +67,7 @@ Admin dashboard for managing portfolio content — projects and clients — back
    bun run generate:api
    ```
 
-   This reads the OpenAPI schema from `VITE_BASE_API_URL/openapi.json` and regenerates `src/store/services/apis.ts`.
+   This reads the OpenAPI schema from `VITE_BASE_API_URL/openapi.json` and regenerates `src/store/services/apis.ts`. Cache tags live separately in `src/store/services/api-cache.ts` — update that file when new endpoints are added.
 
 4. **Start the dev server**
 

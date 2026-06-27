@@ -48,7 +48,12 @@ export default function BlogPostsPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {data?.data.map((post) => (
-            <Card key={post.id}>
+            <Card key={post.id} className="overflow-hidden">
+              {post.coverImage ? (
+                <div className="aspect-video w-full overflow-hidden border-b bg-muted">
+                  <img src={post.coverImage} alt={post.title} className="size-full object-cover" />
+                </div>
+              ) : null}
               <CardHeader className="gap-3">
                 <div className="flex flex-wrap items-center gap-2">
                   {post.published ? (
