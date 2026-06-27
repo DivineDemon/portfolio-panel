@@ -1,5 +1,15 @@
 import { api } from "./core";
-export const addTagTypes = ["Projects", "n8n Workflows", "Clients", "Quick Link"] as const;
+export const addTagTypes = [
+  "Projects",
+  "n8n Workflows",
+  "Clients",
+  "Quick Link",
+  "Pages",
+  "Site Settings",
+  "Blog",
+  "Lead Magnets",
+  "Leads",
+] as const;
 const injectedRtkApi = api
   .enhanceEndpoints({
     addTagTypes,
@@ -119,6 +129,134 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ["Quick Link"],
       }),
+      putApiQuickLinkWorkflowsBulk: build.mutation<
+        PutApiQuickLinkWorkflowsBulkApiResponse,
+        PutApiQuickLinkWorkflowsBulkApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/quick-link/workflows/bulk`,
+          method: "PUT",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["Quick Link"],
+      }),
+      getApiPages: build.query<GetApiPagesApiResponse, GetApiPagesApiArg>({
+        query: () => ({ url: `/api/pages` }),
+        providesTags: ["Pages"],
+      }),
+      postApiPages: build.mutation<PostApiPagesApiResponse, PostApiPagesApiArg>({
+        query: (queryArg) => ({
+          url: `/api/pages`,
+          method: "POST",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["Pages"],
+      }),
+      getApiPagesById: build.query<GetApiPagesByIdApiResponse, GetApiPagesByIdApiArg>({
+        query: (queryArg) => ({ url: `/api/pages/${queryArg.id}` }),
+        providesTags: ["Pages"],
+      }),
+      putApiPagesById: build.mutation<PutApiPagesByIdApiResponse, PutApiPagesByIdApiArg>({
+        query: (queryArg) => ({
+          url: `/api/pages/${queryArg.id}`,
+          method: "PUT",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["Pages"],
+      }),
+      deleteApiPagesById: build.mutation<DeleteApiPagesByIdApiResponse, DeleteApiPagesByIdApiArg>({
+        query: (queryArg) => ({
+          url: `/api/pages/${queryArg.id}`,
+          method: "DELETE",
+        }),
+        invalidatesTags: ["Pages"],
+      }),
+      getApiSiteSettings: build.query<GetApiSiteSettingsApiResponse, GetApiSiteSettingsApiArg>({
+        query: () => ({ url: `/api/site-settings` }),
+        providesTags: ["Site Settings"],
+      }),
+      putApiSiteSettings: build.mutation<PutApiSiteSettingsApiResponse, PutApiSiteSettingsApiArg>({
+        query: (queryArg) => ({
+          url: `/api/site-settings`,
+          method: "PUT",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["Site Settings"],
+      }),
+      getApiBlogPosts: build.query<GetApiBlogPostsApiResponse, GetApiBlogPostsApiArg>({
+        query: () => ({ url: `/api/blog-posts` }),
+        providesTags: ["Blog"],
+      }),
+      postApiBlogPosts: build.mutation<PostApiBlogPostsApiResponse, PostApiBlogPostsApiArg>({
+        query: (queryArg) => ({
+          url: `/api/blog-posts`,
+          method: "POST",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["Blog"],
+      }),
+      getApiBlogPostsById: build.query<GetApiBlogPostsByIdApiResponse, GetApiBlogPostsByIdApiArg>({
+        query: (queryArg) => ({ url: `/api/blog-posts/${queryArg.id}` }),
+        providesTags: ["Blog"],
+      }),
+      putApiBlogPostsById: build.mutation<PutApiBlogPostsByIdApiResponse, PutApiBlogPostsByIdApiArg>({
+        query: (queryArg) => ({
+          url: `/api/blog-posts/${queryArg.id}`,
+          method: "PUT",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["Blog"],
+      }),
+      deleteApiBlogPostsById: build.mutation<DeleteApiBlogPostsByIdApiResponse, DeleteApiBlogPostsByIdApiArg>({
+        query: (queryArg) => ({
+          url: `/api/blog-posts/${queryArg.id}`,
+          method: "DELETE",
+        }),
+        invalidatesTags: ["Blog"],
+      }),
+      getApiLeadMagnets: build.query<GetApiLeadMagnetsApiResponse, GetApiLeadMagnetsApiArg>({
+        query: () => ({ url: `/api/lead-magnets` }),
+        providesTags: ["Lead Magnets"],
+      }),
+      postApiLeadMagnets: build.mutation<PostApiLeadMagnetsApiResponse, PostApiLeadMagnetsApiArg>({
+        query: (queryArg) => ({
+          url: `/api/lead-magnets`,
+          method: "POST",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["Lead Magnets"],
+      }),
+      getApiLeadMagnetsById: build.query<GetApiLeadMagnetsByIdApiResponse, GetApiLeadMagnetsByIdApiArg>({
+        query: (queryArg) => ({ url: `/api/lead-magnets/${queryArg.id}` }),
+        providesTags: ["Lead Magnets"],
+      }),
+      putApiLeadMagnetsById: build.mutation<PutApiLeadMagnetsByIdApiResponse, PutApiLeadMagnetsByIdApiArg>({
+        query: (queryArg) => ({
+          url: `/api/lead-magnets/${queryArg.id}`,
+          method: "PUT",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["Lead Magnets"],
+      }),
+      deleteApiLeadMagnetsById: build.mutation<DeleteApiLeadMagnetsByIdApiResponse, DeleteApiLeadMagnetsByIdApiArg>({
+        query: (queryArg) => ({
+          url: `/api/lead-magnets/${queryArg.id}`,
+          method: "DELETE",
+        }),
+        invalidatesTags: ["Lead Magnets"],
+      }),
+      postApiLeads: build.mutation<PostApiLeadsApiResponse, PostApiLeadsApiArg>({
+        query: (queryArg) => ({
+          url: `/api/leads`,
+          method: "POST",
+          body: queryArg.body,
+        }),
+        invalidatesTags: ["Leads"],
+      }),
+      getApiLeads: build.query<GetApiLeadsApiResponse, GetApiLeadsApiArg>({
+        query: () => ({ url: `/api/leads` }),
+        providesTags: ["Leads"],
+      }),
     }),
     overrideExisting: false,
   });
@@ -149,11 +287,14 @@ export type GetApiProjectsApiResponse = /** status 200 List of projects */ {
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     businessOutcome: string | null;
     beforeAfter: string | null;
@@ -213,11 +354,14 @@ export type PostApiProjectsApiResponse = /** status 201 Project created successf
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     businessOutcome: string | null;
     beforeAfter: string | null;
@@ -273,11 +417,14 @@ export type PostApiProjectsApiArg = {
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     businessOutcome: string | null;
     beforeAfter: string | null;
@@ -335,11 +482,14 @@ export type GetApiProjectsByIdApiResponse = /** status 200 Project details */ {
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     businessOutcome: string | null;
     beforeAfter: string | null;
@@ -401,11 +551,14 @@ export type PutApiProjectsByIdApiResponse = /** status 200 Project updated succe
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     businessOutcome: string | null;
     beforeAfter: string | null;
@@ -462,11 +615,14 @@ export type PutApiProjectsByIdApiArg = {
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     businessOutcome?: string | null;
     beforeAfter?: string | null;
@@ -524,11 +680,14 @@ export type DeleteApiProjectsByIdApiResponse = /** status 200 Project deleted su
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     businessOutcome: string | null;
     beforeAfter: string | null;
@@ -596,18 +755,10 @@ export type GetApiN8NWorkflowsApiResponse = /** status 200 List of n8n workflows
             | number
             | boolean
             | null
+            | (string | number | boolean | null)[]
             | {
                 [key: string]: string | number | boolean | null;
               }
-            | (
-                | string
-                | number
-                | boolean
-                | null
-                | {
-                    [key: string]: string | number | boolean | null;
-                  }
-              )[]
             | {
                 [key: string]: string | number | boolean | null;
               }[]
@@ -620,15 +771,7 @@ export type GetApiN8NWorkflowsApiResponse = /** status 200 List of n8n workflows
                   | {
                       [key: string]: string | number | boolean | null;
                     }
-                  | (
-                      | string
-                      | number
-                      | boolean
-                      | null
-                      | {
-                          [key: string]: string | number | boolean | null;
-                        }
-                    )[];
+                  | (string | number | boolean | null)[];
               };
         };
         credentials?: {
@@ -672,18 +815,10 @@ export type GetApiN8NWorkflowsApiResponse = /** status 200 List of n8n workflows
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -696,15 +831,7 @@ export type GetApiN8NWorkflowsApiResponse = /** status 200 List of n8n workflows
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       pinData?: {
@@ -713,18 +840,10 @@ export type GetApiN8NWorkflowsApiResponse = /** status 200 List of n8n workflows
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -737,15 +856,7 @@ export type GetApiN8NWorkflowsApiResponse = /** status 200 List of n8n workflows
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       meta?: {
@@ -754,18 +865,10 @@ export type GetApiN8NWorkflowsApiResponse = /** status 200 List of n8n workflows
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -778,15 +881,7 @@ export type GetApiN8NWorkflowsApiResponse = /** status 200 List of n8n workflows
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       tags?: {
@@ -811,11 +906,14 @@ export type GetApiN8NWorkflowsApiResponse = /** status 200 List of n8n workflows
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     cardOutcome: string | null;
     displayOrder: number | null;
@@ -860,18 +958,10 @@ export type PostApiN8NWorkflowsApiResponse = /** status 201 n8n workflow created
             | number
             | boolean
             | null
+            | (string | number | boolean | null)[]
             | {
                 [key: string]: string | number | boolean | null;
               }
-            | (
-                | string
-                | number
-                | boolean
-                | null
-                | {
-                    [key: string]: string | number | boolean | null;
-                  }
-              )[]
             | {
                 [key: string]: string | number | boolean | null;
               }[]
@@ -884,15 +974,7 @@ export type PostApiN8NWorkflowsApiResponse = /** status 201 n8n workflow created
                   | {
                       [key: string]: string | number | boolean | null;
                     }
-                  | (
-                      | string
-                      | number
-                      | boolean
-                      | null
-                      | {
-                          [key: string]: string | number | boolean | null;
-                        }
-                    )[];
+                  | (string | number | boolean | null)[];
               };
         };
         credentials?: {
@@ -936,18 +1018,10 @@ export type PostApiN8NWorkflowsApiResponse = /** status 201 n8n workflow created
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -960,15 +1034,7 @@ export type PostApiN8NWorkflowsApiResponse = /** status 201 n8n workflow created
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       pinData?: {
@@ -977,18 +1043,10 @@ export type PostApiN8NWorkflowsApiResponse = /** status 201 n8n workflow created
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1001,15 +1059,7 @@ export type PostApiN8NWorkflowsApiResponse = /** status 201 n8n workflow created
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       meta?: {
@@ -1018,18 +1068,10 @@ export type PostApiN8NWorkflowsApiResponse = /** status 201 n8n workflow created
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1042,15 +1084,7 @@ export type PostApiN8NWorkflowsApiResponse = /** status 201 n8n workflow created
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       tags?: {
@@ -1075,11 +1109,14 @@ export type PostApiN8NWorkflowsApiResponse = /** status 201 n8n workflow created
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     cardOutcome: string | null;
     displayOrder: number | null;
@@ -1120,18 +1157,10 @@ export type PostApiN8NWorkflowsApiArg = {
             | number
             | boolean
             | null
+            | (string | number | boolean | null)[]
             | {
                 [key: string]: string | number | boolean | null;
               }
-            | (
-                | string
-                | number
-                | boolean
-                | null
-                | {
-                    [key: string]: string | number | boolean | null;
-                  }
-              )[]
             | {
                 [key: string]: string | number | boolean | null;
               }[]
@@ -1144,15 +1173,7 @@ export type PostApiN8NWorkflowsApiArg = {
                   | {
                       [key: string]: string | number | boolean | null;
                     }
-                  | (
-                      | string
-                      | number
-                      | boolean
-                      | null
-                      | {
-                          [key: string]: string | number | boolean | null;
-                        }
-                    )[];
+                  | (string | number | boolean | null)[];
               };
         };
         credentials?: {
@@ -1196,18 +1217,10 @@ export type PostApiN8NWorkflowsApiArg = {
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1220,15 +1233,7 @@ export type PostApiN8NWorkflowsApiArg = {
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       pinData?: {
@@ -1237,18 +1242,10 @@ export type PostApiN8NWorkflowsApiArg = {
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1261,15 +1258,7 @@ export type PostApiN8NWorkflowsApiArg = {
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       meta?: {
@@ -1278,18 +1267,10 @@ export type PostApiN8NWorkflowsApiArg = {
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1302,15 +1283,7 @@ export type PostApiN8NWorkflowsApiArg = {
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       tags?: {
@@ -1335,11 +1308,14 @@ export type PostApiN8NWorkflowsApiArg = {
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     cardOutcome: string | null;
     displayOrder: number | null;
@@ -1382,18 +1358,10 @@ export type GetApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow deta
             | number
             | boolean
             | null
+            | (string | number | boolean | null)[]
             | {
                 [key: string]: string | number | boolean | null;
               }
-            | (
-                | string
-                | number
-                | boolean
-                | null
-                | {
-                    [key: string]: string | number | boolean | null;
-                  }
-              )[]
             | {
                 [key: string]: string | number | boolean | null;
               }[]
@@ -1406,15 +1374,7 @@ export type GetApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow deta
                   | {
                       [key: string]: string | number | boolean | null;
                     }
-                  | (
-                      | string
-                      | number
-                      | boolean
-                      | null
-                      | {
-                          [key: string]: string | number | boolean | null;
-                        }
-                    )[];
+                  | (string | number | boolean | null)[];
               };
         };
         credentials?: {
@@ -1458,18 +1418,10 @@ export type GetApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow deta
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1482,15 +1434,7 @@ export type GetApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow deta
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       pinData?: {
@@ -1499,18 +1443,10 @@ export type GetApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow deta
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1523,15 +1459,7 @@ export type GetApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow deta
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       meta?: {
@@ -1540,18 +1468,10 @@ export type GetApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow deta
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1564,15 +1484,7 @@ export type GetApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow deta
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       tags?: {
@@ -1597,11 +1509,14 @@ export type GetApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow deta
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     cardOutcome: string | null;
     displayOrder: number | null;
@@ -1648,18 +1563,10 @@ export type PutApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow upda
             | number
             | boolean
             | null
+            | (string | number | boolean | null)[]
             | {
                 [key: string]: string | number | boolean | null;
               }
-            | (
-                | string
-                | number
-                | boolean
-                | null
-                | {
-                    [key: string]: string | number | boolean | null;
-                  }
-              )[]
             | {
                 [key: string]: string | number | boolean | null;
               }[]
@@ -1672,15 +1579,7 @@ export type PutApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow upda
                   | {
                       [key: string]: string | number | boolean | null;
                     }
-                  | (
-                      | string
-                      | number
-                      | boolean
-                      | null
-                      | {
-                          [key: string]: string | number | boolean | null;
-                        }
-                    )[];
+                  | (string | number | boolean | null)[];
               };
         };
         credentials?: {
@@ -1724,18 +1623,10 @@ export type PutApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow upda
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1748,15 +1639,7 @@ export type PutApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow upda
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       pinData?: {
@@ -1765,18 +1648,10 @@ export type PutApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow upda
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1789,15 +1664,7 @@ export type PutApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow upda
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       meta?: {
@@ -1806,18 +1673,10 @@ export type PutApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow upda
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -1830,15 +1689,7 @@ export type PutApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow upda
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       tags?: {
@@ -1863,11 +1714,14 @@ export type PutApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow upda
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     cardOutcome: string | null;
     displayOrder: number | null;
@@ -1909,18 +1763,10 @@ export type PutApiN8NWorkflowsByIdApiArg = {
             | number
             | boolean
             | null
+            | (string | number | boolean | null)[]
             | {
                 [key: string]: string | number | boolean | null;
               }
-            | (
-                | string
-                | number
-                | boolean
-                | null
-                | {
-                    [key: string]: string | number | boolean | null;
-                  }
-              )[]
             | {
                 [key: string]: string | number | boolean | null;
               }[]
@@ -1933,15 +1779,7 @@ export type PutApiN8NWorkflowsByIdApiArg = {
                   | {
                       [key: string]: string | number | boolean | null;
                     }
-                  | (
-                      | string
-                      | number
-                      | boolean
-                      | null
-                      | {
-                          [key: string]: string | number | boolean | null;
-                        }
-                    )[];
+                  | (string | number | boolean | null)[];
               };
         };
         credentials?: {
@@ -1985,18 +1823,10 @@ export type PutApiN8NWorkflowsByIdApiArg = {
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -2009,15 +1839,7 @@ export type PutApiN8NWorkflowsByIdApiArg = {
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       pinData?: {
@@ -2026,18 +1848,10 @@ export type PutApiN8NWorkflowsByIdApiArg = {
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -2050,15 +1864,7 @@ export type PutApiN8NWorkflowsByIdApiArg = {
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       meta?: {
@@ -2067,18 +1873,10 @@ export type PutApiN8NWorkflowsByIdApiArg = {
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -2091,15 +1889,7 @@ export type PutApiN8NWorkflowsByIdApiArg = {
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       tags?: {
@@ -2124,11 +1914,14 @@ export type PutApiN8NWorkflowsByIdApiArg = {
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     cardOutcome?: string | null;
     displayOrder?: number | null;
@@ -2171,18 +1964,10 @@ export type DeleteApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow d
             | number
             | boolean
             | null
+            | (string | number | boolean | null)[]
             | {
                 [key: string]: string | number | boolean | null;
               }
-            | (
-                | string
-                | number
-                | boolean
-                | null
-                | {
-                    [key: string]: string | number | boolean | null;
-                  }
-              )[]
             | {
                 [key: string]: string | number | boolean | null;
               }[]
@@ -2195,15 +1980,7 @@ export type DeleteApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow d
                   | {
                       [key: string]: string | number | boolean | null;
                     }
-                  | (
-                      | string
-                      | number
-                      | boolean
-                      | null
-                      | {
-                          [key: string]: string | number | boolean | null;
-                        }
-                    )[];
+                  | (string | number | boolean | null)[];
               };
         };
         credentials?: {
@@ -2247,18 +2024,10 @@ export type DeleteApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow d
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -2271,15 +2040,7 @@ export type DeleteApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow d
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       pinData?: {
@@ -2288,18 +2049,10 @@ export type DeleteApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow d
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -2312,15 +2065,7 @@ export type DeleteApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow d
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       meta?: {
@@ -2329,18 +2074,10 @@ export type DeleteApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow d
           | number
           | boolean
           | null
+          | (string | number | boolean | null)[]
           | {
               [key: string]: string | number | boolean | null;
             }
-          | (
-              | string
-              | number
-              | boolean
-              | null
-              | {
-                  [key: string]: string | number | boolean | null;
-                }
-            )[]
           | {
               [key: string]: string | number | boolean | null;
             }[]
@@ -2353,15 +2090,7 @@ export type DeleteApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow d
                 | {
                     [key: string]: string | number | boolean | null;
                   }
-                | (
-                    | string
-                    | number
-                    | boolean
-                    | null
-                    | {
-                        [key: string]: string | number | boolean | null;
-                      }
-                  )[];
+                | (string | number | boolean | null)[];
             };
       };
       tags?: {
@@ -2386,11 +2115,14 @@ export type DeleteApiN8NWorkflowsByIdApiResponse = /** status 200 n8n workflow d
     client?: {
       id: number;
       image: string | null;
+      logo: string | null;
+      companyUrl: string | null;
       company: string;
       content: string;
       designation: string;
       clientName: string;
       feedback: string | null;
+      featured: boolean;
     } | null;
     cardOutcome: string | null;
     displayOrder: number | null;
@@ -2412,11 +2144,14 @@ export type GetApiClientsApiResponse = /** status 200 List of clients */ {
   data: {
     id: number;
     image: string | null;
+    logo: string | null;
+    companyUrl: string | null;
     company: string;
     content: string;
     designation: string;
     clientName: string;
     feedback: string | null;
+    featured: boolean;
   }[];
 };
 export type GetApiClientsApiArg = void;
@@ -2426,21 +2161,27 @@ export type PostApiClientsApiResponse = /** status 201 Client created successful
   data: {
     id: number;
     image: string | null;
+    logo: string | null;
+    companyUrl: string | null;
     company: string;
     content: string;
     designation: string;
     clientName: string;
     feedback: string | null;
+    featured: boolean;
   };
 };
 export type PostApiClientsApiArg = {
   body: {
     image?: string;
+    logo?: string;
+    companyUrl?: string;
     company: string;
     content: string;
     designation: string;
     clientName: string;
     feedback?: string;
+    featured?: boolean;
   };
 };
 export type GetApiClientsByIdApiResponse = /** status 200 Client details */ {
@@ -2449,11 +2190,14 @@ export type GetApiClientsByIdApiResponse = /** status 200 Client details */ {
   data: {
     id: number;
     image: string | null;
+    logo: string | null;
+    companyUrl: string | null;
     company: string;
     content: string;
     designation: string;
     clientName: string;
     feedback: string | null;
+    featured: boolean;
   };
 };
 export type GetApiClientsByIdApiArg = {
@@ -2465,22 +2209,28 @@ export type PutApiClientsByIdApiResponse = /** status 200 Client updated success
   data: {
     id: number;
     image: string | null;
+    logo: string | null;
+    companyUrl: string | null;
     company: string;
     content: string;
     designation: string;
     clientName: string;
     feedback: string | null;
+    featured: boolean;
   };
 };
 export type PutApiClientsByIdApiArg = {
   id: string;
   body: {
     image?: string;
+    logo?: string;
+    companyUrl?: string;
     company?: string;
     content?: string;
     designation?: string;
     clientName?: string;
     feedback?: string;
+    featured?: boolean;
   };
 };
 export type DeleteApiClientsByIdApiResponse = /** status 200 Client deleted successfully */ {
@@ -2489,11 +2239,14 @@ export type DeleteApiClientsByIdApiResponse = /** status 200 Client deleted succ
   data: {
     id: number;
     image: string | null;
+    logo: string | null;
+    companyUrl: string | null;
     company: string;
     content: string;
     designation: string;
     clientName: string;
     feedback: string | null;
+    featured: boolean;
   };
 };
 export type DeleteApiClientsByIdApiArg = {
@@ -2527,6 +2280,28 @@ export type GetApiQuickLinkApiResponse = /** status 200 Quick link overview */ {
         image: string | null;
       };
     }[];
+    unlinkedWorkflows: {
+      id: number;
+      slug: string;
+      title: string;
+      coverImage: string;
+      headlineResult: string;
+    }[];
+    linkedWorkflows: {
+      id: number;
+      slug: string;
+      title: string;
+      coverImage: string;
+      headlineResult: string;
+      clientId: number;
+      client: {
+        id: number;
+        clientName: string;
+        company: string;
+        designation: string;
+        image: string | null;
+      };
+    }[];
     clients: {
       id: number;
       clientName: string;
@@ -2534,15 +2309,17 @@ export type GetApiQuickLinkApiResponse = /** status 200 Quick link overview */ {
       designation: string;
       image: string | null;
       linkedProjectCount: number;
+      linkedWorkflowCount: number;
     }[];
   };
 };
 export type GetApiQuickLinkApiArg = void;
-export type PutApiQuickLinkApiResponse = /** status 200 Project link updated */ {
+export type PutApiQuickLinkApiResponse = /** status 200 Content link updated */ {
   success: boolean;
   message: string;
   data: {
-    projectId: number;
+    projectId?: number;
+    workflowId?: number;
     clientId: number | null;
     slug: string;
     title: string;
@@ -2556,17 +2333,23 @@ export type PutApiQuickLinkApiResponse = /** status 200 Project link updated */ 
   };
 };
 export type PutApiQuickLinkApiArg = {
-  body: {
-    projectId: number;
-    clientId: number | null;
-  };
+  body:
+    | {
+        projectId: number;
+        clientId: number | null;
+      }
+    | {
+        workflowId: number;
+        clientId: number | null;
+      };
 };
 export type PutApiQuickLinkBulkApiResponse = /** status 200 Bulk link results */ {
   success: boolean;
   message: string;
   data: {
     updated: {
-      projectId: number;
+      projectId?: number;
+      workflowId?: number;
       clientId: number | null;
       slug: string;
       title: string;
@@ -2579,7 +2362,8 @@ export type PutApiQuickLinkBulkApiResponse = /** status 200 Bulk link results */
       } | null;
     }[];
     failed: {
-      projectId: number;
+      projectId?: number;
+      workflowId?: number;
       reason: string;
     }[];
   };
@@ -2592,6 +2376,557 @@ export type PutApiQuickLinkBulkApiArg = {
     }[];
   };
 };
+export type PutApiQuickLinkWorkflowsBulkApiResponse = /** status 200 Bulk workflow link results */ {
+  success: boolean;
+  message: string;
+  data: {
+    updated: {
+      projectId?: number;
+      workflowId?: number;
+      clientId: number | null;
+      slug: string;
+      title: string;
+      client: {
+        id: number;
+        clientName: string;
+        company: string;
+        designation: string;
+        image: string | null;
+      } | null;
+    }[];
+    failed: {
+      projectId?: number;
+      workflowId?: number;
+      reason: string;
+    }[];
+  };
+};
+export type PutApiQuickLinkWorkflowsBulkApiArg = {
+  body: {
+    links: {
+      workflowId: number;
+      clientId: number | null;
+    }[];
+  };
+};
+export type GetApiPagesApiResponse = /** status 200 List of pages */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    pageType: "service" | "persona" | "process" | "now" | "index";
+    content: string;
+    excerpt: string | null;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    published: boolean;
+    featured: boolean;
+    sortOrder: number | null;
+    relatedProjectSlugs: string[];
+    relatedWorkflowSlugs: string[];
+    updatedAt: string | null;
+    publishedAt: string | null;
+  }[];
+};
+export type GetApiPagesApiArg = void;
+export type PostApiPagesApiResponse = /** status 201 Page created */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    pageType: "service" | "persona" | "process" | "now" | "index";
+    content: string;
+    excerpt: string | null;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    published: boolean;
+    featured: boolean;
+    sortOrder: number | null;
+    relatedProjectSlugs: string[];
+    relatedWorkflowSlugs: string[];
+    updatedAt: string | null;
+    publishedAt: string | null;
+  };
+};
+export type PostApiPagesApiArg = {
+  body: {
+    slug: string;
+    title: string;
+    pageType: "service" | "persona" | "process" | "now" | "index";
+    content: string;
+    excerpt: string | null;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    published: boolean;
+    featured: boolean;
+    sortOrder: number | null;
+    relatedProjectSlugs: string[];
+    relatedWorkflowSlugs: string[];
+    publishedAt?: string | null;
+  };
+};
+export type GetApiPagesByIdApiResponse = /** status 200 Page details */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    pageType: "service" | "persona" | "process" | "now" | "index";
+    content: string;
+    excerpt: string | null;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    published: boolean;
+    featured: boolean;
+    sortOrder: number | null;
+    relatedProjectSlugs: string[];
+    relatedWorkflowSlugs: string[];
+    updatedAt: string | null;
+    publishedAt: string | null;
+  };
+};
+export type GetApiPagesByIdApiArg = {
+  id: string;
+};
+export type PutApiPagesByIdApiResponse = /** status 200 Page updated */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    pageType: "service" | "persona" | "process" | "now" | "index";
+    content: string;
+    excerpt: string | null;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    published: boolean;
+    featured: boolean;
+    sortOrder: number | null;
+    relatedProjectSlugs: string[];
+    relatedWorkflowSlugs: string[];
+    updatedAt: string | null;
+    publishedAt: string | null;
+  };
+};
+export type PutApiPagesByIdApiArg = {
+  id: string;
+  body: {
+    slug?: string;
+    title?: string;
+    pageType?: "service" | "persona" | "process" | "now" | "index";
+    content?: string;
+    excerpt?: string | null;
+    seoTitle?: string | null;
+    seoDescription?: string | null;
+    keywords?: string[];
+    published?: boolean;
+    featured?: boolean;
+    sortOrder?: number | null;
+    relatedProjectSlugs?: string[];
+    relatedWorkflowSlugs?: string[];
+    publishedAt?: string | null;
+  };
+};
+export type DeleteApiPagesByIdApiResponse = /** status 200 Page deleted */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    pageType: "service" | "persona" | "process" | "now" | "index";
+    content: string;
+    excerpt: string | null;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    published: boolean;
+    featured: boolean;
+    sortOrder: number | null;
+    relatedProjectSlugs: string[];
+    relatedWorkflowSlugs: string[];
+    updatedAt: string | null;
+    publishedAt: string | null;
+  };
+};
+export type DeleteApiPagesByIdApiArg = {
+  id: string;
+};
+export type GetApiSiteSettingsApiResponse = /** status 200 Site settings */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    heroHeadline: string | null;
+    heroSubheadline: string | null;
+    heroBadge: string | null;
+    positioningTitle: string | null;
+    positioningDescription: string | null;
+    availabilityText: string | null;
+    projectMinimumText: string | null;
+    responseTimeText: string | null;
+    bookingUrl: string | null;
+    linkedinUrl: string | null;
+    githubUrl: string | null;
+    llmsIntro: string | null;
+    whoThisIsFor: string[] | null;
+    updatedAt: string | null;
+  };
+};
+export type GetApiSiteSettingsApiArg = void;
+export type PutApiSiteSettingsApiResponse = /** status 200 Site settings updated */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    heroHeadline: string | null;
+    heroSubheadline: string | null;
+    heroBadge: string | null;
+    positioningTitle: string | null;
+    positioningDescription: string | null;
+    availabilityText: string | null;
+    projectMinimumText: string | null;
+    responseTimeText: string | null;
+    bookingUrl: string | null;
+    linkedinUrl: string | null;
+    githubUrl: string | null;
+    llmsIntro: string | null;
+    whoThisIsFor: string[] | null;
+    updatedAt: string | null;
+  };
+};
+export type PutApiSiteSettingsApiArg = {
+  body: {
+    heroHeadline?: string | null;
+    heroSubheadline?: string | null;
+    heroBadge?: string | null;
+    positioningTitle?: string | null;
+    positioningDescription?: string | null;
+    availabilityText?: string | null;
+    projectMinimumText?: string | null;
+    responseTimeText?: string | null;
+    bookingUrl?: string | null;
+    linkedinUrl?: string | null;
+    githubUrl?: string | null;
+    llmsIntro?: string | null;
+    whoThisIsFor?: string[] | null;
+  };
+};
+export type GetApiBlogPostsApiResponse = /** status 200 List of blog posts */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    excerpt: string | null;
+    content: string;
+    coverImage: string | null;
+    published: boolean;
+    featured: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    createdAt: string | null;
+    updatedAt: string | null;
+    publishedAt: string | null;
+  }[];
+};
+export type GetApiBlogPostsApiArg = void;
+export type PostApiBlogPostsApiResponse = /** status 201 Blog post created */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    excerpt: string | null;
+    content: string;
+    coverImage: string | null;
+    published: boolean;
+    featured: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    createdAt: string | null;
+    updatedAt: string | null;
+    publishedAt: string | null;
+  };
+};
+export type PostApiBlogPostsApiArg = {
+  body: {
+    slug: string;
+    title: string;
+    excerpt: string | null;
+    content: string;
+    coverImage?: string | null;
+    published: boolean;
+    featured: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    publishedAt?: string | null;
+  };
+};
+export type GetApiBlogPostsByIdApiResponse = /** status 200 Blog post details */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    excerpt: string | null;
+    content: string;
+    coverImage: string | null;
+    published: boolean;
+    featured: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    createdAt: string | null;
+    updatedAt: string | null;
+    publishedAt: string | null;
+  };
+};
+export type GetApiBlogPostsByIdApiArg = {
+  id: string;
+};
+export type PutApiBlogPostsByIdApiResponse = /** status 200 Blog post updated */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    excerpt: string | null;
+    content: string;
+    coverImage: string | null;
+    published: boolean;
+    featured: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    createdAt: string | null;
+    updatedAt: string | null;
+    publishedAt: string | null;
+  };
+};
+export type PutApiBlogPostsByIdApiArg = {
+  id: string;
+  body: {
+    slug?: string;
+    title?: string;
+    excerpt?: string | null;
+    content?: string;
+    coverImage?: string | null;
+    published?: boolean;
+    featured?: boolean;
+    seoTitle?: string | null;
+    seoDescription?: string | null;
+    keywords?: string[];
+    publishedAt?: string | null;
+  };
+};
+export type DeleteApiBlogPostsByIdApiResponse = /** status 200 Blog post deleted */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    excerpt: string | null;
+    content: string;
+    coverImage: string | null;
+    published: boolean;
+    featured: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    createdAt: string | null;
+    updatedAt: string | null;
+    publishedAt: string | null;
+  };
+};
+export type DeleteApiBlogPostsByIdApiArg = {
+  id: string;
+};
+export type GetApiLeadMagnetsApiResponse = /** status 200 List of lead magnets */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    description: string;
+    magnetType: "pdf" | "calculator";
+    pdfUrl: string | null;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    updatedAt: string | null;
+  }[];
+};
+export type GetApiLeadMagnetsApiArg = void;
+export type PostApiLeadMagnetsApiResponse = /** status 201 Lead magnet created */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    description: string;
+    magnetType: "pdf" | "calculator";
+    pdfUrl: string | null;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    updatedAt: string | null;
+  };
+};
+export type PostApiLeadMagnetsApiArg = {
+  body: {
+    slug: string;
+    title: string;
+    description: string;
+    magnetType: "pdf" | "calculator";
+    pdfUrl?: string | null;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+  };
+};
+export type GetApiLeadMagnetsByIdApiResponse = /** status 200 Lead magnet details */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    description: string;
+    magnetType: "pdf" | "calculator";
+    pdfUrl: string | null;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    updatedAt: string | null;
+  };
+};
+export type GetApiLeadMagnetsByIdApiArg = {
+  id: string;
+};
+export type PutApiLeadMagnetsByIdApiResponse = /** status 200 Lead magnet updated */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    description: string;
+    magnetType: "pdf" | "calculator";
+    pdfUrl: string | null;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    updatedAt: string | null;
+  };
+};
+export type PutApiLeadMagnetsByIdApiArg = {
+  id: string;
+  body: {
+    slug?: string;
+    title?: string;
+    description?: string;
+    magnetType?: "pdf" | "calculator";
+    pdfUrl?: string | null;
+    published?: boolean;
+    seoTitle?: string | null;
+    seoDescription?: string | null;
+    keywords?: string[];
+  };
+};
+export type DeleteApiLeadMagnetsByIdApiResponse = /** status 200 Lead magnet deleted */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    slug: string;
+    title: string;
+    description: string;
+    magnetType: "pdf" | "calculator";
+    pdfUrl: string | null;
+    published: boolean;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    keywords: string[];
+    updatedAt: string | null;
+  };
+};
+export type DeleteApiLeadMagnetsByIdApiArg = {
+  id: string;
+};
+export type PostApiLeadsApiResponse = /** status 201 Lead captured */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    email: string;
+    name: string | null;
+    magnetSlug: string;
+    metadata:
+      | {
+          [key: string]: string | number | boolean | null;
+        }
+      | {
+          [key: string]: string | number | boolean | null;
+        };
+    createdAt: string | null;
+  };
+};
+export type PostApiLeadsApiArg = {
+  body: {
+    email: string;
+    name?: string;
+    magnetSlug: string;
+    metadata?: {
+      [key: string]: string | number | boolean | null;
+    };
+  };
+};
+export type GetApiLeadsApiResponse = /** status 200 List of leads */ {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    email: string;
+    name: string | null;
+    magnetSlug: string;
+    metadata:
+      | {
+          [key: string]: string | number | boolean | null;
+        }
+      | {
+          [key: string]: string | number | boolean | null;
+        };
+    createdAt: string | null;
+  }[];
+};
+export type GetApiLeadsApiArg = void;
 export const {
   useGetApiProjectsQuery,
   usePostApiProjectsMutation,
@@ -2611,4 +2946,24 @@ export const {
   useGetApiQuickLinkQuery,
   usePutApiQuickLinkMutation,
   usePutApiQuickLinkBulkMutation,
+  usePutApiQuickLinkWorkflowsBulkMutation,
+  useGetApiPagesQuery,
+  usePostApiPagesMutation,
+  useGetApiPagesByIdQuery,
+  usePutApiPagesByIdMutation,
+  useDeleteApiPagesByIdMutation,
+  useGetApiSiteSettingsQuery,
+  usePutApiSiteSettingsMutation,
+  useGetApiBlogPostsQuery,
+  usePostApiBlogPostsMutation,
+  useGetApiBlogPostsByIdQuery,
+  usePutApiBlogPostsByIdMutation,
+  useDeleteApiBlogPostsByIdMutation,
+  useGetApiLeadMagnetsQuery,
+  usePostApiLeadMagnetsMutation,
+  useGetApiLeadMagnetsByIdQuery,
+  usePutApiLeadMagnetsByIdMutation,
+  useDeleteApiLeadMagnetsByIdMutation,
+  usePostApiLeadsMutation,
+  useGetApiLeadsQuery,
 } = injectedRtkApi;

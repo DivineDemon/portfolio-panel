@@ -17,6 +17,9 @@ import {
 type UnlinkedProject = GetApiQuickLinkApiResponse["data"]["unlinkedProjects"][number];
 type LinkedProject = GetApiQuickLinkApiResponse["data"]["linkedProjects"][number];
 type ClientOption = GetApiQuickLinkApiResponse["data"]["clients"][number];
+type UnlinkedWorkflow = GetApiQuickLinkApiResponse["data"]["unlinkedWorkflows"][number];
+type LinkedWorkflow = GetApiQuickLinkApiResponse["data"]["linkedWorkflows"][number];
+type QuickLinkOverviewData = GetApiQuickLinkApiResponse["data"];
 
 function getMutationErrorMessage(error: unknown): string {
   if (typeof error === "object" && error !== null && "data" in error) {
@@ -208,6 +211,164 @@ function LinkedProjectRow({
   );
 }
 
+function UnlinkedWorkflowRow({
+  workflow,
+  clients,
+  onLinked,
+}: {
+  workflow: UnlinkedWorkflow;
+  clients: ClientOption[];
+  onLinked: () => void;
+}) {
+  const [clientId, setClientId] = useState<string>("");
+  const [linkContent, { isLoading }] = usePutApiQuickLinkMutation();
+
+  const handleLink = async () => {
+    if (!clientId) {
+      toast.error("Select a client first.");
+      return;
+    }
+
+    const response = await linkContent({
+      body: { workflowId: workflow.id, clientId: Number(clientId) } as never,
+    });
+
+    if ("error" in response && response.error) {
+      toast.error(getMutationErrorMessage(response.error));
+      return;
+    }
+
+    if ("data" in response && response.data) {
+      toast.success(response.data.message);
+      setClientId("");
+      onLinked();
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-3 border-border/80 border-b py-4 last:border-b-0 sm:flex-row sm:items-center">
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <ProjectThumb title={workflow.title} coverImage={workflow.coverImage} />
+        <div className="min-w-0">
+          <p className="truncate font-medium text-sm">{workflow.title}</p>
+          <p className="truncate text-muted-foreground text-xs">{workflow.headlineResult}</p>
+        </div>
+      </div>
+      <div className="flex w-full items-center gap-2 sm:w-auto sm:min-w-[280px]">
+        <Select value={clientId || undefined} onValueChange={setClientId} disabled={isLoading || clients.length === 0}>
+          <SelectTrigger className="w-full flex-1">
+            <SelectValue placeholder={clients.length === 0 ? "No clients" : "Select client"} />
+          </SelectTrigger>
+          <SelectContent>
+            {clients.map((client) => (
+              <SelectItem key={client.id} value={String(client.id)}>
+                {client.clientName}
+                {client.company ? ` · ${client.company}` : ""}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button type="button" size="sm" disabled={isLoading || !clientId} onClick={() => void handleLink()}>
+          {isLoading ? <Loader2 className="size-4 animate-spin" /> : "Link"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function LinkedWorkflowRow({
+  workflow,
+  clients,
+  onUpdated,
+}: {
+  workflow: LinkedWorkflow;
+  clients: ClientOption[];
+  onUpdated: () => void;
+}) {
+  const [clientId, setClientId] = useState(String(workflow.clientId));
+  const [linkContent, { isLoading }] = usePutApiQuickLinkMutation();
+  const hasChange = clientId !== String(workflow.clientId);
+
+  const applyLink = async (nextClientId: number | null) => {
+    const response = await linkContent({
+      body: { workflowId: workflow.id, clientId: nextClientId } as never,
+    });
+
+    if ("error" in response && response.error) {
+      toast.error(getMutationErrorMessage(response.error));
+      return false;
+    }
+
+    if ("data" in response && response.data) {
+      toast.success(response.data.message);
+      onUpdated();
+      return true;
+    }
+
+    return false;
+  };
+
+  const handleUpdate = async () => {
+    const parsed = clientId ? Number(clientId) : null;
+    if (parsed === null) {
+      toast.error("Choose a client or use Unlink.");
+      return;
+    }
+    await applyLink(parsed);
+  };
+
+  const handleUnlink = async () => {
+    const ok = await applyLink(null);
+    if (ok) setClientId("");
+  };
+
+  return (
+    <div className="flex flex-col gap-3 border-border/80 border-b py-4 last:border-b-0 sm:flex-row sm:items-center">
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <ProjectThumb title={workflow.title} coverImage={workflow.coverImage} />
+        <div className="min-w-0">
+          <p className="truncate font-medium text-sm">{workflow.title}</p>
+          <div className="mt-1 flex items-center gap-2">
+            <ClientAvatar client={workflow.client} />
+            <p className="truncate text-muted-foreground text-xs">
+              {workflow.client.clientName}
+              {workflow.client.company ? ` · ${workflow.client.company}` : ""}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
+        <Select value={clientId || undefined} onValueChange={setClientId} disabled={isLoading}>
+          <SelectTrigger className="w-full min-w-[200px] sm:w-[220px]">
+            <SelectValue placeholder="Select client" />
+          </SelectTrigger>
+          <SelectContent>
+            {clients.map((client) => (
+              <SelectItem key={client.id} value={String(client.id)}>
+                {client.clientName}
+                {client.company ? ` · ${client.company}` : ""}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          type="button"
+          size="sm"
+          variant="secondary"
+          disabled={isLoading || !hasChange}
+          onClick={() => void handleUpdate()}
+        >
+          {isLoading ? <Loader2 className="size-4 animate-spin" /> : "Update"}
+        </Button>
+        <Button type="button" size="sm" variant="outline" disabled={isLoading} onClick={() => void handleUnlink()}>
+          <Unlink className="size-4" />
+          Unlink
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 function QuickLinkSkeleton() {
   return (
     <div className="grid gap-5 lg:grid-cols-2">
@@ -260,18 +421,21 @@ export default function QuickLinkPage() {
     );
   }
 
-  const { unlinkedProjects, linkedProjects, clients } = data.data;
+  const overview = data.data as QuickLinkOverviewData;
+  const { unlinkedProjects, linkedProjects, unlinkedWorkflows = [], linkedWorkflows = [], clients } = overview;
 
   return (
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="font-semibold text-2xl tracking-tight">Quick Link</h1>
         <p className="text-muted-foreground text-sm">
-          Link existing projects to clients without opening the full project editor.
+          Link projects and workflows to clients without opening the full editor.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
-          <Badge variant="secondary">{unlinkedProjects.length} unlinked</Badge>
-          <Badge variant="outline">{linkedProjects.length} linked</Badge>
+          <Badge variant="secondary">{unlinkedProjects.length} unlinked projects</Badge>
+          <Badge variant="outline">{linkedProjects.length} linked projects</Badge>
+          <Badge variant="secondary">{unlinkedWorkflows.length} unlinked workflows</Badge>
+          <Badge variant="outline">{linkedWorkflows.length} linked workflows</Badge>
           <Badge variant="outline">{clients.length} clients</Badge>
         </div>
       </div>
@@ -329,6 +493,50 @@ export default function QuickLinkPage() {
         </Card>
       </div>
 
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Card className="min-h-[320px] lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Workflows — unlinked</CardTitle>
+            <CardDescription>Workflow showcases without a client testimonial link.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {unlinkedWorkflows.length === 0 ? (
+              <p className="text-muted-foreground text-sm">All workflows are linked to a client.</p>
+            ) : (
+              unlinkedWorkflows.map((workflow) => (
+                <UnlinkedWorkflowRow
+                  key={workflow.id}
+                  workflow={workflow}
+                  clients={clients}
+                  onLinked={() => void refetch()}
+                />
+              ))
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="min-h-[320px] lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Workflows — linked</CardTitle>
+            <CardDescription>Reassign a client or unlink a workflow.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {linkedWorkflows.length === 0 ? (
+              <p className="text-muted-foreground text-sm">No linked workflows yet.</p>
+            ) : (
+              linkedWorkflows.map((workflow) => (
+                <LinkedWorkflowRow
+                  key={workflow.id}
+                  workflow={workflow}
+                  clients={clients}
+                  onUpdated={() => void refetch()}
+                />
+              ))
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
       {clients.length > 0 && (
         <Card>
           <CardHeader>
@@ -337,21 +545,34 @@ export default function QuickLinkPage() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {clients.map((client) => (
-                <div key={client.id} className="flex items-center gap-3 rounded-lg border border-border/80 bg-card p-3">
-                  <ClientAvatar client={client} />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-sm">{client.clientName}</p>
-                    <p className="truncate text-muted-foreground text-xs">
-                      {client.designation}
-                      {client.company ? ` · ${client.company}` : ""}
-                    </p>
+              {clients.map((client) => {
+                const clientOption = client as ClientOption;
+                return (
+                  <div
+                    key={client.id}
+                    className="flex items-center gap-3 rounded-lg border border-border/80 bg-card p-3"
+                  >
+                    <ClientAvatar client={client} />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium text-sm">{client.clientName}</p>
+                      <p className="truncate text-muted-foreground text-xs">
+                        {client.designation}
+                        {client.company ? ` · ${client.company}` : ""}
+                      </p>
+                    </div>
+                    <Badge
+                      variant={
+                        client.linkedProjectCount > 0 || (clientOption.linkedWorkflowCount ?? 0) > 0
+                          ? "default"
+                          : "outline"
+                      }
+                    >
+                      {client.linkedProjectCount}
+                      {(clientOption.linkedWorkflowCount ?? 0) > 0 ? ` · ${clientOption.linkedWorkflowCount} wf` : ""}
+                    </Badge>
                   </div>
-                  <Badge variant={client.linkedProjectCount > 0 ? "default" : "outline"}>
-                    {client.linkedProjectCount}
-                  </Badge>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>

@@ -64,9 +64,12 @@ export function ProjectFormStepSeoLinks({
             <Input
               id="cardOutcome"
               type="text"
-              placeholder="One-line business outcome for homepage cards"
+              placeholder='e.g. "0 → 4 live portals billing real customers in 16 months"'
               {...register("cardOutcome")}
             />
+            <p className="text-muted-foreground text-xs">
+              One-line business outcome shown on homepage cards and llms.txt. Leave blank to use headline result.
+            </p>
             <FieldError errors={errors.cardOutcome ? [errors.cardOutcome] : undefined} />
           </Field>
           <Field>

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, type Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { type ClientFormValues, clientFormSchema } from "@/lib/form-schemas";
 import { imageToUrl } from "@/lib/upload";
@@ -32,7 +33,10 @@ const EMPTY_DEFAULTS: ClientFormValues = {
   designation: "",
   clientName: "",
   feedback: "",
+  companyUrl: "",
+  featured: false,
   image: "",
+  logo: "",
 };
 
 function getMutationErrorMessage(error: unknown): string {
@@ -57,7 +61,7 @@ export default function ClientSheet({ id }: ClientSheetProps) {
   const [postClient, { isLoading: isCreating }] = usePostApiClientsMutation();
 
   const form = useForm<ClientFormValues>({
-    resolver: zodResolver(clientFormSchema),
+    resolver: zodResolver(clientFormSchema) as Resolver<ClientFormValues>,
     defaultValues: EMPTY_DEFAULTS,
   });
 
@@ -82,6 +86,9 @@ export default function ClientSheet({ id }: ClientSheetProps) {
         company: client.data.company,
         content: client.data.content,
         image: client.data.image ?? "",
+        logo: (client.data as { logo?: string | null }).logo ?? "",
+        companyUrl: (client.data as { companyUrl?: string | null }).companyUrl ?? "",
+        featured: (client.data as { featured?: boolean }).featured ?? false,
         designation: client.data.designation,
         clientName: client.data.clientName,
         feedback: client.data.feedback ?? "",
@@ -94,6 +101,7 @@ export default function ClientSheet({ id }: ClientSheetProps) {
   const onSubmit = form.handleSubmit(async (values) => {
     try {
       let imageUrl: string | undefined;
+      let logoUrl: string | undefined;
 
       if (values.image instanceof FileList && values.image.length > 0) {
         imageUrl = await imageToUrl(values.image[0]!);
@@ -102,13 +110,22 @@ export default function ClientSheet({ id }: ClientSheetProps) {
         imageUrl = values.image;
       }
 
+      if (values.logo instanceof FileList && values.logo.length > 0) {
+        logoUrl = await imageToUrl(values.logo[0]!);
+      } else if (typeof values.logo === "string" && values.logo) {
+        logoUrl = values.logo;
+      }
+
       const body = {
         company: values.company,
         content: values.content,
         designation: values.designation,
         clientName: values.clientName,
+        featured: values.featured ?? false,
         ...(values.feedback?.trim() && { feedback: values.feedback.trim() }),
+        ...(values.companyUrl?.trim() && { companyUrl: values.companyUrl.trim() }),
         ...(imageUrl && { image: imageUrl }),
+        ...(logoUrl && { logo: logoUrl }),
       };
 
       const response = id ? await putClient({ id: `${id}`, body }) : await postClient({ body });
@@ -183,6 +200,34 @@ export default function ClientSheet({ id }: ClientSheetProps) {
               </FieldContent>
             </Field>
 
+            <Field>
+              <FieldLabel htmlFor="companyUrl">Company URL</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="companyUrl"
+                  placeholder="https://company.com"
+                  disabled={isSubmitting}
+                  {...form.register("companyUrl")}
+                />
+              </FieldContent>
+            </Field>
+
+            <Field className="flex items-center justify-between gap-3">
+              <FieldLabel htmlFor="featured">Featured testimonial</FieldLabel>
+              <Controller
+                name="featured"
+                control={form.control}
+                render={({ field }) => (
+                  <Switch
+                    id="featured"
+                    checked={field.value ?? false}
+                    onCheckedChange={field.onChange}
+                    disabled={isSubmitting}
+                  />
+                )}
+              />
+            </Field>
+
             <Field data-invalid={!!form.formState.errors.content}>
               <FieldLabel htmlFor="content">Testimonial</FieldLabel>
               <FieldContent>
@@ -229,6 +274,20 @@ export default function ClientSheet({ id }: ClientSheetProps) {
                   </Avatar>
                 </div>
                 <FieldError errors={[form.formState.errors.image]} />
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="logo">Company logo</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="logo"
+                  type="file"
+                  accept="image/*"
+                  disabled={isSubmitting}
+                  className="p-0 file:mr-2.5 file:h-9 file:bg-primary file:px-2.5 file:py-0"
+                  {...form.register("logo")}
+                />
               </FieldContent>
             </Field>
           </FieldGroup>

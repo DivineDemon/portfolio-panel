@@ -133,8 +133,58 @@ export const clientFormSchema = z.object({
   designation: z.string().min(1, "Required"),
   clientName: z.string().min(1, "Required"),
   feedback: z.string().optional(),
+  companyUrl: z.string().optional(),
+  featured: z.boolean().default(false),
   image: z.union([z.url(), z.literal(""), z.instanceof(FileList)]).optional(),
+  logo: z.union([z.url(), z.literal(""), z.instanceof(FileList)]).optional(),
 });
+
+export const pageFormSchema = z.object({
+  slug: z.string().min(1, "Required"),
+  title: z.string().min(1, "Required"),
+  pageType: z.enum(["service", "persona", "process", "now", "index"]),
+  content: z.string().min(1, "Required"),
+  excerpt: z.string().optional(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
+  keywords: z.string().optional(),
+  relatedProjectSlugs: z.string().optional(),
+  relatedWorkflowSlugs: z.string().optional(),
+  sortOrder: z.union([z.coerce.number().int(), z.literal("")]).optional(),
+  featured: z.boolean(),
+  published: z.boolean(),
+});
+
+export type PageFormValues = z.infer<typeof pageFormSchema>;
+
+export const blogPostFormSchema = z.object({
+  slug: z.string().min(1, "Required"),
+  title: z.string().min(1, "Required"),
+  excerpt: z.string().optional(),
+  content: z.string().min(1, "Required"),
+  coverImage: z.string().optional(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
+  keywords: z.string().optional(),
+  featured: z.boolean(),
+  published: z.boolean(),
+});
+
+export type BlogPostFormValues = z.infer<typeof blogPostFormSchema>;
+
+export const leadMagnetFormSchema = z.object({
+  slug: z.string().min(1, "Required"),
+  title: z.string().min(1, "Required"),
+  description: z.string().min(1, "Required"),
+  magnetType: z.enum(["pdf", "calculator"]),
+  pdfUrl: z.string().optional(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
+  keywords: z.string().optional(),
+  published: z.boolean(),
+});
+
+export type LeadMagnetFormValues = z.infer<typeof leadMagnetFormSchema>;
 
 export type BasicsFormValues = z.infer<typeof basicsFormSchema>;
 export type StoryFormValues = z.infer<typeof storyFormSchema>;

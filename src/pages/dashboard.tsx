@@ -1,19 +1,23 @@
-import { BarChart3, FolderKanban, MessageSquareQuote } from "lucide-react";
+import { BarChart3, FolderKanban, GitBranch, Megaphone, MessageSquareQuote } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import DashboardSkeleton from "@/components/skeleton/dashboard-skeleton";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGetApiClientsQuery, useGetApiProjectsQuery } from "@/store/services/apis";
+import { PRIMARY_KEY_EVENTS } from "@/lib/analytics-events";
+import { useGetApiClientsQuery, useGetApiN8NWorkflowsQuery, useGetApiProjectsQuery } from "@/store/services/apis";
 
 export default function DashboardPage() {
   const { data: projects, isLoading: projectsLoading } = useGetApiProjectsQuery();
+  const { data: workflows, isLoading: workflowsLoading } = useGetApiN8NWorkflowsQuery();
   const { data: clients, isLoading: clientsLoading } = useGetApiClientsQuery();
 
-  if (projectsLoading || clientsLoading) {
+  if (projectsLoading || workflowsLoading || clientsLoading) {
     return <DashboardSkeleton />;
   }
 
   const projectCount = projects?.data.length ?? 0;
+  const workflowCount = workflows?.data.length ?? 0;
   const clientCount = clients?.data.length ?? 0;
 
   return (
@@ -23,7 +27,7 @@ export default function DashboardPage() {
         <p className="text-muted-foreground text-sm">Overview of your portfolio content.</p>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-5 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
             <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -37,6 +41,23 @@ export default function DashboardPage() {
           <CardContent>
             <Link to="/dashboard/projects" className="text-primary text-sm hover:underline">
               View all projects
+            </Link>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <GitBranch className="size-6" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <CardDescription>Workflows</CardDescription>
+              <CardTitle className="text-3xl tabular-nums">{workflowCount}</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Link to="/dashboard/workflows" className="text-primary text-sm hover:underline">
+              View all workflows
             </Link>
           </CardContent>
         </Card>
@@ -59,20 +80,43 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="size-5" />
-            Analytics
-          </CardTitle>
-          <CardDescription>Traffic and engagement insights for your portfolio.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex min-h-32 items-center justify-center rounded-lg border border-dashed bg-muted/30 px-6 py-10 text-center">
-            <p className="text-muted-foreground text-sm">Analytics coming soon.</p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid gap-5 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="size-5" />
+              Analytics
+            </CardTitle>
+            <CardDescription>
+              {PRIMARY_KEY_EVENTS.length} primary GA4 key events tracked on the public site. View the full catalog,
+              Looker Studio embed, and B2B pixel evaluation.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild>
+              <Link to="/dashboard/analytics">Open analytics</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Megaphone className="size-5" />
+              Outreach
+            </CardTitle>
+            <CardDescription>
+              LinkedIn optimization, directory listings, guest posts, client backlinks, and Product Hunt launch
+              checklists with copy-paste templates.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild>
+              <Link to="/dashboard/outreach">Open outreach</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

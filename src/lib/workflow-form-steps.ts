@@ -111,7 +111,9 @@ export function mergeWorkflowStepDataToApiBody(data: FullWorkflowStepData): Post
     problem: data.story.problem,
     approach: data.story.approach,
     results: data.story.results,
-    workflowJson: parseWorkflowJsonString(data.publish.workflowJson),
+    workflowJson: parseWorkflowJsonString(
+      data.publish.workflowJson,
+    ) as PostApiN8NWorkflowsApiArg["body"]["workflowJson"],
     integrations: stringToArray(
       typeof data.basics.integrations === "string" ? data.basics.integrations : data.basics.integrations?.join(", "),
     ),

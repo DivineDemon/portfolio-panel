@@ -1,7 +1,4 @@
 import { z } from "zod";
-import type { PostApiN8NWorkflowsApiArg } from "@/store/services/apis";
-
-export type WorkflowJsonObject = PostApiN8NWorkflowsApiArg["body"]["workflowJson"];
 
 const N8nJsonLeafSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 
@@ -87,6 +84,9 @@ export const workflowJsonObjectSchema = z.object({
   versionId: z.string().optional(),
   id: z.string().optional(),
 });
+
+/** Canonical workflow JSON shape — kept in panel to avoid `any` from OpenAPI codegen. */
+export type WorkflowJsonObject = z.infer<typeof workflowJsonObjectSchema>;
 
 /** Parse one or more JSON values from a string (supports concatenated JSON objects). */
 export function parseJsonValues(input: string): unknown[] {
