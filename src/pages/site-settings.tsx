@@ -14,13 +14,9 @@ import { useGetApiSiteSettingsQuery, usePutApiSiteSettingsMutation } from "@/sto
 
 const siteSettingsFormSchema = z.object({
   heroHeadline: z.string().optional(),
-  heroSubheadline: z.string().optional(),
   heroBadge: z.string().optional(),
   positioningTitle: z.string().optional(),
   positioningDescription: z.string().optional(),
-  availabilityText: z.string().optional(),
-  projectMinimumText: z.string().optional(),
-  responseTimeText: z.string().optional(),
   bookingUrl: z.string().optional(),
   linkedinUrl: z.string().optional(),
   githubUrl: z.string().optional(),
@@ -52,13 +48,9 @@ export default function SiteSettingsPage() {
     const s = data.data;
     form.reset({
       heroHeadline: s.heroHeadline ?? "",
-      heroSubheadline: s.heroSubheadline ?? "",
       heroBadge: s.heroBadge ?? "",
       positioningTitle: s.positioningTitle ?? "",
       positioningDescription: s.positioningDescription ?? "",
-      availabilityText: s.availabilityText ?? "",
-      projectMinimumText: s.projectMinimumText ?? "",
-      responseTimeText: s.responseTimeText ?? "",
       bookingUrl: s.bookingUrl ?? "",
       linkedinUrl: s.linkedinUrl ?? "",
       githubUrl: s.githubUrl ?? "",
@@ -78,13 +70,9 @@ export default function SiteSettingsPage() {
     const response = await updateSettings({
       body: {
         heroHeadline: values.heroHeadline?.trim() || null,
-        heroSubheadline: values.heroSubheadline?.trim() || null,
         heroBadge: values.heroBadge?.trim() || null,
         positioningTitle: values.positioningTitle?.trim() || null,
         positioningDescription: values.positioningDescription?.trim() || null,
-        availabilityText: values.availabilityText?.trim() || null,
-        projectMinimumText: values.projectMinimumText?.trim() || null,
-        responseTimeText: values.responseTimeText?.trim() || null,
         bookingUrl: values.bookingUrl?.trim() || null,
         linkedinUrl: values.linkedinUrl?.trim() || null,
         githubUrl: values.githubUrl?.trim() || null,
@@ -130,7 +118,7 @@ export default function SiteSettingsPage() {
       <div>
         <h1 className="font-semibold text-2xl tracking-tight">Site Settings</h1>
         <p className="text-muted-foreground text-sm">
-          Homepage hero, positioning, contact copy, and llms.txt intro override.
+          Homepage hero, positioning, booking link, and llms.txt intro override.
         </p>
       </div>
 
@@ -147,10 +135,6 @@ export default function SiteSettingsPage() {
             <Field>
               <FieldLabel htmlFor="heroHeadline">Headline</FieldLabel>
               <Textarea id="heroHeadline" rows={3} {...form.register("heroHeadline")} disabled={isSubmitting} />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="heroSubheadline">Subheadline</FieldLabel>
-              <Textarea id="heroSubheadline" rows={3} {...form.register("heroSubheadline")} disabled={isSubmitting} />
             </Field>
           </CardContent>
         </Card>
@@ -182,21 +166,9 @@ export default function SiteSettingsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Contact expectations</CardTitle>
+            <CardTitle>Booking</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Field>
-              <FieldLabel htmlFor="availabilityText">Availability</FieldLabel>
-              <Input id="availabilityText" {...form.register("availabilityText")} disabled={isSubmitting} />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="projectMinimumText">Project minimum</FieldLabel>
-              <Input id="projectMinimumText" {...form.register("projectMinimumText")} disabled={isSubmitting} />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="responseTimeText">Response time</FieldLabel>
-              <Input id="responseTimeText" {...form.register("responseTimeText")} disabled={isSubmitting} />
-            </Field>
             <Field>
               <FieldLabel htmlFor="bookingUrl">Booking URL</FieldLabel>
               <Input id="bookingUrl" {...form.register("bookingUrl")} disabled={isSubmitting} />

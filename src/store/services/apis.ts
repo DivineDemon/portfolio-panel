@@ -2569,13 +2569,9 @@ export type GetApiSiteSettingsApiResponse = /** status 200 Site settings */ {
   data: {
     id: number;
     heroHeadline: string | null;
-    heroSubheadline: string | null;
     heroBadge: string | null;
     positioningTitle: string | null;
     positioningDescription: string | null;
-    availabilityText: string | null;
-    projectMinimumText: string | null;
-    responseTimeText: string | null;
     bookingUrl: string | null;
     linkedinUrl: string | null;
     githubUrl: string | null;
@@ -2591,13 +2587,9 @@ export type PutApiSiteSettingsApiResponse = /** status 200 Site settings updated
   data: {
     id: number;
     heroHeadline: string | null;
-    heroSubheadline: string | null;
     heroBadge: string | null;
     positioningTitle: string | null;
     positioningDescription: string | null;
-    availabilityText: string | null;
-    projectMinimumText: string | null;
-    responseTimeText: string | null;
     bookingUrl: string | null;
     linkedinUrl: string | null;
     githubUrl: string | null;
@@ -2609,13 +2601,9 @@ export type PutApiSiteSettingsApiResponse = /** status 200 Site settings updated
 export type PutApiSiteSettingsApiArg = {
   body: {
     heroHeadline?: string | null;
-    heroSubheadline?: string | null;
     heroBadge?: string | null;
     positioningTitle?: string | null;
     positioningDescription?: string | null;
-    availabilityText?: string | null;
-    projectMinimumText?: string | null;
-    responseTimeText?: string | null;
     bookingUrl?: string | null;
     linkedinUrl?: string | null;
     githubUrl?: string | null;

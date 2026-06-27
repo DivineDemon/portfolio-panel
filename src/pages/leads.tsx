@@ -44,7 +44,9 @@ export default function LeadsPage() {
                   <td className="px-4 py-3 font-mono">{lead.email}</td>
                   <td className="px-4 py-3">{lead.name ?? "—"}</td>
                   <td className="px-4 py-3 font-mono text-muted-foreground">{lead.magnetSlug}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{new Date(lead.createdAt).toLocaleString()}</td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {lead.createdAt ? new Date(lead.createdAt).toLocaleString() : "—"}
+                  </td>
                 </tr>
               ))}
             </tbody>
