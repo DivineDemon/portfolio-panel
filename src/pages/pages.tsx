@@ -22,9 +22,7 @@ export default function PagesPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="font-semibold text-2xl tracking-tight">Pages</h1>
-          <p className="text-muted-foreground text-sm">
-            CMS-managed landing pages — services, personas, process, and now.
-          </p>
+          <p className="text-muted-foreground text-sm">CMS-managed landing pages — personas and process.</p>
         </div>
         <Button asChild>
           <Link to="/dashboard/pages/new">
@@ -51,7 +49,7 @@ export default function PagesPage() {
         <Card className="max-w-lg">
           <CardHeader>
             <CardTitle>No pages yet</CardTitle>
-            <CardDescription>Create CMS pages for services, personas, and other indexable content.</CardDescription>
+            <CardDescription>Create CMS pages for personas and other indexable content.</CardDescription>
           </CardHeader>
           <div className="px-6 pb-6">
             <Button asChild>

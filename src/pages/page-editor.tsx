@@ -23,7 +23,7 @@ import {
 const DEFAULTS: PageFormValues = {
   slug: "",
   title: "",
-  pageType: "service",
+  pageType: "persona",
   content: "",
   excerpt: "",
   seoTitle: "",
@@ -147,7 +147,7 @@ export default function PageEditorPage() {
         <Card>
           <CardHeader>
             <CardTitle>Content</CardTitle>
-            <CardDescription>URL slug uses full path, e.g. services/ai-automation</CardDescription>
+            <CardDescription>URL slug uses full path, e.g. for-founders</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Field>
@@ -157,12 +157,7 @@ export default function PageEditorPage() {
             </Field>
             <Field>
               <FieldLabel htmlFor="slug">Slug</FieldLabel>
-              <Input
-                id="slug"
-                placeholder="services/ai-automation"
-                {...form.register("slug")}
-                disabled={isSubmitting}
-              />
+              <Input id="slug" placeholder="for-founders" {...form.register("slug")} disabled={isSubmitting} />
               <FieldError errors={form.formState.errors.slug ? [form.formState.errors.slug] : undefined} />
             </Field>
             <Field>
@@ -194,7 +189,7 @@ export default function PageEditorPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {(["service", "persona", "process", "now", "index"] as const).map((type) => (
+                        {(["persona", "process", "index"] as const).map((type) => (
                           <SelectItem key={type} value={type}>
                             {type}
                           </SelectItem>
