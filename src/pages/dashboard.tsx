@@ -1,4 +1,4 @@
-import { BarChart3, FolderKanban, GitBranch, Megaphone, MessageSquareQuote } from "lucide-react";
+import { BarChart3, FolderKanban, GitBranch, MessageSquareQuote } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import DashboardSkeleton from "@/components/skeleton/dashboard-skeleton";
@@ -80,43 +80,23 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="size-5" />
-              Analytics
-            </CardTitle>
-            <CardDescription>
-              {PRIMARY_KEY_EVENTS.length} primary GA4 key events tracked on the public site. View the full catalog,
-              Looker Studio embed, and B2B pixel evaluation.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild>
-              <Link to="/dashboard/analytics">Open analytics</Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Megaphone className="size-5" />
-              Outreach
-            </CardTitle>
-            <CardDescription>
-              LinkedIn optimization, directory listings, guest posts, client backlinks, and Product Hunt launch
-              checklists with copy-paste templates.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild>
-              <Link to="/dashboard/outreach">Open outreach</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="size-5" />
+            Analytics
+          </CardTitle>
+          <CardDescription>
+            {PRIMARY_KEY_EVENTS.length} primary GA4 key events tracked on the public site. View the full catalog and
+            PostHog setup.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button asChild>
+            <Link to="/dashboard/analytics">Open analytics</Link>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

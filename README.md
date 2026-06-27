@@ -7,7 +7,7 @@ Admin dashboard for managing portfolio content — projects and clients — back
 - **Landing page** — public marketing entry with sign-in CTA
 - **Single-user auth** — password login via Vercel serverless functions and httpOnly JWT cookie
 - **Dashboard** — project and client counts with link to analytics
-- **Analytics** — GA4 key event catalog, Looker Studio embed, B2B visitor ID evaluation
+- **Analytics** — GA4 key event catalog, PostHog product analytics, and reporting shortcuts
 - **Outreach** — LinkedIn optimization, directory listings, guest posts, client backlinks, Product Hunt checklists and templates
 - **Projects** — list, create, edit, and delete portfolio projects via a 4-step form (basics, story, tech & media, SEO & links)
 - **Clients** — create, edit, and delete clients (name, company, designation, testimonial, feedback, photo) in a slide-over sheet
@@ -54,11 +54,10 @@ Admin dashboard for managing portfolio content — projects and clients — back
    | --- | --- | --- |
    | `VITE_BASE_API_URL` | Client | Base URL of the portfolio API (e.g. `https://pb.sv.mushoodhanif.com`) |
    | `VITE_PUBLIC_IMGBB_KEY` | Client | ImgBB API key for uploading project and client images |
-   | `VITE_LOOKER_STUDIO_EMBED_URL` | Client | Optional Looker Studio report embed URL for the Analytics page |
    | `VITE_GA4_PROPERTY_URL` | Client | Optional direct link to your GA4 property |
    | `VITE_GSC_PROPERTY_URL` | Client | Optional link to Google Search Console |
    | `VITE_CLARITY_PROJECT_URL` | Client | Optional link to Microsoft Clarity project |
-   | `VITE_PUBLIC_SITE_URL` | Client | Public site URL for outreach templates (e.g. `https://mushoodhanif.com`) |
+   | `VITE_POSTHOG_PROJECT_URL` | Client | Optional link to your PostHog project dashboard |
    | `ADMIN_PASSWORD` | Server | Single admin login password |
    | `AUTH_SECRET` | Server | JWT signing secret (32+ random characters) |
 
@@ -128,10 +127,7 @@ src/
 | `/dashboard/projects/new` | Protected | Create project |
 | `/dashboard/projects/:id` | Protected | Edit project |
 | `/dashboard/clients` | Protected | Client list and management |
-| `/dashboard/leads` | Protected | Lead magnet captures |
-| `/dashboard/analytics` | Protected | GA4 key events, Looker Studio, B2B evaluation |
-| `/dashboard/outreach` | Protected | LinkedIn, directories, guest posts, PH launch |
-| `/dashboard/site-settings` | Protected | Global site copy and links |
+| `/dashboard/analytics` | Protected | GA4 key events, PostHog, and reporting shortcuts |
 
 ## Deployment
 

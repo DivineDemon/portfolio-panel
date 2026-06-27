@@ -21,15 +21,6 @@ export const ANALYTICS_EVENT_CATALOG: AnalyticsEventDefinition[] = [
     firedFrom: ["Contact form"],
   },
   {
-    name: "lead_magnet_submit",
-    label: "Lead magnet submit",
-    description: "Email capture from a PDF or calculator lead magnet.",
-    tier: "primary",
-    markAsKeyEvent: true,
-    parameters: ["magnet_slug", "magnet_title", "magnet_type", "annual_savings?"],
-    firedFrom: ["/resources lead magnets"],
-  },
-  {
     name: "booking_click",
     label: "Booking click",
     description: "Click on the Calendly or booking link in the contact section.",

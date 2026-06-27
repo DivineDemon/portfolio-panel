@@ -172,20 +172,6 @@ export const blogPostFormSchema = z.object({
 
 export type BlogPostFormValues = z.infer<typeof blogPostFormSchema>;
 
-export const leadMagnetFormSchema = z.object({
-  slug: z.string().min(1, "Required"),
-  title: z.string().min(1, "Required"),
-  description: z.string().min(1, "Required"),
-  magnetType: z.enum(["pdf", "calculator"]),
-  pdfUrl: z.string().optional(),
-  seoTitle: z.string().optional(),
-  seoDescription: z.string().optional(),
-  keywords: z.string().optional(),
-  published: z.boolean(),
-});
-
-export type LeadMagnetFormValues = z.infer<typeof leadMagnetFormSchema>;
-
 export type BasicsFormValues = z.infer<typeof basicsFormSchema>;
 export type StoryFormValues = z.infer<typeof storyFormSchema>;
 export type TechMediaFormValues = z.input<typeof techMediaFormSchema>;

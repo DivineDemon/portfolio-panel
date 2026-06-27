@@ -6,12 +6,8 @@ import {
   LayoutDashboard,
   Link2,
   type LucideIcon,
-  Magnet,
-  Megaphone,
   MessageSquareQuote,
   Newspaper,
-  Settings2,
-  Users,
 } from "lucide-react";
 
 export interface DashboardNavItem {
@@ -52,29 +48,9 @@ export const dashboardNavItems: DashboardNavItem[] = [
     icon: Newspaper,
   },
   {
-    title: "Lead Magnets",
-    href: "/dashboard/lead-magnets",
-    icon: Magnet,
-  },
-  {
-    title: "Leads",
-    href: "/dashboard/leads",
-    icon: Users,
-  },
-  {
     title: "Analytics",
     href: "/dashboard/analytics",
     icon: BarChart3,
-  },
-  {
-    title: "Outreach",
-    href: "/dashboard/outreach",
-    icon: Megaphone,
-  },
-  {
-    title: "Site Settings",
-    href: "/dashboard/site-settings",
-    icon: Settings2,
   },
   {
     title: "Quick Link",

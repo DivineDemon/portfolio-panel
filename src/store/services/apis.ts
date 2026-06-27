@@ -1,15 +1,5 @@
 import { api } from "./core";
-export const addTagTypes = [
-  "Projects",
-  "n8n Workflows",
-  "Clients",
-  "Quick Link",
-  "Pages",
-  "Site Settings",
-  "Blog",
-  "Lead Magnets",
-  "Leads",
-] as const;
+export const addTagTypes = ["Projects", "n8n Workflows", "Clients", "Quick Link", "Pages", "Blog"] as const;
 const injectedRtkApi = api
   .enhanceEndpoints({
     addTagTypes,
@@ -171,18 +161,6 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ["Pages"],
       }),
-      getApiSiteSettings: build.query<GetApiSiteSettingsApiResponse, GetApiSiteSettingsApiArg>({
-        query: () => ({ url: `/api/site-settings` }),
-        providesTags: ["Site Settings"],
-      }),
-      putApiSiteSettings: build.mutation<PutApiSiteSettingsApiResponse, PutApiSiteSettingsApiArg>({
-        query: (queryArg) => ({
-          url: `/api/site-settings`,
-          method: "PUT",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Site Settings"],
-      }),
       getApiBlogPosts: build.query<GetApiBlogPostsApiResponse, GetApiBlogPostsApiArg>({
         query: () => ({ url: `/api/blog-posts` }),
         providesTags: ["Blog"],
@@ -213,49 +191,6 @@ const injectedRtkApi = api
           method: "DELETE",
         }),
         invalidatesTags: ["Blog"],
-      }),
-      getApiLeadMagnets: build.query<GetApiLeadMagnetsApiResponse, GetApiLeadMagnetsApiArg>({
-        query: () => ({ url: `/api/lead-magnets` }),
-        providesTags: ["Lead Magnets"],
-      }),
-      postApiLeadMagnets: build.mutation<PostApiLeadMagnetsApiResponse, PostApiLeadMagnetsApiArg>({
-        query: (queryArg) => ({
-          url: `/api/lead-magnets`,
-          method: "POST",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Lead Magnets"],
-      }),
-      getApiLeadMagnetsById: build.query<GetApiLeadMagnetsByIdApiResponse, GetApiLeadMagnetsByIdApiArg>({
-        query: (queryArg) => ({ url: `/api/lead-magnets/${queryArg.id}` }),
-        providesTags: ["Lead Magnets"],
-      }),
-      putApiLeadMagnetsById: build.mutation<PutApiLeadMagnetsByIdApiResponse, PutApiLeadMagnetsByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/lead-magnets/${queryArg.id}`,
-          method: "PUT",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Lead Magnets"],
-      }),
-      deleteApiLeadMagnetsById: build.mutation<DeleteApiLeadMagnetsByIdApiResponse, DeleteApiLeadMagnetsByIdApiArg>({
-        query: (queryArg) => ({
-          url: `/api/lead-magnets/${queryArg.id}`,
-          method: "DELETE",
-        }),
-        invalidatesTags: ["Lead Magnets"],
-      }),
-      postApiLeads: build.mutation<PostApiLeadsApiResponse, PostApiLeadsApiArg>({
-        query: (queryArg) => ({
-          url: `/api/leads`,
-          method: "POST",
-          body: queryArg.body,
-        }),
-        invalidatesTags: ["Leads"],
-      }),
-      getApiLeads: build.query<GetApiLeadsApiResponse, GetApiLeadsApiArg>({
-        query: () => ({ url: `/api/leads` }),
-        providesTags: ["Leads"],
       }),
     }),
     overrideExisting: false,
@@ -2563,54 +2498,6 @@ export type DeleteApiPagesByIdApiResponse = /** status 200 Page deleted */ {
 export type DeleteApiPagesByIdApiArg = {
   id: string;
 };
-export type GetApiSiteSettingsApiResponse = /** status 200 Site settings */ {
-  success: boolean;
-  message: string;
-  data: {
-    id: number;
-    heroHeadline: string | null;
-    heroBadge: string | null;
-    positioningTitle: string | null;
-    positioningDescription: string | null;
-    bookingUrl: string | null;
-    linkedinUrl: string | null;
-    githubUrl: string | null;
-    llmsIntro: string | null;
-    whoThisIsFor: string[] | null;
-    updatedAt: string | null;
-  };
-};
-export type GetApiSiteSettingsApiArg = void;
-export type PutApiSiteSettingsApiResponse = /** status 200 Site settings updated */ {
-  success: boolean;
-  message: string;
-  data: {
-    id: number;
-    heroHeadline: string | null;
-    heroBadge: string | null;
-    positioningTitle: string | null;
-    positioningDescription: string | null;
-    bookingUrl: string | null;
-    linkedinUrl: string | null;
-    githubUrl: string | null;
-    llmsIntro: string | null;
-    whoThisIsFor: string[] | null;
-    updatedAt: string | null;
-  };
-};
-export type PutApiSiteSettingsApiArg = {
-  body: {
-    heroHeadline?: string | null;
-    heroBadge?: string | null;
-    positioningTitle?: string | null;
-    positioningDescription?: string | null;
-    bookingUrl?: string | null;
-    linkedinUrl?: string | null;
-    githubUrl?: string | null;
-    llmsIntro?: string | null;
-    whoThisIsFor?: string[] | null;
-  };
-};
 export type GetApiBlogPostsApiResponse = /** status 200 List of blog posts */ {
   success: boolean;
   message: string;
@@ -2749,172 +2636,6 @@ export type DeleteApiBlogPostsByIdApiResponse = /** status 200 Blog post deleted
 export type DeleteApiBlogPostsByIdApiArg = {
   id: string;
 };
-export type GetApiLeadMagnetsApiResponse = /** status 200 List of lead magnets */ {
-  success: boolean;
-  message: string;
-  data: {
-    id: number;
-    slug: string;
-    title: string;
-    description: string;
-    magnetType: "pdf" | "calculator";
-    pdfUrl: string | null;
-    published: boolean;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    updatedAt: string | null;
-  }[];
-};
-export type GetApiLeadMagnetsApiArg = void;
-export type PostApiLeadMagnetsApiResponse = /** status 201 Lead magnet created */ {
-  success: boolean;
-  message: string;
-  data: {
-    id: number;
-    slug: string;
-    title: string;
-    description: string;
-    magnetType: "pdf" | "calculator";
-    pdfUrl: string | null;
-    published: boolean;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    updatedAt: string | null;
-  };
-};
-export type PostApiLeadMagnetsApiArg = {
-  body: {
-    slug: string;
-    title: string;
-    description: string;
-    magnetType: "pdf" | "calculator";
-    pdfUrl?: string | null;
-    published: boolean;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-  };
-};
-export type GetApiLeadMagnetsByIdApiResponse = /** status 200 Lead magnet details */ {
-  success: boolean;
-  message: string;
-  data: {
-    id: number;
-    slug: string;
-    title: string;
-    description: string;
-    magnetType: "pdf" | "calculator";
-    pdfUrl: string | null;
-    published: boolean;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    updatedAt: string | null;
-  };
-};
-export type GetApiLeadMagnetsByIdApiArg = {
-  id: string;
-};
-export type PutApiLeadMagnetsByIdApiResponse = /** status 200 Lead magnet updated */ {
-  success: boolean;
-  message: string;
-  data: {
-    id: number;
-    slug: string;
-    title: string;
-    description: string;
-    magnetType: "pdf" | "calculator";
-    pdfUrl: string | null;
-    published: boolean;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    updatedAt: string | null;
-  };
-};
-export type PutApiLeadMagnetsByIdApiArg = {
-  id: string;
-  body: {
-    slug?: string;
-    title?: string;
-    description?: string;
-    magnetType?: "pdf" | "calculator";
-    pdfUrl?: string | null;
-    published?: boolean;
-    seoTitle?: string | null;
-    seoDescription?: string | null;
-    keywords?: string[];
-  };
-};
-export type DeleteApiLeadMagnetsByIdApiResponse = /** status 200 Lead magnet deleted */ {
-  success: boolean;
-  message: string;
-  data: {
-    id: number;
-    slug: string;
-    title: string;
-    description: string;
-    magnetType: "pdf" | "calculator";
-    pdfUrl: string | null;
-    published: boolean;
-    seoTitle: string | null;
-    seoDescription: string | null;
-    keywords: string[];
-    updatedAt: string | null;
-  };
-};
-export type DeleteApiLeadMagnetsByIdApiArg = {
-  id: string;
-};
-export type PostApiLeadsApiResponse = /** status 201 Lead captured */ {
-  success: boolean;
-  message: string;
-  data: {
-    id: number;
-    email: string;
-    name: string | null;
-    magnetSlug: string;
-    metadata:
-      | {
-          [key: string]: string | number | boolean | null;
-        }
-      | {
-          [key: string]: string | number | boolean | null;
-        };
-    createdAt: string | null;
-  };
-};
-export type PostApiLeadsApiArg = {
-  body: {
-    email: string;
-    name?: string;
-    magnetSlug: string;
-    metadata?: {
-      [key: string]: string | number | boolean | null;
-    };
-  };
-};
-export type GetApiLeadsApiResponse = /** status 200 List of leads */ {
-  success: boolean;
-  message: string;
-  data: {
-    id: number;
-    email: string;
-    name: string | null;
-    magnetSlug: string;
-    metadata:
-      | {
-          [key: string]: string | number | boolean | null;
-        }
-      | {
-          [key: string]: string | number | boolean | null;
-        };
-    createdAt: string | null;
-  }[];
-};
-export type GetApiLeadsApiArg = void;
 export const {
   useGetApiProjectsQuery,
   usePostApiProjectsMutation,
@@ -2940,18 +2661,9 @@ export const {
   useGetApiPagesByIdQuery,
   usePutApiPagesByIdMutation,
   useDeleteApiPagesByIdMutation,
-  useGetApiSiteSettingsQuery,
-  usePutApiSiteSettingsMutation,
   useGetApiBlogPostsQuery,
   usePostApiBlogPostsMutation,
   useGetApiBlogPostsByIdQuery,
   usePutApiBlogPostsByIdMutation,
   useDeleteApiBlogPostsByIdMutation,
-  useGetApiLeadMagnetsQuery,
-  usePostApiLeadMagnetsMutation,
-  useGetApiLeadMagnetsByIdQuery,
-  usePutApiLeadMagnetsByIdMutation,
-  useDeleteApiLeadMagnetsByIdMutation,
-  usePostApiLeadsMutation,
-  useGetApiLeadsQuery,
 } = injectedRtkApi;
