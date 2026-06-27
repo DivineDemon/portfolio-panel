@@ -48,7 +48,7 @@ export function LandingHeader() {
             className="flex items-center gap-2 transition-opacity hover:opacity-80"
             aria-label="Portfolio Panel home"
           >
-            <AppLogoIcon className="size-8" />
+            <AppLogoIcon className="mb-0.5 ml-0.5 size-8" />
           </Link>
         </div>
 

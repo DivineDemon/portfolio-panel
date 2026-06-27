@@ -9,7 +9,7 @@ export function LandingFooter() {
     <footer className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-6 p-4 sm:flex-row sm:p-6">
       <div className="flex flex-col items-center gap-2 text-center sm:items-start sm:text-left">
         <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
-          <AppLogoIcon className="size-7" />
+          <AppLogoIcon className="mb-0.5 ml-0.5 size-8" />
           <p className="font-medium text-sm">Portfolio Panel</p>
         </Link>
         <p className="text-black text-sm dark:text-muted-foreground">Manage content, publish with confidence.</p>

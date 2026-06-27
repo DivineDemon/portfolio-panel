@@ -167,12 +167,12 @@ export default function AnalyticsPage() {
             <p className="font-medium">Manual setup (public site)</p>
             <ol className="mt-2 list-decimal space-y-1 pl-5 text-muted-foreground">
               <li>
-                In PostHog, open <strong>Project settings → Project API key</strong> and copy the{" "}
+                In PostHog, open <strong>Project settings → Project API key</strong> and copy the&nbsp;
                 <code className="text-xs">phc_…</code> value.
               </li>
               <li>
-                Add to <code className="text-xs">portfolio/.env</code>:{" "}
-                <code className="text-xs">NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN</code> and{" "}
+                Add to <code className="text-xs">portfolio/.env</code>:&nbsp;
+                <code className="text-xs">NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN</code> and&nbsp;
                 <code className="text-xs">NEXT_PUBLIC_POSTHOG_HOST</code> (
                 <code className="text-xs">https://us.i.posthog.com</code> or EU equivalent).
               </li>
@@ -183,7 +183,7 @@ export default function AnalyticsPage() {
       </Card>
 
       {clarityUrl ? (
-        <Button variant="outline" size="sm" asChild>
+        <Button variant="outline" asChild>
           <a href={clarityUrl} target="_blank" rel="noopener noreferrer">
             Open Clarity project
             <ExternalLink className="size-3.5" />
