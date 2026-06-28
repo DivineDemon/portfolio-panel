@@ -142,7 +142,7 @@ export const clientFormSchema = z.object({
 export const pageFormSchema = z.object({
   slug: z.string().min(1, "Required"),
   title: z.string().min(1, "Required"),
-  pageType: z.enum(["persona", "index"]),
+  pageType: z.enum(["persona"]),
   content: z.string().min(1, "Required"),
   excerpt: z.string().optional(),
   seoTitle: z.string().optional(),

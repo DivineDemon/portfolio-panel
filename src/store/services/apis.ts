@@ -2318,7 +2318,7 @@ export type GetApiPagesApiResponse = /** status 200 List of pages */ {
     id: number;
     slug: string;
     title: string;
-    pageType: "persona" | "index";
+    pageType: "persona";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;
@@ -2341,7 +2341,7 @@ export type PostApiPagesApiResponse = /** status 201 Page created */ {
     id: number;
     slug: string;
     title: string;
-    pageType: "persona" | "index";
+    pageType: "persona";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;
@@ -2360,7 +2360,7 @@ export type PostApiPagesApiArg = {
   body: {
     slug: string;
     title: string;
-    pageType: "persona" | "index";
+    pageType: "persona";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;
@@ -2381,7 +2381,7 @@ export type GetApiPagesByIdApiResponse = /** status 200 Page details */ {
     id: number;
     slug: string;
     title: string;
-    pageType: "persona" | "index";
+    pageType: "persona";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;
@@ -2406,7 +2406,7 @@ export type PutApiPagesByIdApiResponse = /** status 200 Page updated */ {
     id: number;
     slug: string;
     title: string;
-    pageType: "persona" | "index";
+    pageType: "persona";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;
@@ -2426,7 +2426,7 @@ export type PutApiPagesByIdApiArg = {
   body: {
     slug?: string;
     title?: string;
-    pageType?: "persona" | "index";
+    pageType?: "persona";
     content?: string;
     excerpt?: string | null;
     seoTitle?: string | null;
@@ -2447,7 +2447,7 @@ export type DeleteApiPagesByIdApiResponse = /** status 200 Page deleted */ {
     id: number;
     slug: string;
     title: string;
-    pageType: "persona" | "index";
+    pageType: "persona";
     content: string;
     excerpt: string | null;
     seoTitle: string | null;

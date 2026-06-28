@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { MarkdownField } from "@/components/ui/markdown-field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
@@ -154,27 +153,6 @@ function PageEditorForm({
               <CardTitle>Publish</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Field>
-                <FieldLabel>Page type</FieldLabel>
-                <Controller
-                  control={form.control}
-                  name="pageType"
-                  render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange} disabled={isSubmitting}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {(["persona", "index"] as const).map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-              </Field>
               <Field>
                 <FieldLabel htmlFor="sortOrder">Sort order</FieldLabel>
                 <Input id="sortOrder" type="number" {...form.register("sortOrder")} disabled={isSubmitting} />
